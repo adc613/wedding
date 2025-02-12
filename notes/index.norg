@@ -1,0 +1,14 @@
+@document.meta
+title: index
+description: 
+authors: adam
+categories: 
+created: 2025-02-11T18:19:56-0800
+updated: 2025-02-11T18:20:27-0800
+version: 1.1.1
+@end
+
+
+* Getting started
+
+  Followed [some guys guide]{https://dev.to/andyklimczak/very-unofficial-getting-started-with-elixir-phoenix-guide-3k55}
