@@ -4,7 +4,7 @@ description:
 authors: adam
 categories: 
 created: 2025-02-11T18:19:56-0800
-updated: 2025-02-11T18:20:27-0800
+updated: 2025-02-13T21:28:53-0800
 version: 1.1.1
 @end
 
@@ -12,3 +12,44 @@ version: 1.1.1
 * Getting started
 
   Followed [some guys guide]{https://dev.to/andyklimczak/very-unofficial-getting-started-with-elixir-phoenix-guide-3k55}
+
+* Runing server
+
+  @code
+  mix phx.server
+  @end
+
+* Goals
+
+** Static pages
+   - ( ) Welcome page
+   - ( ) Wedding logisitc page
+
+** RSVP System
+   - ( ) Admin view of RSVP status 
+   - ( ) User view of RSVP status
+   - ( ) User input for RSVP status
+   - ( ) 2 User types
+
+** User system
+   - ( ) Will likely just do it with a static password on the site, I'm not
+         worried about data being leaked. Passord hash can be hard coded server
+         side and/or stored in sqlite3 to prevent javascript look up. This 
+         only thing we need to protect against is incidental writes to another
+         person's RSVP status. If abuse happens we'll figure it out.
+   - Can require password on every page load, i.e. no need to JWT or similar
+
+** Email system
+   - ( ) Send email invites
+   - ( ) Admins can send email updates to guest
+
+
+* Architecutre
+
+** Reverse proxy
+   We're going to wait until it happens, outside a Robots.txt file, we'll
+   ignore most things. Not worreid about DDOS or maliciously reading/writing
+   RSVP statuses.
+
+   I'd like to avoid bots from putting too much load on the system, as I plan
+   to run on the cheapest VM I can find.
