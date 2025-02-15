@@ -18,6 +18,9 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/home", MyHomeController, :index
+    get "/home/:id", MyHomeController, :detail
+    resources "/guests", GuestsController
   end
 
   # Other scopes may use custom stacks.

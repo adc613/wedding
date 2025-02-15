@@ -1,0 +1,22 @@
+<h1 class="text-lg text-brand">
+  Guests:
+</h1>
+
+
+<ul class="pt-5">
+  <%= for guest <- @guests do %>
+    <li>
+      <a href={~p"/guests/#{guest}/edit"}>
+        <%= guest.first_name %> <%= guest.last_name %>
+      </a>
+    </li>
+  <% end %>
+</ul>
+
+<h1 class="text-lg text-brand">
+  Actions:
+</h1>
+
+<ul>
+  <a href="/guests/new"> Craete Guest </a>
+</ul>

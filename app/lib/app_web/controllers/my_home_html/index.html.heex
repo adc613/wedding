@@ -1,0 +1,13 @@
+<h1 class="text-lg text-brand">
+  Hello Phoenix
+</h1>
+
+<ul class="pt-5">
+  <%= for guest <- @guests do %>
+    <li>
+      <a href={~p"/home/#{guest}"}>
+        <%= guest.first_name %> <%= guest.last_name %>
+      </a>
+    </li>
+  <% end %>
+</ul>
