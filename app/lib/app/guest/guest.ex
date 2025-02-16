@@ -14,7 +14,7 @@ defmodule App.Guest.Guest do
     guest
     |> cast(attrs, [:first_name, :last_name])
     |> validate_required([:first_name, :last_name])
-    |> validate_length(:first_name, min: 4)
-    |> validate_length(:last_name, min: 4)
+    |> validate_length(:first_name, min: 3)
+    |> validate_length(:last_name, min: 3)
   end
 end

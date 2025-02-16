@@ -23,7 +23,6 @@ defmodule AppWeb.GuestsController do
   def new(conn, _params) do
     changeset = MyGuest.change_guest(%Guest{})
     conn
-    |> put_flash(:info, "Creating Guest")
     |> render(:new, changeset: changeset)
   end
 

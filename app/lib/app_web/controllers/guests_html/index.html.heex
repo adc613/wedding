@@ -1,22 +1,30 @@
 <h1 class="text-lg text-brand">
-  Guests:
+  Guest Overview
 </h1>
 
-
-<ul class="pt-5">
-  <%= for guest <- @guests do %>
-    <li>
-      <a href={~p"/guests/#{guest}/edit"}>
-        <%= guest.first_name %> <%= guest.last_name %>
-      </a>
-    </li>
-  <% end %>
+<ul class="mt-2">
+  <.button><.link href="/guests/new">Create guest</.link></.button>
 </ul>
 
-<h1 class="text-lg text-brand">
-  Actions:
-</h1>
+<.table id="guests" rows={@guests}>
+  <:col :let={guest} label="Name">{guest.first_name} {guest.last_name}</:col>
+  <:col :let={guest} label="">
+    <.button>
+      <.link href={~p"/guests/#{guest}/edit"}>
+        Edit
+      </.link>
+    </.button>
+  </:col>
+  <:col :let={guest} label="">
+    <.button>
+      <.link
+        href={~p"/guests/#{guest}"}
+        method="delete"
+        data-confirm="Are you sure?"
+      >
+        Delete
+      </.link>
+    </.button>
+  </:col>
+</.table>
 
-<ul>
-  <a href="/guests/new"> Craete Guest </a>
-</ul>

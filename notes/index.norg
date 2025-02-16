@@ -4,7 +4,7 @@ description:
 authors: adam
 categories: 
 created: 2025-02-11T18:19:56-0800
-updated: 2025-02-13T21:28:53-0800
+updated: 2025-02-13T22:07:01-0800
 version: 1.1.1
 @end
 
@@ -37,11 +37,13 @@ version: 1.1.1
          side and/or stored in sqlite3 to prevent javascript look up. This 
          only thing we need to protect against is incidental writes to another
          person's RSVP status. If abuse happens we'll figure it out.
-   - Can require password on every page load, i.e. no need to JWT or similar
+   - NOTE: Can require password on every page load, i.e. no need to JWT or similar
 
 ** Email system
    - ( ) Send email invites
    - ( ) Admins can send email updates to guest
+   - NOTE: Could look into AppScript for sending email, instead of a paid
+     service
 
 
 * Architecutre

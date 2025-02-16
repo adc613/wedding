@@ -18,9 +18,10 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    get "/home", MyHomeController, :index
-    get "/home/:id", MyHomeController, :detail
-    resources "/guests", GuestsController
+    resources "/guests", GuestsController do
+      get "/rsvp", GuestsController, :rsvp
+      post "/rsvp", GuestsController, :rsvp_update
+    end
   end
 
   # Other scopes may use custom stacks.
