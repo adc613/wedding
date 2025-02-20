@@ -16,6 +16,7 @@ defmodule AppWeb do
   below. Instead, define additional modules and import
   those modules here.
   """
+  alias AppWeb.ErrorHTML
 
   def static_paths, do: ~w(assets fonts images favicon.ico robots.txt)
 
@@ -47,6 +48,10 @@ defmodule AppWeb do
       import Plug.Conn
 
       unquote(verified_routes())
+
+      defp render_not_found(conn) do
+        conn |> put_status(:not_found) |> put_view(ErrorHTML) |> render(:"404")
+      end
     end
   end
 
@@ -113,4 +118,13 @@ defmodule AppWeb do
   defmacro __using__(which) when is_atom(which) do
     apply(__MODULE__, which, [])
   end
+end
+
+defmodule AppWeb.NotFoundError do
+  defexception [:message, plug_status: 404]
+end
+
+defimpl Plug.Exception, for: MyApp.NotFoundError do
+  def status(_exception), do: 404
+  def actions(_exception), do: []
 end

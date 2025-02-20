@@ -18,7 +18,8 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    resources "/guests", GuestsController do
+
+    resources "/guest", GuestsController do
       get "/rsvp", GuestsController, :rsvp
       post "/rsvp", GuestsController, :rsvp_update
     end

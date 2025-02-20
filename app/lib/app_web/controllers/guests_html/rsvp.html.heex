@@ -1,0 +1,26 @@
+<h1 class="text-lg text-brand">
+  RSVP: {@guest.first_name} {@guest.last_name}
+</h1>
+
+<ul>
+  <li>
+    <.simple_form :let={f} for={@changeset} action={~p"/guest/#{@guest}/rsvp"}>
+      <.error :if={@changeset.action}>
+        Oops, something went wrong! Please check the errors below.
+      </.error>
+      <.input
+        field={f[:confirmed]}
+        value={
+          if @guest.rsvp != nil do
+            @guest.rsvp.confirmed
+          end
+        }
+        type="checkbox"
+        label="I will be attending the wedding"
+      />
+      <:actions>
+        <.button class="btn-action">Save</.button>
+      </:actions>
+    </.simple_form>
+  </li>
+</ul>

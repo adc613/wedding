@@ -2,16 +2,15 @@
   Detail view
 </h1>
 
-<.guest_form changeset={@changeset} action={~p"/guests/#{@guest}"}/>
+<.guest_form changeset={@changeset} action={~p"/guest/#{@guest}"} />
 
-<h2> Actions </h2>
+<h2>Actions</h2>
 <ul>
-  <form method="DELETE" action={~p"/guests/#{@guest}"}>
+  <form method="DELETE" action={~p"/guest/#{@guest}"}>
     <button type="submit">Delete</button>
   </form>
 </ul>
 
-
 <p>
-  <a href="/guests">Go Back</a>
+  <a href="/guest">Go Back</a>
 </p>

@@ -1,24 +1,24 @@
 <h1 class="text-lg text-brand">
-  Details: <%= @guest.first_name %> <%= @guest.last_name %>
+  Details: {@guest.first_name} {@guest.last_name}
 </h1>
 
 <ul>
   <li>
-    <.link href={~p"/guests/#{@guest}/edit"}>
+    <.link href={~p"/guest/#{@guest}/edit"}>
       <.button>
-          Edit
+        Edit
       </.button>
     </.link>
   </li>
   <li>
-    <.link href={~p"/guests/#{@guest}"} method="delete" data-confirm="Are you sure?">
+    <.link href={~p"/guest/#{@guest}"} method="delete" data-confirm="Are you sure?">
       <.button>
-          Delete
+        Delete
       </.button>
     </.link>
   </li>
 </ul>
 
 <p>
-  <a href="/guests">Go Back</a>
+  <a href="/guest">Go Back</a>
 </p>
