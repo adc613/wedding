@@ -74,13 +74,36 @@ defmodule AppWeb.GuestsController do
     end
   end
 
-  def rsvp(conn, %{"guests_id" => guests_id}) do
-    changeset = RSVP.changeset(%RSVP{})
+  def rsvp(conn, %{"guests_id" => guests_id, "secret" => secret}) do
+    guest = MyGuest.get_guest(guests_id)
 
-    case MyGuest.get_guest(guests_id) do
-      nil -> render_not_found(conn)
-      guest -> render(conn, :rsvp, guest: guest, changeset: changeset)
+    guest =
+      case guest do
+        nil ->
+          :not_found
+
+        %{secret: nil} ->
+          MyGuest.update!(guest, %{"secret" => secret})
+
+        guest ->
+          guest
+      end
+
+    case guest do
+      :not_found ->
+        render_not_found(conn)
+
+      %{secret: ^secret} ->
+        changeset = RSVP.changeset(%RSVP{})
+        render(conn, :rsvp, guest: guest, changeset: changeset)
+
+      _guest_with_incorrect_secret ->
+        render_forbidden(conn)
     end
+  end
+
+  def rsvp(conn, %{"guests_id" => guests_id}) do
+    rsvp(conn, %{"guests_id" => guests_id, "secret" => Guest.gen_secret()})
   end
 
   def rsvp_update(conn, %{"guests_id" => guests_id, "rsvp" => rsvp_params}) do
@@ -89,5 +112,9 @@ defmodule AppWeb.GuestsController do
 
     put_flash(conn, :info, "Received RSVP")
     |> redirect(to: ~p"/guest/#{guests_id}/rsvp")
+  end
+
+  defp render_forbidden(conn) do
+    render_not_found(conn)
   end
 end

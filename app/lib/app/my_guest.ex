@@ -17,6 +17,12 @@ defmodule App.MyGuest do
     Repo.get!(Guest, id) |> Repo.preload(:rsvp)
   end
 
+  def update!(%Guest{} = guest, attrs) do
+    guest
+    |> Guest.changeset(attrs)
+    |> Repo.update!()
+  end
+
   def update(%Guest{} = guest, attrs) do
     guest
     |> Guest.changeset(attrs)

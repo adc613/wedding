@@ -19,11 +19,18 @@ defmodule App.MyGuestTest do
   end
 
   test "create_guest()" do
-    created_guest = create_guest()
-    guest = MyGuest.get_guest!(created_guest.id)
+    {:ok, %{:id => guest_id}} =
+      MyGuest.create_guest(%{
+        "first_name" => "Adam",
+        "last_name" => "Collins",
+        "secret" => "123456"
+      })
+
+    guest = MyGuest.get_guest!(guest_id)
 
     assert guest.first_name == "Adam"
-    assert guest == created_guest
+    assert guest.last_name == "Collins"
+    assert guest.secret == "123456"
   end
 
   test "update()" do
