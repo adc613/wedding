@@ -4,7 +4,7 @@ description:
 authors: adam
 categories: 
 created: 2025-02-11T18:19:56-0800
-updated: 2025-02-20T15:40:04-0800
+updated: 2025-02-22T10:25:50-0800
 version: 1.1.1
 @end
 
@@ -26,16 +26,16 @@ version: 1.1.1
    - ( ) Wedding logisitc page
 
 ** RSVP System
-   - ( ) Admin view of RSVP status 
+   - (x) Admin view of RSVP status 
    - (x) User view of RSVP status
    - (x) User input for RSVP status
-   - ( ) 2 User types
+   - (x) 2 User types
 
 ** Styling
    - ( ) Make it pretty
 
 ** User system
-   - ( ) Will likely just do it with a static password on the site, I'm not
+   - (x) Will likely just do it with a static password on the site, I'm not
          worried about data being leaked. Passord hash can be hard coded server
          side and/or stored in sqlite3 to prevent javascript look up. This 
          only thing we need to protect against is incidental writes to another
