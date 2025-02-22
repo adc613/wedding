@@ -23,8 +23,8 @@ defmodule AppWeb.Router do
     get "/", PageController, :home
 
     scope "/guest/:guests_id" do
-      get "/rsvp", GuestsController, :rsvp
-      post "/rsvp", GuestsController, :rsvp_update
+      get "/rsvp", RSVPController, :rsvp
+      post "/rsvp", RSVPController, :rsvp_update
     end
   end
 
