@@ -22,10 +22,16 @@ defmodule AppWeb.Router do
 
     get "/", PageController, :home
 
-    resources "/guest", GuestsController do
+    scope "/guest/:guests_id" do
       get "/rsvp", GuestsController, :rsvp
       post "/rsvp", GuestsController, :rsvp_update
     end
+  end
+
+  scope "/", AppWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    resources "/guest", GuestsController
   end
 
   # Other scopes may use custom stacks.

@@ -1,22 +1,37 @@
 defmodule AppWeb.GuestControllerTest do
+  alias App.Accounts
   alias App.Guest.RSVP
   alias App.MyGuest
+  alias AppWeb.UserAuth
   use AppWeb.ConnCase
 
   setup do
-    {result, _guest} =
+    {:ok, _guest} =
       MyGuest.create_guest(%{
         "first_name" => "Adam",
         "last_name" => "Collins",
         "secret" => "123456"
       })
 
-    result
+    {:ok, _user} =
+      Accounts.register_user(%{
+        "email" => "test@test.com",
+        "password" => "password123456789",
+        "confirm_password" => "password123456789"
+      })
+
+    :ok
   end
 
+  @tag only: true
   test "GET /guest", %{conn: conn} do
-    conn = get(conn, ~p"/guest")
-    resp = html_response(conn, 200)
+    user = Accounts.get_user!(1)
+    conn = UserAuth.log_in_user(conn, user, %{"remember_me" => "true"})
+
+    resp =
+      conn
+      |> get(~p"/guest")
+      |> html_response(200)
 
     assert resp =~ "</html>"
     assert resp =~ "Adam Collins"
