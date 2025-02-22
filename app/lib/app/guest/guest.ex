@@ -6,6 +6,9 @@ defmodule App.Guest.Guest do
   schema "guests" do
     field :first_name, :string
     field :last_name, :string
+    # Important to note this is not a password, and should not be used for anything
+    # that needs to be remotely secure. It's only to prevent users from making
+    # uninteional changes
     field :secret, :string
     has_one :rsvp, RSVP
 
