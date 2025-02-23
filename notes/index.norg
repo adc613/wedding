@@ -4,7 +4,7 @@ description:
 authors: adam
 categories: 
 created: 2025-02-11T18:19:56-0800
-updated: 2025-02-22T22:21:03-0800
+updated: 2025-02-22T22:22:18-0800
 version: 1.1.1
 @end
 
@@ -43,6 +43,7 @@ version: 1.1.1
    - ( ) Restrict who can create a user account
 
 ** Email system
+   - (x) Send transactional emails
    - ( ) Send email invites
    - ( ) Admins can send email updates to guest
    - NOTE: Could look into AppScript for sending email, instead of a paid
