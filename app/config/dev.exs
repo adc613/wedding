@@ -79,4 +79,13 @@ config :phoenix_live_view,
   enable_expensive_runtime_checks: true
 
 # Disable swoosh api client as it is only required for production adapters.
-config :swoosh, :api_client, false
+config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: App.Finch
+
+config :app, App.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: "us-east-1",
+  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
+  secret: System.get_env("AWS_SES_SECRET_KEY")
+
+config :app,
+  from_email: "helen.adam.wedding2026@gmail.com"
