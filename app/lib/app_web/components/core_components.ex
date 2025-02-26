@@ -36,6 +36,31 @@ defmodule AppWeb.CoreComponents do
       </.modal>
 
   """
+  attr :link, :string, required: true
+
+  def image(assigns) do
+    ~H"""
+    <img src={get_image_path(@link)} />
+    """
+  end
+
+  @doc """
+  Renders a modal.
+
+  ## Examples
+
+      <.modal id="confirm-modal">
+        This is a modal.
+      </.modal>
+
+  JS commands may be passed to the `:on_cancel` to configure
+  the closing/cancel event, for example:
+
+      <.modal id="confirm" on_cancel={JS.navigate(~p"/posts")}>
+        This is another modal.
+      </.modal>
+
+  """
   attr :id, :string, required: true
   attr :show, :boolean, default: false
   attr :on_cancel, JS, default: %JS{}
@@ -672,5 +697,9 @@ defmodule AppWeb.CoreComponents do
   """
   def translate_errors(errors, field) when is_list(errors) do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
+  end
+
+  defp get_image_path(link) do
+    "/images/" <> link
   end
 end

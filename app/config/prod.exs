@@ -10,6 +10,15 @@ config :app, AppWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: App.Finch
 
+config :app, App.Mailer,
+  adapter: Swoosh.Adapters.AmazonSES,
+  region: System.get_env("AWS_SES_REGION"),
+  access_key: System.get_env("AWS_SES_ACCESS_KEY"),
+  secret: System.get_env("AWS_SES_SECRET_KEY")
+
+config :app,
+  from_email: "helen.adam.wedding2026@gmail.com"
+
 # Disable Swoosh Local Memory Storage
 config :swoosh, local: false
 

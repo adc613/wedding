@@ -8,7 +8,7 @@ defmodule App.Accounts.UserNotifier do
     email =
       new()
       |> to(recipient)
-      |> from({"App", "contact@example.com"})
+      |> from({"App", App.Mailer.get_from_email()})
       |> subject(subject)
       |> text_body(body)
 
