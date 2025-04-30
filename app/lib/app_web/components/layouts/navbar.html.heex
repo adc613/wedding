@@ -1,0 +1,46 @@
+<header class="px-4 sm:px-6 lg:px-8">
+  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+    <div class="flex items-center gap-4">
+      <a href="/">
+        <img src={~p"/images/logo.svg"} width="36" />
+      </a>
+    </div>
+    <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
+      <li :if={@current_user}>
+        <a href="/guest" class="hover:text-zinc-700">
+          Manage Guests
+        </a>
+      </li>
+      <li>
+        <a href="/story" class="hover:text-zinc-700">
+          Our story
+        </a>
+      </li>
+      <li>
+        <a href="/photos" class="hover:text-zinc-700">
+          Photos
+        </a>
+      </li>
+      <li>
+        <a href="/travel" class="hover:text-zinc-700">
+          Travel
+        </a>
+      </li>
+      <li>
+        <a href="/things" class="hover:text-zinc-700">
+          Things to Do
+        </a>
+      </li>
+      <li>
+        <a href="/registry" class="hover:text-zinc-700">
+          Registry
+        </a>
+      </li>
+      <li>
+        <a href="/rsvp" class="hover:text-zinc-700">
+          RSVP
+        </a>
+      </li>
+    </ul>
+  </div>
+</header>
