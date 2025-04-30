@@ -60,7 +60,6 @@ if config_env() == :prod do
       port: port
     ],
     https: [
-      ...,
       port: 443,
       cipher_suite: :strong,
       keyfile: "/etc/letsencrypt/live/wewdding.adamcollins.io/privkey.pem",
