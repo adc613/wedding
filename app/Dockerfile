@@ -19,4 +19,4 @@ RUN mix assets.deploy
 ENV DATABASE_PATH=/var/app/app.db
 ENV PORT=4001
 
-CMD mix phx.server
+CMD ["mix", "phx.server"]
