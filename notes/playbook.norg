@@ -4,7 +4,7 @@ description:
 authors: adam
 categories: 
 created: 2025-04-30T07:48:39-0600
-updated: 2025-04-30T07:50:43-0600
+updated: 2025-04-30T08:10:04-0600
 version: 1.1.1
 @end
 
@@ -13,8 +13,20 @@ version: 1.1.1
   Run this line of code on the server (/Note: you'll likely need to kill the
   website for a minute to refresh certs/)
 
-  @code
+  @code sh
   docker run --rm -p 80:80 -p 443:443 -v /root/nginx/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
   @end
 
 ** ( ) Move to Ansible playbook
+
+* Running docker container
+
+  @code sh
+  docker run -p 4001:4001 -p 80:80 -p 443:443 -v /etc/letsencrypt/live:/etc/letsencrypt/live -e SECRET_KEY_BASE=$SECRET_KEY_BASE phx
+  @end
+
+* Building docker container
+
+  @code sh
+  docker build . -t phx
+  @end

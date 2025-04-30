@@ -62,8 +62,8 @@ if config_env() == :prod do
     https: [
       port: 443,
       cipher_suite: :strong,
-      keyfile: "/etc/letsencrypt/live/wewdding.adamcollins.io/privkey.pem",
-      certfile: "/etc/letsencrypt/live/wewdding.adamcollins.io/fullchain.pem"
+      keyfile: "/etc/letsencrypt/live/wedding.adamcollins.io/privkey.pem",
+      certfile: "/etc/letsencrypt/live/wedding.adamcollins.io/fullchain.pem"
     ],
     secret_key_base: secret_key_base
 
