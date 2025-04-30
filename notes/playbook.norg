@@ -24,7 +24,7 @@ version: 1.1.1
 * Running docker container
 
   @code sh
-  docker run -p 4001:4001 -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt -e SECRET_KEY_BASE=$SECRET_KEY_BASE phx
+  docker run -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt -e SECRET_KEY_BASE=$SECRET_KEY_BASE phx
   @end
 
 * Building docker container
