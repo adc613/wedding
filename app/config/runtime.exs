@@ -59,6 +59,12 @@ if config_env() == :prod do
       ip: {0, 0, 0, 0, 0, 0, 0, 0},
       port: port
     ],
+    https: [
+      port: 443,
+      cipher_suite: :strong,
+      keyfile: "/etc/letsencrypt/live/wedding.adamcollins.io/privkey.pem",
+      certfile: "/etc/letsencrypt/live/wedding.adamcollins.io/fullchain.pem"
+    ],
     secret_key_base: secret_key_base
 
   # ## SSL Support
@@ -66,14 +72,6 @@ if config_env() == :prod do
   # To get SSL working, you will need to add the `https` key
   # to your endpoint configuration:
   #
-  #     config :app, AppWeb.Endpoint,
-  #       https: [
-  #         ...,
-  #         port: 443,
-  #         cipher_suite: :strong,
-  #         keyfile: System.get_env("SOME_APP_SSL_KEY_PATH"),
-  #         certfile: System.get_env("SOME_APP_SSL_CERT_PATH")
-  #       ]
   #
   # The `cipher_suite` is set to `:strong` to support only the
   # latest and more secure SSL ciphers. This means old browsers

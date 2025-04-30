@@ -2,6 +2,10 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+body {
+  background-color: #f5f4ef
+}
+
 /* This file is for your main application CSS */
 .btn-action {
   @apply bg-blue-500;
