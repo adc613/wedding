@@ -4,31 +4,34 @@ description:
 authors: adam
 categories: 
 created: 2025-04-30T07:48:39-0600
-updated: 2025-04-30T09:50:56-0600
+updated: 2025-04-30T11:19:12-0600
 version: 1.1.1
 @end
 
-* Generating certs
+* Manual
+** Generating certs
 
-  Run this line of code on the server (/Note: you'll likely need to kill the
-  website for a minute to refresh certs/)
+   Run this line of code on the server (/Note: you'll likely need to kill the
+   website for a minute to refresh certs/)
 
-  @code sh
-  cd <project_root_dir>
-  source secret.env
-  docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
-  @end
+   @code sh
+   cd <project_root_dir>
+   source secret.env
+   docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
+   @end
 
-** ( ) Move to Ansible playbook
+** Running docker container
 
-* Running docker container
+   @code sh
+   docker run -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt -e SECRET_KEY_BASE=$SECRET_KEY_BASE -d phx
+   @end
 
-  @code sh
-  docker run -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt -e SECRET_KEY_BASE=$SECRET_KEY_BASE phx
-  @end
+** Building docker container
 
-* Building docker container
+   @code sh
+   docker build . -t phx
+   @end
 
-  @code sh
-  docker build . -t phx
-  @end
+* (-) Ansible playbooks
+
+  See {http://github.com/adc613/ansible}[git repo]
