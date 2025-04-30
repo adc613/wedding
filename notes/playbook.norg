@@ -1,0 +1,20 @@
+@document.meta
+title: playbook
+description: 
+authors: adam
+categories: 
+created: 2025-04-30T07:48:39-0600
+updated: 2025-04-30T07:50:43-0600
+version: 1.1.1
+@end
+
+* Generating certs
+
+  Run this line of code on the server (/Note: you'll likely need to kill the
+  website for a minute to refresh certs/)
+
+  @code
+  docker run --rm -p 80:80 -p 443:443 -v /root/nginx/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
+  @end
+
+** ( ) Move to Ansible playbook
