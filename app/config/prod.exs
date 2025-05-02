@@ -10,6 +10,8 @@ config :app, AppWeb.Endpoint, cache_static_manifest: "priv/static/cache_manifest
 # Configures Swoosh API Client
 config :swoosh, api_client: Swoosh.ApiClient.Finch, finch_name: App.Finch
 
+config :app, AppWeb.Endpoint, force_ssl: [hsts: true]
+
 config :app, App.Mailer,
   adapter: Swoosh.Adapters.AmazonSES,
   region: System.get_env("AWS_SES_REGION"),
