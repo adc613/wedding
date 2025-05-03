@@ -81,7 +81,10 @@ defmodule App.MixProject do
       "assets.deploy": [
         "tailwind app --minify",
         "esbuild app --minify",
-        "phx.digest"
+        "phx.digest",
+        "phx.digest assets/icons -o priv/static/assets/icons/",
+        "phx.digest assets/images -o priv/static/images/",
+        "phx.digest assets/static -o priv/static/"
       ]
     ]
   end
