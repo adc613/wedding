@@ -1,0 +1,28 @@
+@document.meta
+title: unexpected
+description: 
+authors: adam
+categories: 
+created: 2025-05-02T21:36:40-0600
+updated: 2025-05-02T21:39:38-0600
+version: 1.1.1
+@end
+
+
+* Static files
+
+** Expected
+
+  I expected to be able to add files directly to the static paths in {/ /home/adam/projects/wedding/app/lib/app_web/endpoint.ex}[Plug.Static
+  declaration]
+
+
+** Solution
+
+  This didn't work the way I expected so I added a rule to mix.exs and exported 
+   icons to `/assets/icons/...` the downside is that now the path names are
+   `/assets/icons/...` instead of what I wanted `/icons/...`. Not the end of the
+   world. May debug more in the future. I'm also getting tired so if this
+   doesn't make sense to future Adam, past Adam apologizes.
+
+
