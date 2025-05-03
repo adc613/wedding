@@ -3,6 +3,7 @@ FROM elixir:latest
 
 # Create app directory and copy the Elixir projects into it.
 RUN mkdir /app
+RUN mkdir /app/priv/
 WORKDIR /app
 
 COPY mix.exs /app/mix.exs
@@ -10,7 +11,6 @@ RUN mix deps.get --prod
 
 COPY config/ /app/config/
 COPY assets/ /app/assets/
-COPY priv /app/priv/
 RUN mix assets.deploy
 
 COPY lib /app/lib/

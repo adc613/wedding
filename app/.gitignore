@@ -31,6 +31,10 @@ app-*.tar
 # Ignore digested assets cache.
 /priv/static/cache_manifest.json
 
+# Ignore all static assets in priv/. Persistent assets should be stored in
+# /assets then output via assets.deploy
+/priv/static/
+
 # In case you use Node.js/npm, you want to ignore these.
 npm-debug.log
 /assets/node_modules/
