@@ -21,17 +21,17 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    # get "/story", PageController, :story
-    # get "/photos", PageController, :photos
-    # get "/rsvp", PageController, :rsvp
-    # get "/travel", PageController, :travel
-    # get "/things", PageController, :things_to_do
-    # get "/registry", PageController, :registry
+    get "/story", PageController, :story
+    get "/photos", PageController, :photos
+    get "/rsvp", PageController, :rsvp
+    get "/travel", PageController, :travel
+    get "/things", PageController, :things_to_do
+    get "/registry", PageController, :registry
 
-    # scope "/guest/:guests_id" do
-    #   get "/rsvp", RSVPController, :rsvp
-    #   post "/rsvp", RSVPController, :rsvp_update
-    # end
+    scope "/guest/:guests_id" do
+      get "/rsvp", RSVPController, :rsvp
+      post "/rsvp", RSVPController, :rsvp_update
+    end
   end
 
   scope "/", AppWeb do
