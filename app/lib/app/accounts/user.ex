@@ -47,9 +47,6 @@ defmodule App.Accounts.User do
     |> validate_required([:email])
     |> validate_format(:email, ~r/^[^\s]+@[^\s]+$/, message: "must have the @ sign and no spaces")
     |> validate_length(:email, max: 160)
-    # |> validate_format(:email, ~r/(adc613@gmail\.com|helen\.clark\.r@gmail\.com)$/,
-    # message: "Email must be from a known set"
-    # )
     |> maybe_validate_unique_email(opts)
   end
 
