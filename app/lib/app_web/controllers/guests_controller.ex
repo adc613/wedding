@@ -51,7 +51,9 @@ defmodule AppWeb.GuestsController do
         |> redirect(to: ~p"/guest_old/#{guest}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, changeset: changeset)
+        conn
+        |> put_flash(:error, "Failed to update guest")
+        |> render(:edit, guest: guest, changeset: changeset)
     end
   end
 
