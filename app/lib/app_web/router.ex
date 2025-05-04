@@ -37,7 +37,7 @@ defmodule AppWeb.Router do
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/guest", GuestsController
+    resources "/guest_old", GuestsController
   end
 
   # Other scopes may use custom stacks.
@@ -85,6 +85,7 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/guest", GuestManageLive
     end
   end
 

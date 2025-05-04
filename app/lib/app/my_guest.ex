@@ -59,4 +59,14 @@ defmodule App.MyGuest do
     |> RSVP.changeset(%{"guest_id" => guest.id})
     |> Repo.insert!()
   end
+
+  def send_std(%Guest{} = guest) do
+    IO.puts("send STD")
+
+    # TODO: Send STD email
+
+    guest
+    |> Guest.changeset(%{sent_std: true})
+    |> Repo.update()
+  end
 end

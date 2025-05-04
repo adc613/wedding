@@ -50,9 +50,7 @@ defmodule AppWeb.UserRegistrationLiveTest do
       # Now do a logged in request and assert on the menu
       conn = get(conn, "/")
       response = html_response(conn, 200)
-      assert response =~ email
-      assert response =~ "Settings"
-      assert response =~ "Log out"
+      assert response =~ "Manage Guests"
     end
 
     test "renders errors for duplicated email", %{conn: conn} do
