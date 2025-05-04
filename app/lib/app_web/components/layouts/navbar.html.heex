@@ -7,8 +7,11 @@
     </div>
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <li :if={@current_user}>
-        <a href="/guest" class="hover:text-zinc-700">
+        <a href={~p"/guest"} class="hover:text-zinc-700">
           Manage Guests
+        </a>
+        <a href={~p"/users/settings"} class="hover:text-zinc-700">
+          User settings
         </a>
       </li>
       <li>
