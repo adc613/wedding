@@ -1,2 +1,3 @@
 # Putting keys in .secret file
 *.secret
+db/*
