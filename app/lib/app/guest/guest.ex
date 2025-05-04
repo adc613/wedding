@@ -10,9 +10,9 @@ defmodule App.Guest.Guest do
     # that needs to be remotely secure. It's only to prevent users from making
     # uninteional changes
     field :secret, :string
-    field :rehersal_dinner, :boolean
-    field :brunch, :boolean
-    field :sent_std, :boolean
+    field :rehersal_dinner, :boolean, default: false
+    field :brunch, :boolean, default: false
+    field :sent_std, :boolean, default: false
     field :email, :string
     has_one :rsvp, RSVP
 

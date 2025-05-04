@@ -64,12 +64,12 @@ defmodule AppWeb.GuestsController do
       {:ok, _guest} ->
         conn
         |> put_flash(:info, "Deleted guest")
-        |> redirect(to: ~p"/guest")
+        |> redirect(to: ~p"/guest_old")
 
       {:error, _guest} ->
         conn
         |> put_flash(:error, "Failed to delete guest")
-        |> redirect(to: ~p"/guest")
+        |> redirect(to: ~p"/guest_old")
     end
   end
 end
