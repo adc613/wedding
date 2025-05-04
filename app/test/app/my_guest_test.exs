@@ -21,6 +21,7 @@ defmodule App.MyGuestTest do
   test "create_guest()" do
     {:ok, %{:id => guest_id}} =
       MyGuest.create_guest(%{
+        "email" => "test@test.test",
         "first_name" => "Adam",
         "last_name" => "Collins",
         "secret" => "123456"
@@ -57,8 +58,19 @@ defmodule App.MyGuestTest do
     assert_raise Ecto.NoResultsError, fn -> MyGuest.get_or_create_rsvp!(42) end
   end
 
+  test "send_std()" do
+    guest = create_guest()
+    {:ok, guest} = MyGuest.send_std(guest)
+
+    assert guest = %{sent_std: true}
+
+    result = MyGuest.send_std(guest)
+    assert {:error, :duplicate_std} = result
+  end
+
   defp create_guest() do
     MyGuest.create_guest(%{
+      "email" => "test@test.test",
       "first_name" => "Adam",
       "last_name" => "Colins"
     })

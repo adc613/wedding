@@ -5,7 +5,11 @@ defmodule App.Guest.GuestTest do
   test "Changeset happy case" do
     errors =
       %Guest{}
-      |> Guest.changeset(%{"first_name" => "Adam", "last_name" => "Collins"})
+      |> Guest.changeset(%{
+        "email" => "test@test.test",
+        "first_name" => "Adam",
+        "last_name" => "Collins"
+      })
       |> errors_on()
 
     assert errors == %{}

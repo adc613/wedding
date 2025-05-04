@@ -34,7 +34,7 @@ defmodule AppWeb.GuestsController do
       {:ok, guest} ->
         conn
         |> put_flash(:info, "Created new Guest")
-        |> redirect(to: ~p"/guest/#{guest}")
+        |> redirect(to: ~p"/guest_old/#{guest}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, :new, changeset: changeset)
@@ -48,10 +48,12 @@ defmodule AppWeb.GuestsController do
       {:ok, guest} ->
         conn
         |> put_flash(:info, "Updated guest")
-        |> redirect(to: ~p"/guest/#{guest}")
+        |> redirect(to: ~p"/guest_old/#{guest}")
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, :edit, changeset: changeset)
+        conn
+        |> put_flash(:error, "Failed to update guest")
+        |> render(:edit, guest: guest, changeset: changeset)
     end
   end
 
@@ -64,12 +66,12 @@ defmodule AppWeb.GuestsController do
       {:ok, _guest} ->
         conn
         |> put_flash(:info, "Deleted guest")
-        |> redirect(to: ~p"/guest")
+        |> redirect(to: ~p"/guest_old")
 
       {:error, _guest} ->
         conn
         |> put_flash(:error, "Failed to delete guest")
-        |> redirect(to: ~p"/guest")
+        |> redirect(to: ~p"/guest_old")
     end
   end
 end

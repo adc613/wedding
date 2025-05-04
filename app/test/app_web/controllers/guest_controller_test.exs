@@ -6,6 +6,7 @@ defmodule AppWeb.GuestControllerTest do
   setup do
     {:ok, _guest} =
       MyGuest.create_guest(%{
+        "email" => "test@test.com",
         "first_name" => "Adam",
         "last_name" => "Collins",
         "secret" => "123456"
@@ -28,33 +29,33 @@ defmodule AppWeb.GuestControllerTest do
       {:ok, %{conn: conn, user: user}}
     end
 
-    test "GET /guest", %{conn: conn} do
+    test "GET /guest_old", %{conn: conn} do
       resp =
         conn
-        |> get(~p"/guest")
+        |> get(~p"/guest_old")
         |> html_response(200)
 
       assert resp =~ "</html>"
       assert resp =~ "Adam Collins"
     end
 
-    test "GET /guest/:id", %{conn: conn} do
-      conn = get(conn, ~p"/guest/1")
+    test "GET /guest_old/:id", %{conn: conn} do
+      conn = get(conn, ~p"/guest_old/1")
       resp = html_response(conn, 200)
 
       assert resp =~ "</html>"
       assert resp =~ "Adam Collins"
     end
 
-    test "GET /guest/:id 404", %{conn: conn} do
+    test "GET /guest_old/:id 404", %{conn: conn} do
       conn = get(conn, ~p"/guest/42")
       resp = html_response(conn, 404)
 
       assert resp =~ "Not found"
     end
 
-    test "GET /guest/new", %{conn: conn} do
-      conn = get(conn, ~p"/guest/new")
+    test "GET /guest_old/new", %{conn: conn} do
+      conn = get(conn, ~p"/guest_old/new")
       resp = html_response(conn, 200)
 
       assert resp =~ "</html>"
@@ -63,46 +64,52 @@ defmodule AppWeb.GuestControllerTest do
 
     test "POST /guest", %{conn: conn} do
       conn =
-        post(conn, ~p"/guest", %{"guest" => %{"first_name" => "Adam 2", "last_name" => "Collins"}})
+        post(conn, ~p"/guest_old", %{
+          "guest" => %{
+            "email" => "test@test.test",
+            "first_name" => "Adam 2",
+            "last_name" => "Collins"
+          }
+        })
 
       resp = html_response(conn, 302)
 
-      assert resp =~ ~p"/guest/2"
+      assert resp =~ ~p"/guest_old/2"
       assert MyGuest.get_guest!(2).first_name == "Adam 2"
     end
 
     test "PUT /guest/:id", %{conn: conn} do
       conn =
-        put(conn, ~p"/guest/1", %{
+        put(conn, ~p"/guest_old/1", %{
           "guest" => %{"first_name" => "Adam 2", "last_name" => "Collins"}
         })
 
       resp = html_response(conn, 302)
 
-      assert resp =~ ~p"/guest/1"
+      assert resp =~ ~p"/guest_old/1"
       assert MyGuest.get_guest!(1).first_name == "Adam 2"
       assert MyGuest.get_guest!(1).last_name == "Collins"
     end
 
     test "PATCH /guest/:id", %{conn: conn} do
       conn =
-        patch(conn, ~p"/guest/1", %{
+        patch(conn, ~p"/guest_old/1", %{
           "guest" => %{"first_name" => "Adam 2"}
         })
 
       resp = html_response(conn, 302)
 
-      assert resp =~ ~p"/guest/1"
+      assert resp =~ ~p"/guest_old/1"
       assert MyGuest.get_guest!(1).first_name == "Adam 2"
       assert MyGuest.get_guest!(1).last_name == "Collins"
     end
 
     test "DELETE /guest/:id", %{conn: conn} do
-      conn = delete(conn, ~p"/guest/1")
+      conn = delete(conn, ~p"/guest_old/1")
 
       resp = html_response(conn, 302)
 
-      assert resp =~ ~p"/guest"
+      assert resp =~ ~p"/guest_old"
       assert MyGuest.list_guests() == []
     end
   end

@@ -16,6 +16,7 @@ RUN mix deps.get --prod
 COPY config/ /app/config/
 COPY assets/ /app/assets/
 COPY lib /app/lib/
+COPY priv/repo /app/priv/repo/
 
 RUN mix assets.deploy
 RUN mix compile

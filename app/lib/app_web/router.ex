@@ -21,23 +21,23 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
-    # get "/story", PageController, :story
-    # get "/photos", PageController, :photos
-    # get "/rsvp", PageController, :rsvp
-    # get "/travel", PageController, :travel
-    # get "/things", PageController, :things_to_do
-    # get "/registry", PageController, :registry
+    get "/story", PageController, :story
+    get "/photos", PageController, :photos
+    get "/rsvp", PageController, :rsvp
+    get "/travel", PageController, :travel
+    get "/things", PageController, :things_to_do
+    get "/registry", PageController, :registry
 
-    # scope "/guest/:guests_id" do
-    #   get "/rsvp", RSVPController, :rsvp
-    #   post "/rsvp", RSVPController, :rsvp_update
-    # end
+    scope "/guest/:guests_id" do
+      get "/rsvp", RSVPController, :rsvp
+      post "/rsvp", RSVPController, :rsvp_update
+    end
   end
 
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/guest", GuestsController
+    resources "/guest_old", GuestsController
   end
 
   # Other scopes may use custom stacks.
@@ -69,7 +69,9 @@ defmodule AppWeb.Router do
 
     live_session :redirect_if_user_is_authenticated,
       on_mount: [{AppWeb.UserAuth, :redirect_if_user_is_authenticated}] do
-      live "/users/register", UserRegistrationLive, :new
+      # Disable user registration to prevent any one from registering an account.
+      # All account are registered by seeding the database.
+      # live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
@@ -85,6 +87,7 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
+      live "/guest", GuestManageLive
     end
   end
 

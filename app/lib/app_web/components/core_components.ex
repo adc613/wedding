@@ -481,6 +481,12 @@ defmodule AppWeb.CoreComponents do
   attr :row_id, :any, default: nil, doc: "the function for generating the row id"
   attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
 
+  attr :selected, :any, default: nil, doc: "map to hold checkbox state"
+
+  attr :checkbox_click, :any,
+    default: nil,
+    doc: "the function for handling phx-click on each row's checkbox"
+
   attr :row_item, :any,
     default: &Function.identity/1,
     doc: "the function for mapping each row before calling the :col and :action slots"
@@ -502,6 +508,7 @@ defmodule AppWeb.CoreComponents do
       <table class="w-[40rem] mt-11 sm:w-full">
         <thead class="text-sm text-left leading-6 text-zinc-500">
           <tr>
+            <th :if={@selected} class="p-0 pb-4 pr-6 font-normal"></th>
             <th :for={col <- @col} class="p-0 pb-4 pr-6 font-normal">{col[:label]}</th>
             <th :if={@action != []} class="relative p-0 pb-4">
               <span class="sr-only">{gettext("Actions")}</span>
@@ -514,6 +521,15 @@ defmodule AppWeb.CoreComponents do
           class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
         >
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
+            <td :if={@selected}>
+              <div class="block py-4 pr-6">
+                <input
+                  type="checkbox"
+                  checked={@selected[row.id]}
+                  phx-click={@checkbox_click && @checkbox_click.(row)}
+                />
+              </div>
+            </td>
             <td
               :for={{col, i} <- Enum.with_index(@col)}
               phx-click={@row_click && @row_click.(row)}
@@ -701,5 +717,14 @@ defmodule AppWeb.CoreComponents do
 
   defp get_image_path(link) do
     "/images/" <> link
+  end
+
+  attr :checked, :boolean, required: true
+
+  def check_icon(assigns) do
+    ~H"""
+    <i :if={@checked} class="fa fa-check text-green-600"></i>
+    <i :if={not @checked} class="fa fa-times text-red-600"></i>
+    """
   end
 end

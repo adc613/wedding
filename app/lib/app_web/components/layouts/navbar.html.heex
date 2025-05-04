@@ -2,13 +2,16 @@
   <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4">
       <a href="/">
-        <img src={~p"/images/logo.svg"} width="36" />
+        <img src={~p"/assets/icons/favicon-32x32.png"} width="36" />
       </a>
     </div>
     <ul class="relative z-10 flex items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end">
       <li :if={@current_user}>
-        <a href="/guest" class="hover:text-zinc-700">
+        <a href={~p"/guest"} class="hover:text-zinc-700">
           Manage Guests
+        </a>
+        <a href={~p"/users/settings"} class="hover:text-zinc-700">
+          User settings
         </a>
       </li>
       <li>

@@ -7,6 +7,7 @@ defmodule AppWeb.RSVPControllerTest do
   setup do
     {:ok, _guest} =
       MyGuest.create_guest(%{
+        "email" => "test@test.com",
         "first_name" => "Adam",
         "last_name" => "Collins",
         "secret" => "123456"
@@ -51,7 +52,12 @@ defmodule AppWeb.RSVPControllerTest do
     end
 
     test "Writes a secret when none exist", %{conn: conn} do
-      {:ok, %{id: id}} = MyGuest.create_guest(%{"first_name" => "Test", "last_name" => "User"})
+      {:ok, %{id: id}} =
+        MyGuest.create_guest(%{
+          "email" => "test@test.test",
+          "first_name" => "Test",
+          "last_name" => "User"
+        })
 
       new_secret = "9999999"
 
