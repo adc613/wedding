@@ -35,6 +35,11 @@ defmodule AppWeb.GuestManageLive do
       </:col>
       <:col :let={guest} label="Brunch"><.check_icon checked={guest.brunch} /></:col>
       <:col :let={guest} label="Sent Save the Date"><.check_icon checked={guest.sent_std} /></:col>
+      <:col :let={guest} label="Detail">
+        <.link href={~p"/guest_old/#{guest}"}>
+          <.button>Details</.button>
+        </.link>
+      </:col>
     </.table>
     """
   end
@@ -90,8 +95,6 @@ defmodule AppWeb.GuestManageLive do
   end
 
   def handle_event("toggle_guest", %{"id" => id}, socket) do
-    IO.puts("toggle: " <> Integer.to_string(id))
-
     {
       :noreply,
       socket
