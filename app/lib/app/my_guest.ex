@@ -10,6 +10,13 @@ defmodule App.MyGuest do
     Repo.all(Guest) |> Repo.preload(:rsvp)
   end
 
+  def get_guest(email: email) do
+    IO.puts(email)
+    g = Repo.get_by!(Guest, email: email)
+    IO.inspect(g)
+    g
+  end
+
   def get_guest(id) do
     Repo.get(Guest, id) |> Repo.preload(:rsvp)
   end

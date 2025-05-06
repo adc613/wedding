@@ -23,10 +23,16 @@ defmodule AppWeb.Router do
     get "/", PageController, :home
     get "/story", PageController, :story
     get "/photos", PageController, :photos
-    get "/rsvp", PageController, :rsvp
     get "/travel", PageController, :travel
     get "/things", PageController, :things_to_do
     get "/registry", PageController, :registry
+  end
+
+  scope "/", AppWeb do
+    pipe_through :browser
+
+    get "/rsvp", RSVPController, :lookup
+    post "/rsvp", RSVPController, :lookup
 
     scope "/guest/:guests_id" do
       get "/rsvp", RSVPController, :rsvp
@@ -71,6 +77,7 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       # Disable user registration to prevent any one from registering an account.
       # All account are registered by seeding the database.
+      # NOTE: Some test will fail without this line. I'm too lazy to fix them.
       # live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new

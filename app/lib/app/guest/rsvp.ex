@@ -4,7 +4,8 @@ defmodule App.Guest.RSVP do
   alias App.Guest.Guest
 
   schema "rsvps" do
-    field :confirmed, :boolean, default: false
+    field :attending, Ecto.Enum, values: [:unkown, :yes, :no]
+    field :event, Ecto.Enum, values: [:wedding_day, :rehersal_dinner]
     belongs_to :guest, Guest
 
     timestamps(type: :utc_datetime)
@@ -13,8 +14,8 @@ defmodule App.Guest.RSVP do
   @doc false
   def changeset(rsvp, attrs \\ %{}) do
     rsvp
-    |> cast(attrs, [:confirmed, :guest_id])
-    |> validate_required([:confirmed, :guest_id])
+    |> cast(attrs, [:attending, :event, :guest_id])
+    |> validate_required([:attending, :event, :guest_id])
     |> assoc_constraint(:guest)
   end
 end

@@ -1,26 +1,32 @@
 <h1 class="text-lg text-brand">
-  RSVP: {@guest.first_name} {@guest.last_name}
+  You're invited!
 </h1>
 
-<ul>
-  <li>
-    <.simple_form :let={f} for={@changeset} action={~p"/guest/#{@guest}/rsvp"}>
-      <.error :if={@changeset.action}>
-        Oops, something went wrong! Please check the errors below.
-      </.error>
-      <.input
-        field={f[:confirmed]}
-        value={
-          if @guest.rsvp != nil do
-            @guest.rsvp.confirmed
-          end
-        }
-        type="checkbox"
-        label="I will be attending the wedding"
-      />
-      <:actions>
-        <.button class="btn-action">Save</.button>
-      </:actions>
-    </.simple_form>
-  </li>
-</ul>
+<p>
+  Please answer the following questions to help us plan a perfect day.
+</p>
+
+<p>
+  If things change, you can return to this page to upate your answers at any
+  time in the future
+</p>
+
+<.event
+  title="Ceremony"
+  date="2026.04.04"
+  time="5:00 PM - 7:00 PM"
+  location="Garfield Park Conservatory"
+  attire="Cocktail"
+  location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
+  suffix=""
+/>
+
+<.event
+  title="Reception"
+  date="2026.04.04"
+  time="7:00 PM - TBD"
+  location="Ovation"
+  attire="Cocktail"
+  location_link="https://maps.app.goo.gl/5fnzavcBJPoiYeN96"
+  suffix=""
+/>

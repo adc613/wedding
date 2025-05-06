@@ -5,36 +5,32 @@ defmodule AppWeb.RSVPController do
   alias App.MyGuest
   alias App.Guest.Guest
 
-  def rsvp(conn, %{"guests_id" => guests_id, "secret" => secret}) do
-    guest = MyGuest.get_guest(guests_id)
-
-    guest =
-      case guest do
-        nil ->
-          :not_found
-
-        %{secret: nil} ->
-          MyGuest.update!(guest, %{"secret" => secret})
-
-        guest ->
-          guest
-      end
+  def lookup(conn, %{"guest" => %{"email" => email}}) do
+    guest = MyGuest.get_guest(email: email)
 
     case guest do
-      :not_found ->
+      %Guest{id: id} ->
+        redirect(conn, to: ~p"/guest/#{id}/rsvp")
+
+      _ ->
         render_not_found(conn)
-
-      %{secret: ^secret} ->
-        changeset = RSVP.changeset(%RSVP{})
-        render(conn, :rsvp, guest: guest, changeset: changeset)
-
-      _guest_with_incorrect_secret ->
-        render_forbidden(conn)
     end
   end
 
+  def lookup(conn, _params) do
+    changeset = Guest.lookup_changeset(%Guest{})
+    render(conn, :landing, changeset: changeset, guests: [])
+  end
+
   def rsvp(conn, %{"guests_id" => guests_id}) do
-    rsvp(conn, %{"guests_id" => guests_id, "secret" => Guest.gen_secret()})
+    case MyGuest.get_guest(guests_id) do
+      nil ->
+        render_not_found(conn)
+
+      guest ->
+        changeset = RSVP.changeset(%RSVP{})
+        render(conn, :rsvp, guests: [guest], changeset: changeset)
+    end
   end
 
   def rsvp_update(conn, %{"guests_id" => guests_id, "rsvp" => rsvp_params}) do

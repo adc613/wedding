@@ -37,6 +37,12 @@ defmodule App.Guest.Guest do
     |> validate_length(:last_name, min: 3)
   end
 
+  def lookup_changeset(guest, attrs \\ %{}) do
+    guest
+    |> cast(attrs, [:email])
+    |> validate_email()
+  end
+
   defp validate_email(changeset) do
     changeset
     |> validate_required([:email])

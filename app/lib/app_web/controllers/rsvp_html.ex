@@ -1,5 +1,6 @@
 defmodule AppWeb.RSVPHTML do
   use AppWeb, :html
+  import AppWeb.PageHTML
 
   embed_templates "rsvp_html/*"
 
