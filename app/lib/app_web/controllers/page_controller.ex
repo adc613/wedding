@@ -17,10 +17,6 @@ defmodule AppWeb.PageController do
     render(conn, :registry)
   end
 
-  def rsvp(conn, _params) do
-    render(conn, :rsvp)
-  end
-
   def travel(conn, _params) do
     render(conn, :travel)
   end

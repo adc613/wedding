@@ -2,15 +2,8 @@
   Detail view
 </h1>
 
-<.guest_form changeset={@changeset} action={~p"/guest_old/#{@guest}"} />
-
-<h2>Actions</h2>
-<ul>
-  <form method="DELETE" action={~p"/guest_old/#{@guest}"}>
-    <button type="submit">Delete</button>
-  </form>
-</ul>
-
-<p>
-  <a href="/guest">Go Back</a>
-</p>
+<.guest_form
+  go_back_href={@redirect}
+  changeset={@changeset}
+  action={~p"/guest_old/#{@guest}?#{[redirect: @redirect]}"}
+/>
