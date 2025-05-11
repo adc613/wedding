@@ -2,6 +2,7 @@ defmodule App.Guest.Guest do
   use Ecto.Schema
   import Ecto.Changeset
   alias App.Guest.RSVP
+  alias App.Guest.Invitation
 
   schema "guests" do
     field :first_name, :string
@@ -15,6 +16,7 @@ defmodule App.Guest.Guest do
     field :sent_std, :boolean, default: false
     field :email, :string
     has_one :rsvp, RSVP
+    belongs_to :invitation, Invitation, on_replace: :update
 
     timestamps(type: :utc_datetime)
   end
@@ -29,18 +31,35 @@ defmodule App.Guest.Guest do
       :brunch,
       :rehersal_dinner,
       :email,
-      :sent_std
+      :sent_std,
+      :invitation_id
     ])
+    |> cast_assoc(:invitation, with: &Invitation.changeset/2)
     |> validate_email()
     |> validate_required([:first_name, :last_name])
     |> validate_length(:first_name, min: 3)
     |> validate_length(:last_name, min: 3)
+    |> assoc_constraint(:invitation)
   end
 
+  # def changeset_assoc(guest, attrs \\ %{}) do
+  # guest
+  # end
+
+  @doc """
+  Returns a changeset for doing a %Guest{} lookup in the database. Not meant
+  to be used for DB write actions.
+  """
+  @spec lookup_changeset(map()) :: %Ecto.Changeset{}
   def lookup_changeset(guest, attrs \\ %{}) do
     guest
     |> cast(attrs, [:email])
     |> validate_email()
+  end
+
+  def apply_lookup(guest, attrs \\ %{}) do
+    lookup_changeset(guest, attrs)
+    |> apply_action(:validate_attrs)
   end
 
   defp validate_email(changeset) do

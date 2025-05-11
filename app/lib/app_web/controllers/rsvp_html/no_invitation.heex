@@ -1,0 +1,24 @@
+<h1 class="text-lg text-brand">
+  Unable to find invitation
+  <%= if @email do %>
+    for: "{@email}"
+  <% end %>
+</h1>
+
+<p class="mt-8 mb-8">
+  It looks like an error occured. <b>Please reach out to Helen and/or Adam.</b>
+  We'll try to fix it as soon as we can. Until then please return to the home page
+  for event details or try a different email address.
+</p>
+
+<.button class="btn-action">
+  <.link href={~p"/rsvp"}>
+    Try a different email address
+  </.link>
+</.button>
+
+<.button>
+  <.link href={~p"/"}>
+    Return to homepage
+  </.link>
+</.button>

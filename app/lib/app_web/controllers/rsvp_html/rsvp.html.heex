@@ -11,22 +11,51 @@
   time in the future
 </p>
 
-<.event
-  title="Ceremony"
-  date="2026.04.04"
-  time="5:00 PM - 7:00 PM"
-  location="Garfield Park Conservatory"
-  attire="Cocktail"
-  location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
-  suffix=""
-/>
+<br />
 
-<.event
-  title="Reception"
-  date="2026.04.04"
-  time="7:00 PM - TBD"
-  location="Ovation"
-  attire="Cocktail"
-  location_link="https://maps.app.goo.gl/5fnzavcBJPoiYeN96"
-  suffix=""
-/>
+<p>
+  You are permitted to Respond for:
+</p>
+<ul class="list-disc list-inside space-y-2 mb-8">
+  <%= for guest <- @invitation.guests do %>
+    <li>
+      {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i> <.link
+        class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
+        href={~p"/guest_old/#{guest}/edit?#{[redirect: ~p"/rsvp/#{@guest_id}"]}"}
+      >edit information</.link>)
+    </li>
+  <% end %>
+</ul>
+
+<.form for={%{}} action={~p"/rsvp"} method="put">
+  <%!--<input type="hidden" name="csrf_token" value={Plug.Conn.get_session(@conn, :csrf_token)} />--%>
+  <input type="hidden" value={@invitation.id} name="invitation_id" />
+  <.response
+    :if={:wedding in @invitation.events}
+    group_name="Wedding day"
+    guests={@invitation.guests}
+    name="wedding"
+  >
+    <.cocktail_event />
+    <.reception_event />
+    <.ceremony_event />
+  </.response>
+  <.response
+    :if={:rehersal in @invitation.events}
+    group_name="Rehersal Dinner"
+    guests={@invitation.guests}
+    name="rehersal"
+  >
+    <.rehersal_event />
+  </.response>
+  <.response
+    :if={:brunch in @invitation.events}
+    group_name="Brunch"
+    guests={@invitation.guests}
+    name="brunch"
+  >
+    <.brunch_event />
+  </.response>
+
+  <.button class="btn-action" type="submit">Submit answers</.button>
+</.form>

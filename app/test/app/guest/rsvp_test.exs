@@ -5,7 +5,7 @@ defmodule App.Guest.RSVPTest do
   test "Changeset happy case for RSVP" do
     errors =
       %RSVP{}
-      |> RSVP.changeset(%{"guest_id" => 1})
+      |> RSVP.changeset(%{"guest_id" => 1, "event" => :wedding})
       |> errors_on()
 
     assert errors == %{}

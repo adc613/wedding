@@ -4,8 +4,12 @@ defmodule App.Guest.RSVP do
   alias App.Guest.Guest
 
   schema "rsvps" do
-    field :attending, Ecto.Enum, values: [:unkown, :yes, :no]
-    field :event, Ecto.Enum, values: [:wedding_day, :rehersal_dinner]
+    field :events, {:array, Ecto.Enum}, values: [:wedding, :brunch, :rehersal], default: []
+
+    field :declined_events, {:array, Ecto.Enum},
+      values: [:wedding, :brunch, :rehersal],
+      default: []
+
     belongs_to :guest, Guest
 
     timestamps(type: :utc_datetime)
@@ -14,8 +18,8 @@ defmodule App.Guest.RSVP do
   @doc false
   def changeset(rsvp, attrs \\ %{}) do
     rsvp
-    |> cast(attrs, [:attending, :event, :guest_id])
-    |> validate_required([:attending, :event, :guest_id])
+    |> cast(attrs, [:events, :declined_events, :guest_id])
+    |> validate_required([:guest_id])
     |> assoc_constraint(:guest)
   end
 end

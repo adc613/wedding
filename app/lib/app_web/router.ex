@@ -28,16 +28,13 @@ defmodule AppWeb.Router do
     get "/registry", PageController, :registry
   end
 
-  scope "/", AppWeb do
+  scope "/rsvp", AppWeb do
     pipe_through :browser
 
-    get "/rsvp", RSVPController, :lookup
-    post "/rsvp", RSVPController, :lookup
-
-    scope "/guest/:guests_id" do
-      get "/rsvp", RSVPController, :rsvp
-      post "/rsvp", RSVPController, :rsvp_update
-    end
+    get "/", RSVPController, :rsvp
+    get "/lookup", RSVPController, :find_rsvp
+    get "/:guest_id", RSVPController, :find_rsvp
+    put "/", RSVPController, :update_rsvp
   end
 
   scope "/", AppWeb do
@@ -78,7 +75,7 @@ defmodule AppWeb.Router do
       # Disable user registration to prevent any one from registering an account.
       # All account are registered by seeding the database.
       # NOTE: Some test will fail without this line. I'm too lazy to fix them.
-      # live "/users/register", UserRegistrationLive, :new
+      live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
