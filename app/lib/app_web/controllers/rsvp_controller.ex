@@ -47,23 +47,13 @@ defmodule AppWeb.RSVPController do
     form_key = ~r/^(wedding|brunch|rehersal)-(\d+)$/
 
     params
-    |> Enum.filter(fn {key, _value} ->
-      Regex.match?(form_key, key)
-    end)
+    |> Enum.filter(fn {key, _value} -> Regex.match?(form_key, key) end)
     |> Enum.reduce(
       %{},
       fn {key, value}, acc ->
-        [_, event, guest] = Regex.run(form_key, key)
-
-        answer =
-          if value == "yes" do
-            :yes
-          else
-            :no
-          end
-
-        answers = [{event, answer} | Map.get(acc, guest, [])]
-        Map.put(acc, guest, answers)
+        {event, answer, guest_id} = parse_key(key, value, form_key)
+        answers = [{event, answer} | Map.get(acc, guest_id, [])]
+        Map.put(acc, guest_id, answers)
       end
     )
     |> Enum.each(fn {guest_id, answers} ->
@@ -71,8 +61,19 @@ defmodule AppWeb.RSVPController do
       MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events})
     end)
 
-    put_flash(conn, :info, "Updated RSVP")
+    conn
+    |> put_flash(:info, "Updated RSVP")
     |> redirect(to: ~p"/rsvp/1")
+  end
+
+  defp parse_key(key, value, form_key) do
+    [_, event, guest_id] = Regex.run(form_key, key)
+
+    if value == "yes" do
+      {event, :yes, guest_id}
+    else
+      {event, :no, guest_id}
+    end
   end
 
   defp parse_answers(answers) do

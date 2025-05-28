@@ -19,16 +19,18 @@
 <ul class="list-disc list-inside space-y-2 mb-8">
   <%= for guest <- @invitation.guests do %>
     <li>
-      {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i> <.link
+      {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
+      <.link
         class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
         href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/#{@guest_id}"]}"}
-      >edit information</.link>)
+      >
+        edit information
+      </.link>)
     </li>
   <% end %>
 </ul>
 
 <.form for={%{}} action={~p"/rsvp"} method="put">
-  <%!--<input type="hidden" name="csrf_token" value={Plug.Conn.get_session(@conn, :csrf_token)} />--%>
   <input type="hidden" value={@invitation.id} name="invitation_id" />
   <.response
     :if={:wedding in @invitation.events}
@@ -36,7 +38,8 @@
     guests={@invitation.guests}
     name="wedding"
   >
-    <.cocktail_event />
+    <!-- Hide cocktail event for now -->
+    <!--<.cocktail_event /> -->
     <.reception_event />
     <.ceremony_event />
   </.response>
@@ -57,5 +60,5 @@
     <.brunch_event />
   </.response>
 
-  <.button class="btn-action" type="submit">Submit answers</.button>
+  <.button class="btn-action" type="submit">Submit RSVP</.button>
 </.form>

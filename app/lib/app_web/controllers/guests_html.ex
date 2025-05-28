@@ -25,7 +25,6 @@ defmodule AppWeb.GuestsHTML do
   end
 
   attr :action, :string, required: false, doc: "action path for forms", default: ""
-  attr :go_back_href, :string, required: false, default: nil, doc: "href for the Go Back button"
 
   attr :submit_action, :string,
     required: false,

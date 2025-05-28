@@ -27,11 +27,9 @@ defmodule AppWeb.GuestManageLive do
     >
       <:col :let={guest} label="Guest">{guest.first_name} {guest.last_name}</:col>
       <:col :let={guest} label="Email">{guest.email}</:col>
-      <:col :let={guest} label="Rehersal dinner">
-        <.check_icon checked={guest.rehersal_dinner} />
+      <:col :let={guest} label="Sent Save the Date">
+        <.check_icon checked={guest.sent_std} />
       </:col>
-      <:col :let={guest} label="Brunch"><.check_icon checked={guest.brunch} /></:col>
-      <:col :let={guest} label="Sent Save the Date"><.check_icon checked={guest.sent_std} /></:col>
       <:col :let={guest} label="Links">
         <.link
           class="text-blue-500 hover:underline hover:text-blue-600 text-sm"

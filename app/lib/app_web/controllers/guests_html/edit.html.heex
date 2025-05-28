@@ -2,11 +2,7 @@
   Detail view
 </h1>
 
-<.guest_form
-  go_back_href={@redirect}
-  changeset={@changeset}
-  action={~p"/guest/#{@guest}?#{[redirect: @redirect]}"}
->
+<.guest_form changeset={@changeset} action={~p"/guest/#{@guest}?#{[redirect: @redirect]}"}>
   <:actions>
     <.button class="btn-action">
       Update

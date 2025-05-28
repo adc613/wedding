@@ -10,8 +10,12 @@ defmodule App.Guest.Guest do
     # Important to note this is not a password, and should not be used for anything
     # that needs to be remotely secure. It's only to prevent users from making
     # uninteional changes
+    # TODO: Clean up secret field. Ended up using email address as the key to
+    # guest lookup
     field :secret, :string
+    # TODO: Clean up, invites should be looked up through the guest's invitation
     field :rehersal_dinner, :boolean, default: false
+    # TODO: Clean up, invites should be looked up through the guest's invitation
     field :brunch, :boolean, default: false
     field :sent_std, :boolean, default: false
     field :email, :string
@@ -41,10 +45,6 @@ defmodule App.Guest.Guest do
     |> validate_length(:last_name, min: 3)
     |> assoc_constraint(:invitation)
   end
-
-  # def changeset_assoc(guest, attrs \\ %{}) do
-  # guest
-  # end
 
   @doc """
   Returns a changeset for doing a %Guest{} lookup in the database. Not meant
