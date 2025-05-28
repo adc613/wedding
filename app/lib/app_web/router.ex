@@ -79,13 +79,13 @@ defmodule AppWeb.Router do
       # Disable user registration to prevent any one from registering an account.
       # All account are registered by seeding the database.
       # NOTE: Some test will fail without this line. I'm too lazy to fix them.
-      live "/users/register", UserRegistrationLive, :new
+      # live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
 
-    post "/users/log_in", UserSessionController, :create
+    # post "/users/log_in", UserSessionController, :create
   end
 
   scope "/admin", AppWeb do
