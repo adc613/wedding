@@ -4,7 +4,7 @@ defmodule App.Repo.Migrations.CreateRsvps do
   def change do
     create table(:rsvps) do
       add :confirmed, :boolean, default: false, null: false
-      add :guest_id, references(:guests, on_delete: :delete_all)
+      add :guest_id, references(:guests, on_delete: :nothing)
 
       timestamps(type: :utc_datetime)
     end

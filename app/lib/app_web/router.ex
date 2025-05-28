@@ -13,6 +13,10 @@ defmodule AppWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :admin_layout do
+    plug :put_layout, html: {AppWeb.Layouts, :admin}
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -23,21 +27,24 @@ defmodule AppWeb.Router do
     get "/", PageController, :home
     get "/story", PageController, :story
     get "/photos", PageController, :photos
-    get "/rsvp", PageController, :rsvp
     get "/travel", PageController, :travel
     get "/things", PageController, :things_to_do
     get "/registry", PageController, :registry
+  end
 
-    scope "/guest/:guests_id" do
-      get "/rsvp", RSVPController, :rsvp
-      post "/rsvp", RSVPController, :rsvp_update
-    end
+  scope "/rsvp", AppWeb do
+    pipe_through :browser
+
+    get "/", RSVPController, :rsvp
+    get "/lookup", RSVPController, :find_rsvp
+    get "/:guest_id", RSVPController, :find_rsvp
+    put "/", RSVPController, :update_rsvp
   end
 
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/guest_old", GuestsController
+    resources "/guest", GuestsController
   end
 
   # Other scopes may use custom stacks.
@@ -71,13 +78,23 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :redirect_if_user_is_authenticated}] do
       # Disable user registration to prevent any one from registering an account.
       # All account are registered by seeding the database.
+      # NOTE: Some test will fail without this line. I'm too lazy to fix them.
       # live "/users/register", UserRegistrationLive, :new
       live "/users/log_in", UserLoginLive, :new
       live "/users/reset_password", UserForgotPasswordLive, :new
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
 
-    post "/users/log_in", UserSessionController, :create
+    # post "/users/log_in", UserSessionController, :create
+  end
+
+  scope "/admin", AppWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin_layout]
+
+    live_session :require_authenticated_admin,
+      on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
+      live "/guest", GuestManageLive
+    end
   end
 
   scope "/", AppWeb do
@@ -87,7 +104,6 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/guest", GuestManageLive
     end
   end
 

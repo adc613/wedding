@@ -83,8 +83,6 @@ defmodule App.Accounts.UserNotifier do
   def deliver_save_the_date(guest) do
     deliver(guest.email, "[Helen & Adam Wedding] Save the Date 2026-04-04", """
 
-    ==============================
-
     Hi #{guest.first_name},
 
     We've got a venue. Save the date. 
@@ -94,8 +92,6 @@ defmodule App.Accounts.UserNotifier do
     Hope to see you on 2026.04.04,
 
     Helen & Adam
-
-    ==============================
     """)
   end
 end

@@ -227,7 +227,7 @@ defmodule AppWeb.CoreComponents do
   def simple_form(assigns) do
     ~H"""
     <.form :let={f} for={@for} as={@as} {@rest}>
-      <div class="mt-10 space-y-8 bg-white">
+      <div class="mt-10 space-y-8">
         {render_slot(@inner_block, f)}
         <div :for={action <- @actions} class="mt-2 flex items-center justify-between gap-6">
           {render_slot(action, f)}
@@ -522,7 +522,7 @@ defmodule AppWeb.CoreComponents do
         >
           <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
             <td :if={@selected}>
-              <div class="block py-4 pr-6">
+              <div class="block py-1 pr-1">
                 <input
                   type="checkbox"
                   checked={@selected[row.id]}
@@ -535,7 +535,7 @@ defmodule AppWeb.CoreComponents do
               phx-click={@row_click && @row_click.(row)}
               class={["relative p-0", @row_click && "hover:cursor-pointer"]}
             >
-              <div class="block py-4 pr-6">
+              <div class="block py-1 pr-1">
                 <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
                 <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
                   {render_slot(col, @row_item.(row))}

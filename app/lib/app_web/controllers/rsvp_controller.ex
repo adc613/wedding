@@ -5,47 +5,83 @@ defmodule AppWeb.RSVPController do
   alias App.MyGuest
   alias App.Guest.Guest
 
-  def rsvp(conn, %{"guests_id" => guests_id, "secret" => secret}) do
-    guest = MyGuest.get_guest(guests_id)
+  def rsvp(conn, _params) do
+    changeset = Guest.lookup_changeset(%Guest{})
+    render(conn, :lookup, changeset: changeset, guests: [])
+  end
 
-    guest =
-      case guest do
-        nil ->
-          :not_found
+  def find_rsvp(conn, %{"guest" => %{"email" => email}}) do
+    email = String.trim(email)
 
-        %{secret: nil} ->
-          MyGuest.update!(guest, %{"secret" => secret})
+    case Guest.apply_lookup(%Guest{}, %{"email" => email}) do
+      {:error, changeset} ->
+        render(conn, :lookup, changeset: changeset, guests: [])
 
-        guest ->
-          guest
-      end
+      {:ok, _changeset} ->
+        MyGuest.get_guest(email: email)
+        |> case do
+          %Guest{} = guest ->
+            redirect(conn, to: ~p"/rsvp/#{guest}")
 
-    case guest do
-      :not_found ->
-        render_not_found(conn)
-
-      %{secret: ^secret} ->
-        changeset = RSVP.changeset(%RSVP{})
-        render(conn, :rsvp, guest: guest, changeset: changeset)
-
-      _guest_with_incorrect_secret ->
-        render_forbidden(conn)
+          _ ->
+            render(conn, :no_invitation, email: email)
+        end
     end
   end
 
-  def rsvp(conn, %{"guests_id" => guests_id}) do
-    rsvp(conn, %{"guests_id" => guests_id, "secret" => Guest.gen_secret()})
+  def find_rsvp(conn, %{"guest_id" => guest_id}) do
+    case MyGuest.get_invitation(guest_id: guest_id, preload: :guests) do
+      nil ->
+        render(conn, :no_invitation, email: nil)
+
+      invitation ->
+        changeset = RSVP.changeset(%RSVP{})
+
+        put_flash(conn, :info, "Found invitation")
+        |> render(:rsvp, invitation: invitation, changeset: changeset, guest_id: guest_id)
+    end
   end
 
-  def rsvp_update(conn, %{"guests_id" => guests_id, "rsvp" => rsvp_params}) do
-    MyGuest.get_or_create_rsvp!(guests_id)
-    |> MyGuest.update(rsvp_params)
+  def update_rsvp(conn, params) do
+    _invitation = MyGuest.get_invitation(params["invitation_id"], preload: :guests)
+    form_key = ~r/^(wedding|brunch|rehersal)-(\d+)$/
 
-    put_flash(conn, :info, "Received RSVP")
-    |> redirect(to: ~p"/guest/#{guests_id}/rsvp")
+    params
+    |> Enum.filter(fn {key, _value} -> Regex.match?(form_key, key) end)
+    |> Enum.reduce(
+      %{},
+      fn {key, value}, acc ->
+        {event, answer, guest_id} = parse_key(key, value, form_key)
+        answers = [{event, answer} | Map.get(acc, guest_id, [])]
+        Map.put(acc, guest_id, answers)
+      end
+    )
+    |> Enum.each(fn {guest_id, answers} ->
+      {events, declined_events} = parse_answers(answers)
+      MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events})
+    end)
+
+    conn
+    |> put_flash(:info, "Updated RSVP")
+    |> redirect(to: ~p"/rsvp/1")
   end
 
-  defp render_forbidden(conn) do
-    render_not_found(conn)
+  defp parse_key(key, value, form_key) do
+    [_, event, guest_id] = Regex.run(form_key, key)
+
+    if value == "yes" do
+      {event, :yes, guest_id}
+    else
+      {event, :no, guest_id}
+    end
+  end
+
+  defp parse_answers(answers) do
+    Enum.reduce(answers, {[], []}, fn answer, {events, declined_events} ->
+      case answer do
+        {event, :yes} -> {[event | events], declined_events}
+        {event, :no} -> {events, [event | declined_events]}
+      end
+    end)
   end
 end
