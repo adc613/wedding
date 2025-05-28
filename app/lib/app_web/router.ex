@@ -85,7 +85,7 @@ defmodule AppWeb.Router do
       live "/users/reset_password/:token", UserResetPasswordLive, :edit
     end
 
-    # post "/users/log_in", UserSessionController, :create
+    post "/users/log_in", UserSessionController, :create
   end
 
   scope "/admin", AppWeb do

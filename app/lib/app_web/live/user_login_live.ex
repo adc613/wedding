@@ -7,11 +7,7 @@ defmodule AppWeb.UserLoginLive do
       <.header class="text-center">
         Log in to account
         <:subtitle>
-          Don't have an account?
-          <.link navigate={~p"/users/register"} class="font-semibold text-brand hover:underline">
-            Sign up
-          </.link>
-          for an account now.
+          Don't have an account? <b>Reach out to Adam to ceate one</b> for an account now.
         </:subtitle>
       </.header>
 
