@@ -21,7 +21,7 @@
     <li>
       {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i> <.link
         class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
-        href={~p"/guest_old/#{guest}/edit?#{[redirect: ~p"/rsvp/#{@guest_id}"]}"}
+        href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/#{@guest_id}"]}"}
       >edit information</.link>)
     </li>
   <% end %>

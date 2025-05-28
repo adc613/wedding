@@ -13,6 +13,10 @@ defmodule AppWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :admin_layout do
+    plug :put_layout, html: {AppWeb.Layouts, :admin}
+  end
+
   pipeline :api do
     plug :accepts, ["json"]
   end
@@ -40,7 +44,7 @@ defmodule AppWeb.Router do
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
-    resources "/guest_old", GuestsController
+    resources "/guest", GuestsController
   end
 
   # Other scopes may use custom stacks.
@@ -84,6 +88,15 @@ defmodule AppWeb.Router do
     post "/users/log_in", UserSessionController, :create
   end
 
+  scope "/admin", AppWeb do
+    pipe_through [:browser, :require_authenticated_user, :admin_layout]
+
+    live_session :require_authenticated_admin,
+      on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
+      live "/guest", GuestManageLive
+    end
+  end
+
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
@@ -91,7 +104,6 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
       live "/users/settings", UserSettingsLive, :edit
       live "/users/settings/confirm_email/:token", UserSettingsLive, :confirm_email
-      live "/guest", GuestManageLive
     end
   end
 

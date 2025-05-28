@@ -1,4 +1,6 @@
 defmodule AppWeb.GuestManageLive do
+  alias App.Guest
+  alias App.Guest
   alias App.Guest.Guest
   alias App.MyGuest
   use AppWeb, :live_view
@@ -11,13 +13,8 @@ defmodule AppWeb.GuestManageLive do
       <:subtitle>Manage guest</:subtitle>
     </.header>
 
-    <.button :if={not @show_form} phx-click="toggle_form">Add guest</.button>
-    <.button :if={@show_form} phx-click="toggle_form">Hide form</.button>
-    <div :if={@show_form}>
-      <.guest_form changeset={@changeset} />
-    </div>
-
-    <.button phx-click="delete_selected">Delete selected</.button>
+    <.button phx-click={show_modal("add-guest-modal")}>Add guest</.button>
+    <.button phx-click={show_modal("confirm-delete")}>Delete selected</.button>
     <.button phx-click="send_std">Send Save the Dates</.button>
 
     <.table
@@ -35,12 +32,47 @@ defmodule AppWeb.GuestManageLive do
       </:col>
       <:col :let={guest} label="Brunch"><.check_icon checked={guest.brunch} /></:col>
       <:col :let={guest} label="Sent Save the Date"><.check_icon checked={guest.sent_std} /></:col>
-      <:col :let={guest} label="Detail">
-        <.link href={~p"/guest_old/#{guest}"}>
-          <.button>Details</.button>
+      <:col :let={guest} label="Links">
+        <.link
+          class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
+          href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/guest"]}"}
+        >
+          Edit
         </.link>
       </:col>
     </.table>
+
+    <.modal id="add-guest-modal">
+      <.guest_form
+        :if={changeset = @changeset.ok? && @changeset.result}
+        changeset={changeset}
+        submit_action="guest_submit"
+      >
+        <:actions>
+          <.button class="btn-action" phx-click={hide_modal("add-guest-modal")}>
+            Add
+          </.button>
+        </:actions>
+      </.guest_form>
+    </.modal>
+
+    <.modal id="confirm-delete">
+      <.header class="mb-4">Are you sure you'd like to Delete Guest</.header>
+      <ul :if={@guests.ok?} class="list-disc ml-4 mb-8">
+        <%= for guest <- @guests.result do %>
+          <li :if={@selected[guest.id]}>{guest.first_name} {guest.last_name}</li>
+        <% end %>
+      </ul>
+      <.button
+        class="btn-action"
+        phx-click={JS.push("delete_selected") |> hide_modal("confirm-delete")}
+      >
+        Delete
+      </.button>
+      <.button phx-click={hide_modal("confirm-delete")}>
+        Cancel
+      </.button>
+    </.modal>
     """
   end
 
@@ -50,9 +82,19 @@ defmodule AppWeb.GuestManageLive do
       socket
       |> assign(:hello, "world")
       |> assign(:selected, %{})
-      |> assign(:changeset, Guest.changeset(%Guest{}))
-      |> assign(:show_form, false)
-      |> assign_async(:guests, fn -> {:ok, %{guests: MyGuest.list_guests()}} end)
+      |> assign_async([:guests, :changeset], fn ->
+        {:ok,
+         %{
+           guests: MyGuest.list_guests(),
+           changeset:
+             Guest.changeset(%Guest{
+               first_name: "Test",
+               last_name: "User",
+               email: "adc613@gmail.com"
+             })
+         }}
+      end),
+      layout: {AppWeb.Layouts, :admin}
     }
   end
 
@@ -102,22 +144,23 @@ defmodule AppWeb.GuestManageLive do
     }
   end
 
-  def handle_event("toggle_form", _value, socket) do
-    {
-      :noreply,
-      socket
-      |> update(:show_form, &(not &1))
-    }
-  end
-
   def handle_event("guest_submit", %{"guest" => guest_params}, socket) do
     {
       :noreply,
       socket
-      |> assign_async(:guests, fn ->
+      |> assign_async([:guests, :changeset], fn ->
         case MyGuest.create_guest(guest_params) do
           {:ok, _} ->
-            {:ok, %{guests: MyGuest.list_guests()}}
+            {:ok,
+             %{
+               guests: MyGuest.list_guests(),
+               changeset:
+                 Guest.changeset(%Guest{
+                   first_name: "",
+                   last_name: "",
+                   email: ""
+                 })
+             }}
 
           {:error, _} ->
             {:ok, %{}}

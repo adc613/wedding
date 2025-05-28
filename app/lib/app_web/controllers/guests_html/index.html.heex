@@ -10,14 +10,14 @@
   <:col :let={guest} label="Name">{guest.first_name} {guest.last_name}</:col>
   <:col :let={guest} label="">
     <.button>
-      <.link href={~p"/guest_old/#{guest}/edit"}>
+      <.link href={~p"/guest/#{guest}/edit"}>
         Edit
       </.link>
     </.button>
   </:col>
   <:col :let={guest} label="">
     <.button>
-      <.link href={~p"/guest_old/#{guest}"} method="delete" data-confirm="Are you sure?">
+      <.link href={~p"/guest/#{guest}"} method="delete" data-confirm="Are you sure?">
         Delete
       </.link>
     </.button>
@@ -25,7 +25,7 @@
   <:col :let={guest}>
     <.status rsvp={guest.rsvp} />
     <.button>
-      <.link href={~p"/guest_old/#{guest}/rsvp"}>
+      <.link href={~p"/guest/#{guest}/rsvp"}>
         RSVP
       </.link>
     </.button>
