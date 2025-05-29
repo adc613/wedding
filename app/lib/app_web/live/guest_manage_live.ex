@@ -149,25 +149,6 @@ defmodule AppWeb.GuestManageLive do
     }
   end
 
-  def handle_event("send_std", _value, socket) do
-    selected = socket.assigns.selected
-
-    {
-      :noreply,
-      socket
-      |> assign(:selected, %{})
-      |> assign_async(:guests, fn ->
-        selected
-        |> Map.to_list()
-        |> Enum.filter(fn {_key, value} -> value end)
-        |> Enum.map(fn {key, _value} -> MyGuest.get_guest!(key) end)
-        |> Enum.map(&MyGuest.send_std(&1))
-
-        {:ok, %{guests: MyGuest.list_guests()}}
-      end)
-    }
-  end
-
   def handle_event("delete_selected", _value, socket) do
     selected = socket.assigns.selected
 
