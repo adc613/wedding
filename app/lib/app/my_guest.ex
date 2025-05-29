@@ -141,6 +141,12 @@ defmodule App.MyGuest do
     end
   end
 
+  def mark_sent!(%Guest{} = guest) do
+    guest
+    |> Guest.changeset(%{sent_std: true})
+    |> Repo.update!()
+  end
+
   defp apply_preloads(element, keywords) do
     keywords
     |> Enum.map(fn keyword ->

@@ -53,4 +53,24 @@ defmodule AppWeb.GuestsHTML do
     </.simple_form>
     """
   end
+
+  attr :guests, :any, required: true, doc: "Guest who's emails need to be listed"
+  attr :selected, :any, required: true, doc: "Map of selected guest"
+
+  def guest_emails(assigns) do
+    ~H"""
+    <div>
+      {get_emails(@guests, @selected)}
+    </div>
+    """
+  end
+
+  defp get_emails(guests, selected) do
+    guests
+    |> Enum.filter(&selected[&1.id])
+    |> Enum.map(fn guest ->
+      guest.email
+    end)
+    |> Enum.join(",")
+  end
 end
