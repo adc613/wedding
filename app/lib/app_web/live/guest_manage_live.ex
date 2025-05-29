@@ -15,7 +15,7 @@ defmodule AppWeb.GuestManageLive do
 
     <.button phx-click={show_modal("add-guest-modal")}>Add guest</.button>
     <.button phx-click={show_modal("confirm-delete")}>Delete selected</.button>
-    <.button phx-click="send_std">Send Save the Dates</.button>
+    <.button phx-click={show_modal("std-modal")}>Send Save the Dates</.button>
 
     <.table
       :if={guests = @guests.ok? && @guests.result}
@@ -71,6 +71,40 @@ defmodule AppWeb.GuestManageLive do
         Cancel
       </.button>
     </.modal>
+
+    <.modal id="std-modal">
+      <.header class="mb-4">Send save the dates to:</.header>
+      <ul :if={@guests.ok?} class="list-disc ml-4 mb-8">
+        <%= for guest <- @guests.result do %>
+          <li :if={@selected[guest.id]}>{guest.first_name} {guest.last_name}</li>
+        <% end %>
+      </ul>
+      <h2 class="text-lg mb-4 mt-8  font-semibold leading-8 text-zinc-800">
+        Recipients
+      </h2>
+      <p class="mb-8">
+        <.guest_emails :if={@guests.ok?} guests={@guests.result} selected={@selected} />
+      </p>
+      <h2 class="text-lg mb-4 mt-8 font-semibold leading-8 text-zinc-800">
+        Subject
+      </h2>
+      <p>[Helen & Adam Wedding] Save the Date 2026-04-04</p>
+      <h2 class="text-lg mb-4 mt-8 font-semibold leading-8 text-zinc-800">
+        Body
+      </h2>
+      <p class="max-w-2xl mb-4">
+        Hi, <br /> <br /> We've got a venue. Save the date. <br /> <br />
+        <a href="http://wedding.adamcollins.io">http://wedding.adamcollins.io</a> <br /> <br />
+        Hope to see you on 2026.04.04, <br /> <br /> Helen & Adam <br />
+      </p>
+      <.button class="btn-action" phx-click={JS.push("mark_sent") |> hide_modal("std-modal")}>
+        Mark Sent
+      </.button>
+
+      <.button phx-click={hide_modal("std-modal")}>
+        Cancel
+      </.button>
+    </.modal>
     """
   end
 
@@ -93,6 +127,25 @@ defmodule AppWeb.GuestManageLive do
          }}
       end),
       layout: {AppWeb.Layouts, :admin}
+    }
+  end
+
+  def handle_event("mark_sent", _value, socket) do
+    selected = socket.assigns.selected
+
+    {
+      :noreply,
+      socket
+      |> assign(:selected, %{})
+      |> assign_async(:guests, fn ->
+        selected
+        |> Map.to_list()
+        |> Enum.filter(fn {_key, value} -> value end)
+        |> Enum.map(fn {key, _value} -> MyGuest.get_guest!(key) end)
+        |> Enum.map(&MyGuest.mark_sent!(&1))
+
+        {:ok, %{guests: MyGuest.list_guests()}}
+      end)
     }
   end
 
