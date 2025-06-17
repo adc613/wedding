@@ -17,28 +17,13 @@ defmodule AppWeb.GuestManageLive do
     <.button phx-click={show_modal("confirm-delete")}>Delete selected</.button>
     <.button phx-click={show_modal("std-modal")}>Send Save the Dates</.button>
 
-    <.table
+    <.guests_table
       :if={guests = @guests.ok? && @guests.result}
-      id="guests"
-      rows={guests}
+      guests={guests}
       selected={@selected}
       row_click={fn guest -> toggle_guest(guest) end}
       checkbox_click={fn guest -> toggle_guest(guest) end}
-    >
-      <:col :let={guest} label="Guest">{guest.first_name} {guest.last_name}</:col>
-      <:col :let={guest} label="Email">{guest.email}</:col>
-      <:col :let={guest} label="Sent Save the Date">
-        <.check_icon checked={guest.sent_std} />
-      </:col>
-      <:col :let={guest} label="Links">
-        <.link
-          class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
-          href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/guest"]}"}
-        >
-          Edit
-        </.link>
-      </:col>
-    </.table>
+    />
 
     <.modal id="add-guest-modal">
       <.guest_form

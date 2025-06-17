@@ -94,6 +94,7 @@ defmodule AppWeb.Router do
     live_session :require_authenticated_admin,
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
       live "/guest", GuestManageLive
+      live "/invitation", InvitationManageLive
     end
   end
 
