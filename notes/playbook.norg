@@ -4,20 +4,34 @@ description:
 authors: adam
 categories: 
 created: 2025-04-30T07:48:39-0600
-updated: 2025-05-03T08:06:28-0600
+updated: 2025-06-17T09:26:16-0600
 version: 1.1.1
 @end
 
 * Manual
 ** Generating certs
 
+   Run this line of code on the server
+
+   @code sh
+   docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
+   @end
+
+** Renewing certs
+
    Run this line of code on the server (/Note: you'll likely need to kill the
    website for a minute to refresh certs/)
 
    @code sh
-   cd <project_root_dir>
-   source secret.env
-   docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certonly -d wedding.adamcollins.io --standalone -m adc613@gmail.com --agree-tos
+   docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot renew
+   @end
+
+** Checking cert details
+
+   Run this line of code on the server
+
+   @code sh
+   docker run --rm -p 80:80 -p 443:443 -v /etc/letsencrypt:/etc/letsencrypt certbot/certbot certificates
    @end
 
 ** Running docker container
@@ -32,6 +46,6 @@ version: 1.1.1
    docker build . -t phx
    @end
 
-* (-) Ansible playbooks
+* (x) Ansible playbooks
 
   See {http://github.com/adc613/ansible}[git repo]
