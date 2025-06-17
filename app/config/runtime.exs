@@ -62,8 +62,11 @@ if config_env() == :prod do
     https: [
       port: 443,
       cipher_suite: :strong,
-      keyfile: "/etc/letsencrypt/live/wedding.adamcollins.io/privkey.pem",
-      certfile: "/etc/letsencrypt/live/wedding.adamcollins.io/fullchain.pem"
+      # Migrating to 0001, I think I got myself into an odd state during the
+      # certificate set up process. It's easier to point to 0001 then to redo the
+      # cert setups
+      keyfile: "/etc/letsencrypt/live/wedding.adamcollins.io-0001/privkey.pem",
+      certfile: "/etc/letsencrypt/live/wedding.adamcollins.io-0001/fullchain.pem"
     ],
     secret_key_base: secret_key_base
 
