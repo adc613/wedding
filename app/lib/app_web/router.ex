@@ -25,6 +25,7 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", PageController, :home
+    get "/std", PageController, :std
     get "/story", PageController, :story
     get "/photos", PageController, :photos
     get "/travel", PageController, :travel

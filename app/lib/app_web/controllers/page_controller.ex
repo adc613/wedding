@@ -2,7 +2,22 @@ defmodule AppWeb.PageController do
   use AppWeb, :controller
 
   def home(conn, _params) do
-    render(conn, :home)
+    image =
+      Enum.random([
+        "italy_rooftop.jpg",
+        "shared_sausage.jpg",
+        "ski_beard.jpg",
+        "swing.jpg",
+        "thrones.jpg",
+        "boat_party.jpg",
+        "gingerbread.jpg"
+      ])
+
+    render(conn, :home, %{image: image})
+  end
+
+  def std(conn, _params) do
+    render(conn, :std)
   end
 
   def story(conn, _params) do
