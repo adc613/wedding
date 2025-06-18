@@ -7,6 +7,19 @@
     <.live_title default="Helen & Adam">
       {assigns[:page_title]}
     </.live_title>
+    <meta
+      property="og:title"
+      content={
+        if assigns[:page_title] do
+          assigns[:page_title]
+        else
+          "Helen & Adam"
+        end
+      }
+    />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="/images/img1.jpg" />
+    <meta property="og:url" content={"https://wedding.adamcollins.io" <> @conn.request_path} />
     <link rel="apple-touch-icon" sizes="180x180" href={~p"/assets/icons/apple-touch-icon.png"} />
     <link rel="icon" type="image/png" sizes="32x32" href={~p"/assets/icons/favicon-32x32.png"} />
     <link rel="icon" type="image/png" sizes="16x16" href={~p"/assets/icons/favicon-16x16.png"} />

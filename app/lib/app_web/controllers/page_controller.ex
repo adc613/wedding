@@ -17,7 +17,7 @@ defmodule AppWeb.PageController do
   end
 
   def std(conn, _params) do
-    render(conn, :std)
+    render(conn, :std, %{page_title: "Save the Date"})
   end
 
   def story(conn, _params) do
