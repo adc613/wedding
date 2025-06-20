@@ -137,12 +137,24 @@ defmodule App.MyGuestTest do
     assert %{first_name: "Helen"} = guest
   end
 
-  test "delete()" do
+  test "delete() guest" do
     1..3
     |> Enum.map(&MyGuest.get_guest!(&1, preload: :rsvp))
     |> Enum.map(&MyGuest.delete(&1))
 
     assert MyGuest.list_guests() == []
+  end
+
+  test "delete() invitation" do
+    assert length(MyGuest.list_invitations()) == 0
+
+    g1 = MyGuest.get_guest!(1, preload: :rsvp)
+    :ok = MyGuest.create_invitation(guests: [g1], events: [:wedding, :rehersal])
+
+    invitation = MyGuest.get_invitation(1)
+    MyGuest.delete(invitation)
+
+    assert length(MyGuest.list_invitations()) == 0
   end
 
   test "get_or_create_rsvp()" do

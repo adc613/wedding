@@ -65,6 +65,38 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
+  attr :guests, :any, required: true, doc: "List of guests"
+  attr :selected, :any, required: true, doc: "Map of selected guest"
+  attr :row_click, :fun, required: false, doc: "The function that's called on row click"
+
+  attr :checkbox_click, :fun, doc: "The function that's called on checkbox click"
+
+  def guests_table(assigns) do
+    ~H"""
+    <.table
+      id="guests"
+      rows={@guests}
+      selected={@selected}
+      row_click={@row_click}
+      checkbox_click={@checkbox_click}
+    >
+      <:col :let={guest} label="Guest">{guest.first_name} {guest.last_name}</:col>
+      <:col :let={guest} label="Email">{guest.email}</:col>
+      <:col :let={guest} label="Sent Save the Date">
+        <.check_icon checked={guest.sent_std} />
+      </:col>
+      <:col :let={guest} label="Links">
+        <.link
+          class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
+          href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/guest"]}"}
+        >
+          Edit
+        </.link>
+      </:col>
+    </.table>
+    """
+  end
+
   defp get_emails(guests, selected) do
     guests
     |> Enum.filter(&selected[&1.id])
