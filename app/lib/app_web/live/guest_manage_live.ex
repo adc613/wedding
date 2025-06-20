@@ -26,14 +26,20 @@ defmodule AppWeb.GuestManageLive do
     />
 
     <.modal id="add-guest-modal">
+      <.flash :if={@new_guest != nil and @new_guest.ok?} kind={:info}>
+        Successfully created {@new_guest.result.first_name} {@new_guest.result.last_name}
+      </.flash>
       <.guest_form
         :if={changeset = @changeset.ok? && @changeset.result}
         changeset={changeset}
         submit_action="guest_submit"
       >
         <:actions>
-          <.button class="btn-action" phx-click={hide_modal("add-guest-modal")}>
+          <.button class="btn-action">
             Add
+          </.button>
+          <.button type="reset" phx-click={hide_modal("add-guest-modal")}>
+            Close
           </.button>
         </:actions>
       </.guest_form>
@@ -97,7 +103,7 @@ defmodule AppWeb.GuestManageLive do
     {
       :ok,
       socket
-      |> assign(:hello, "world")
+      |> assign(:new_guest, nil)
       |> assign(:selected, %{})
       |> assign_async([:guests, :changeset], fn ->
         {:ok,
@@ -105,9 +111,9 @@ defmodule AppWeb.GuestManageLive do
            guests: MyGuest.list_guests(),
            changeset:
              Guest.changeset(%Guest{
-               first_name: "Test",
-               last_name: "User",
-               email: "adc613@gmail.com"
+               first_name: "",
+               last_name: "",
+               email: ""
              })
          }}
       end),
@@ -165,18 +171,19 @@ defmodule AppWeb.GuestManageLive do
     {
       :noreply,
       socket
-      |> assign_async([:guests, :changeset], fn ->
+      |> assign_async([:guests, :changeset, :new_guest], fn ->
         case MyGuest.create_guest(guest_params) do
-          {:ok, _} ->
+          {:ok, guest} ->
             {:ok,
              %{
                guests: MyGuest.list_guests(),
                changeset:
                  Guest.changeset(%Guest{
-                   first_name: "",
+                   first_name: "Placeholder",
                    last_name: "",
                    email: ""
-                 })
+                 }),
+               new_guest: guest
              }}
 
           {:error, _} ->

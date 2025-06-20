@@ -15,6 +15,19 @@ defmodule App.Guest.GuestTest do
     assert errors == %{}
   end
 
+  test "Do not require an email" do
+    errors =
+      %Guest{}
+      |> Guest.changeset(%{
+        "email" => "",
+        "first_name" => "Adam",
+        "last_name" => "Collins"
+      })
+      |> errors_on()
+
+    assert errors == %{}
+  end
+
   test "Require first name" do
     errors =
       %Guest{}

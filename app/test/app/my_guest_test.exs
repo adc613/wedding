@@ -31,6 +31,41 @@ defmodule App.MyGuestTest do
     :ok
   end
 
+  describe("create_guests()") do
+    test "with email" do
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "test@test.test",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456"
+        })
+
+      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
+
+      assert guest.first_name == "Adam"
+      assert guest.last_name == "Collins"
+      assert guest.secret == "123456"
+    end
+
+    test "supports no email addres" do
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456"
+        })
+
+      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
+
+      assert guest.first_name == "Adam"
+      assert guest.last_name == "Collins"
+      assert guest.secret == "123456"
+      assert guest.email == nil
+    end
+  end
+
   describe "get_guest()" do
     test "with email" do
       {:ok, guest} =
@@ -111,22 +146,6 @@ defmodule App.MyGuestTest do
     guests = 1..3 |> Enum.map(&MyGuest.get_guest!(&1, preload: :rsvp))
 
     assert list_guests == guests
-  end
-
-  test "create_guest()" do
-    {:ok, %{id: guest_id}} =
-      MyGuest.create_guest(%{
-        "email" => "test@test.test",
-        "first_name" => "Adam",
-        "last_name" => "Collins",
-        "secret" => "123456"
-      })
-
-    guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
-
-    assert guest.first_name == "Adam"
-    assert guest.last_name == "Collins"
-    assert guest.secret == "123456"
   end
 
   test "update()" do
