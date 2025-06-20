@@ -71,6 +71,17 @@ defmodule App.MyGuest do
     Repo.delete(guest)
   end
 
+  def delete(%Invitation{} = invitation) do
+    Repo.preload(invitation, :guests)
+    |> then(& &1.guests)
+    |> Enum.each(fn guest ->
+      Guest.changeset(guest, %{"invitation_id" => nil})
+      |> Repo.update()
+    end)
+
+    Repo.delete(invitation)
+  end
+
   def create_invitation(guests: guests, events: events) do
     {:ok, invitation} =
       %Invitation{}
