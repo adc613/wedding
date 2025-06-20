@@ -89,6 +89,7 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
+      <a href="sms:+18475626149&body=This is a test">Testing in production</a>
     </.modal>
     """
   end
