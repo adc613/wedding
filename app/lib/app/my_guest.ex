@@ -72,12 +72,14 @@ defmodule App.MyGuest do
   end
 
   def delete(%Invitation{} = invitation) do
+    # Note for future self and any observers. This is like much of this repo is a
+    # bunch of hacky code. If any individual update call fails we could get into
+    # an undesired state. At the end of the day, I don't care too much, because
+    # this website is only for me and if need be its very feasible for me to
+    # manually clean the data and/or resolve issues.
     Repo.preload(invitation, :guests)
     |> then(& &1.guests)
-    |> Enum.each(fn guest ->
-      Guest.changeset(guest, %{"invitation_id" => nil})
-      |> Repo.update()
-    end)
+    |> Enum.each(&App.MyGuest.update(&1, %{"invitation_id" => nil}))
 
     Repo.delete(invitation)
   end

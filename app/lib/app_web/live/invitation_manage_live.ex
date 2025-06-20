@@ -111,16 +111,12 @@ defmodule AppWeb.InvitationManageLive do
     {
       :ok,
       socket
-      |> assign(:selected, %{})
-      |> assign(:selected_guests, %{})
-      |> assign(:invite_form, to_form(%{"brunch" => false, "rehersal" => false}))
-      |> assign(:changeset, Invitation.changeset(%Invitation{}))
-      |> assign(:events, %{brunch: false, rehersal: false})
+      |> assign_initial_state()
       |> assign_async(:invitations, fn ->
         {:ok, %{invitations: MyGuest.list_invitations(preload: :guests)}}
       end)
       |> assign_async(:guests, fn ->
-        {:ok, %{guests: MyGuest.list_guests()}}
+        {:ok, %{guests: MyGuest.list_guests() |> Enum.filter(&(&1.invitation_id == nil))}}
       end),
       layout: {AppWeb.Layouts, :admin}
     }
@@ -156,36 +152,20 @@ defmodule AppWeb.InvitationManageLive do
 
     ids =
       Map.to_list(selected_guests)
-      |> Enum.filter(fn {_key, value} ->
-        value
-      end)
-      |> Enum.map(fn {key, _value} ->
-        key
-      end)
+      |> Enum.filter(fn {_key, value} -> value end)
+      |> Enum.map(fn {key, _value} -> key end)
 
     {
       :noreply,
       socket
+      |> assign_initial_state()
       |> assign_async([:invitations], fn ->
-        guests = ids |> Enum.map(&MyGuest.get_guest(&1))
+        guests = Enum.map(ids, &MyGuest.get_guest(&1))
+        events = Enum.filter([:brunch, :rehersal], &(events_map[&1] == "true"))
+        result = MyGuest.create_invitation(guests: guests, events: [:wedding | events])
+        refreshed_invites = MyGuest.list_invitations(preload: :guests)
 
-        events =
-          [
-            :brunch,
-            :rehersal
-          ]
-          |> Enum.filter(&(events_map[&1] == "true"))
-
-        result =
-          MyGuest.create_invitation(
-            guests: guests,
-            events: [:wedding | events]
-          )
-
-        {result,
-         %{
-           invitations: MyGuest.list_invitations(preload: :guests)
-         }}
+        {result, %{invitations: refreshed_invites}}
       end)
     }
   end
@@ -197,13 +177,12 @@ defmodule AppWeb.InvitationManageLive do
       :noreply,
       socket
       |> assign_async(:invitations, fn ->
-        selected
-        |> Map.keys()
+        Map.keys(selected)
         |> Enum.filter(&selected[&1])
         |> Enum.map(&MyGuest.get_invitation(&1))
         |> Enum.each(&MyGuest.delete(&1))
 
-        {:ok, %{invitations: MyGuest.list_invitations()}}
+        {:ok, %{invitations: MyGuest.list_invitations(preload: :guests)}}
       end)
     }
   end
@@ -214,12 +193,20 @@ defmodule AppWeb.InvitationManageLive do
   end
 
   defp toggle_guest(guest) do
-    %JS{}
-    |> JS.push("toggle_guest", value: %{id: guest.id})
+    JS.push(%JS{}, "toggle_guest", value: %{id: guest.id})
   end
 
   defp toggle(selected, id) do
-    new_value = not Map.get(selected, id, false)
-    Map.put(selected, id, new_value)
+    value = Map.get(selected, id, false)
+    Map.put(selected, id, not value)
+  end
+
+  defp assign_initial_state(socket) do
+    socket
+    |> assign(:selected, %{})
+    |> assign(:selected_guests, %{})
+    |> assign(:invite_form, to_form(%{"brunch" => false, "rehersal" => false}))
+    |> assign(:changeset, Invitation.changeset(%Invitation{}))
+    |> assign(:events, %{brunch: false, rehersal: false})
   end
 end
