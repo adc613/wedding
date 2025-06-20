@@ -72,11 +72,10 @@ defmodule App.MyGuest do
   end
 
   def delete(%Invitation{} = invitation) do
-    # Note for future self and any observers. This is like much of this repo is a
-    # bunch of hacky code. If any individual update call fails we could get into
-    # an undesired state. At the end of the day, I don't care too much, because
-    # this website is only for me and if need be its very feasible for me to
-    # manually clean the data and/or resolve issues.
+    # Note for future self and any observers. This is less than ideal. If any
+    # individual update call fails we could get into an undesired state. However,
+    # the Adam at the time of writing doesn't care. This website is small and for
+    # me and its feasible for me to manually clean the data and resolves issues.
     Repo.preload(invitation, :guests)
     |> then(& &1.guests)
     |> Enum.each(&App.MyGuest.update(&1, %{"invitation_id" => nil}))
