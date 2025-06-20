@@ -29,6 +29,7 @@ defmodule AppWeb.GuestManageLive do
       <.flash :if={@new_guest != nil and @new_guest.ok?} kind={:info}>
         Successfully created {@new_guest.result.first_name} {@new_guest.result.last_name}
       </.flash>
+      <.flash_group id="modal" flash={@flash} />
       <.guest_form
         :if={changeset = @changeset.ok? && @changeset.result}
         changeset={changeset}
@@ -95,6 +96,7 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
+      <a href="sms:+18475626149&body=This is a test">Testing in production</a>
     </.modal>
     """
   end
@@ -168,29 +170,51 @@ defmodule AppWeb.GuestManageLive do
   end
 
   def handle_event("guest_submit", %{"guest" => guest_params}, socket) do
-    {
-      :noreply,
-      socket
-      |> assign_async([:guests, :changeset, :new_guest], fn ->
-        case MyGuest.create_guest(guest_params) do
-          {:ok, guest} ->
-            {:ok,
-             %{
-               guests: MyGuest.list_guests(),
-               changeset:
-                 Guest.changeset(%Guest{
-                   first_name: "Placeholder",
-                   last_name: "",
-                   email: ""
-                 }),
-               new_guest: guest
-             }}
+    guests = socket.assigns.guests
 
-          {:error, _} ->
-            {:ok, %{}}
-        end
-      end)
-    }
+    guests =
+      if guests.ok? do
+        guests.result
+      else
+        []
+      end
+
+    has_duplicate =
+      Enum.any?(
+        guests,
+        &(&1.first_name == guest_params["first_name"] and
+            &1.last_name == guest_params["last_name"])
+      )
+
+    if not has_duplicate do
+      {
+        :noreply,
+        socket
+        |> assign_async([:guests, :changeset, :new_guest], fn ->
+          case MyGuest.create_guest(guest_params) do
+            {:ok, guest} ->
+              {:ok,
+               %{
+                 guests: MyGuest.list_guests(),
+                 changeset:
+                   Guest.changeset(%Guest{
+                     first_name: "Placeholder",
+                     last_name: "",
+                     email: ""
+                   }),
+                 new_guest: guest
+               }}
+
+            {:error, err} ->
+              IO.puts("Something happened")
+              IO.inspect(err)
+              {:error, %{}}
+          end
+        end)
+      }
+    else
+      {:noreply, socket |> put_flash(:error, "Duplicate guest")}
+    end
   end
 
   defp toggle_guest(guest) do
