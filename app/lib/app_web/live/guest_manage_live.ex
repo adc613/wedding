@@ -96,7 +96,10 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
-      <a href="sms:+18475626149&body=This is a test">Testing in production</a>
+      {# TODO: Change to user's phone number }
+      <a href={sms_message("+18475626149")}>
+        <.button>Open text</.button>
+      </a>
     </.modal>
     """
   end
@@ -225,5 +228,20 @@ defmodule AppWeb.GuestManageLive do
   defp toggle(selected, id) do
     new_value = not Map.get(selected, id, false)
     Map.put(selected, id, new_value)
+  end
+
+  defp sms_message(phone_number) do
+    message = """
+    https://wedding.adamcollins.io/std
+
+    We’re getting married on April 4th, 2026. Please save the date!
+
+    Note: We’ll share more details including any information about hotel blocks when we send out invites in the coming months. 
+
+    Can't wait to see you in Chicago,
+    Helen & Adam
+    """
+
+    "sms:#{phone_number}?body=#{URI.encode(message)}"
   end
 end
