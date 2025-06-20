@@ -41,7 +41,13 @@ defmodule AppWeb.GuestsHTML do
 
   def guest_form(assigns) do
     ~H"""
-    <.simple_form :let={f} for={@changeset} phx-submit={@submit_action} action={@action || ""}>
+    <.simple_form
+      :let={f}
+      id="guest-form"
+      for={@changeset}
+      phx-submit={@submit_action}
+      action={@action || ""}
+    >
       <.error :if={@changeset.action}>
         Oops, something went wrong! Please check the errors below.
       </.error>

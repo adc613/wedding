@@ -26,14 +26,21 @@ defmodule AppWeb.GuestManageLive do
     />
 
     <.modal id="add-guest-modal">
+      <.flash :if={@new_guest != nil and @new_guest.ok?} kind={:info}>
+        Successfully created {@new_guest.result.first_name} {@new_guest.result.last_name}
+      </.flash>
+      <.flash_group id="modal" flash={@flash} />
       <.guest_form
         :if={changeset = @changeset.ok? && @changeset.result}
         changeset={changeset}
         submit_action="guest_submit"
       >
         <:actions>
-          <.button class="btn-action" phx-click={hide_modal("add-guest-modal")}>
+          <.button class="btn-action">
             Add
+          </.button>
+          <.button type="reset" phx-click={hide_modal("add-guest-modal")}>
+            Close
           </.button>
         </:actions>
       </.guest_form>
@@ -89,7 +96,10 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
-      <a href="sms:+18475626149&body=This is a test">Testing in production</a>
+      {# TODO: Change to user's phone number }
+      <a href={sms_message("+18475626149")}>
+        <.button>Open text</.button>
+      </a>
     </.modal>
     """
   end
@@ -98,7 +108,7 @@ defmodule AppWeb.GuestManageLive do
     {
       :ok,
       socket
-      |> assign(:hello, "world")
+      |> assign(:new_guest, nil)
       |> assign(:selected, %{})
       |> assign_async([:guests, :changeset], fn ->
         {:ok,
@@ -106,9 +116,9 @@ defmodule AppWeb.GuestManageLive do
            guests: MyGuest.list_guests(),
            changeset:
              Guest.changeset(%Guest{
-               first_name: "Test",
-               last_name: "User",
-               email: "adc613@gmail.com"
+               first_name: "",
+               last_name: "",
+               email: ""
              })
          }}
       end),
@@ -163,28 +173,51 @@ defmodule AppWeb.GuestManageLive do
   end
 
   def handle_event("guest_submit", %{"guest" => guest_params}, socket) do
-    {
-      :noreply,
-      socket
-      |> assign_async([:guests, :changeset], fn ->
-        case MyGuest.create_guest(guest_params) do
-          {:ok, _} ->
-            {:ok,
-             %{
-               guests: MyGuest.list_guests(),
-               changeset:
-                 Guest.changeset(%Guest{
-                   first_name: "",
-                   last_name: "",
-                   email: ""
-                 })
-             }}
+    guests = socket.assigns.guests
 
-          {:error, _} ->
-            {:ok, %{}}
-        end
-      end)
-    }
+    guests =
+      if guests.ok? do
+        guests.result
+      else
+        []
+      end
+
+    has_duplicate =
+      Enum.any?(
+        guests,
+        &(&1.first_name == guest_params["first_name"] and
+            &1.last_name == guest_params["last_name"])
+      )
+
+    if not has_duplicate do
+      {
+        :noreply,
+        socket
+        |> assign_async([:guests, :changeset, :new_guest], fn ->
+          case MyGuest.create_guest(guest_params) do
+            {:ok, guest} ->
+              {:ok,
+               %{
+                 guests: MyGuest.list_guests(),
+                 changeset:
+                   Guest.changeset(%Guest{
+                     first_name: "Placeholder",
+                     last_name: "",
+                     email: ""
+                   }),
+                 new_guest: guest
+               }}
+
+            {:error, err} ->
+              IO.puts("Something happened")
+              IO.inspect(err)
+              {:error, %{}}
+          end
+        end)
+      }
+    else
+      {:noreply, socket |> put_flash(:error, "Duplicate guest")}
+    end
   end
 
   defp toggle_guest(guest) do
@@ -195,5 +228,20 @@ defmodule AppWeb.GuestManageLive do
   defp toggle(selected, id) do
     new_value = not Map.get(selected, id, false)
     Map.put(selected, id, new_value)
+  end
+
+  defp sms_message(phone_number) do
+    message = """
+    https://wedding.adamcollins.io/std
+
+    We’re getting married on April 4th, 2026. Please save the date!
+
+    Note: We’ll share more details including any information about hotel blocks when we send out invites in the coming months. 
+
+    Can't wait to see you in Chicago,
+    Helen & Adam
+    """
+
+    "sms:#{phone_number}?body=#{URI.encode(message)}"
   end
 end

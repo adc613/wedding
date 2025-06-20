@@ -2,7 +2,8 @@
 <.adminbar :if={@current_user} current_user={@current_user} />
 <main class="px-4 py-20 sm:px-6 lg:px-8">
   <div class="mx-auto">
-    <.flash_group flash={@flash} />
+    <!-- I removed the flash group If future Adam wonders why a flash message
+    isn't working please read this message. -->
     {@inner_content}
   </div>
 </main>
