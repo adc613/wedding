@@ -23,6 +23,7 @@ defmodule AppWeb.GuestManageLive do
       selected={@selected}
       row_click={fn guest -> toggle_guest(guest) end}
       checkbox_click={fn guest -> toggle_guest(guest) end}
+      redirect={~p"/admin/guest"}
     />
 
     <.modal id="add-guest-modal">
