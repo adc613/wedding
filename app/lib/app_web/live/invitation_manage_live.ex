@@ -52,6 +52,7 @@ defmodule AppWeb.InvitationManageLive do
         selected={@selected_guests}
         row_click={fn guest -> toggle_guest(guest) end}
         checkbox_click={fn guest -> toggle_guest(guest) end}
+        fields={[:guest]}
       />
       <.header class="mb-4">What events</.header>
       <div class="mb-4">

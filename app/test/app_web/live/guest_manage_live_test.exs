@@ -1,4 +1,5 @@
 defmodule AppWeb.GuestManageLiveTest do
+  alias App.Guest.Guest
   alias App.MyGuest
   use AppWeb.ConnCase
 
@@ -52,11 +53,14 @@ defmodule AppWeb.GuestManageLiveTest do
 
       assert lv
              |> element("#guest-form")
-             |> render_submit(%{"guest" => %{"first_name" => "fn4", "last_name" => "ln4"}})
+             |> render_submit(%{
+               "guest" => %{"first_name" => "fn4", "last_name" => "ln4", "phone" => "8475556149"}
+             })
 
       render_async(lv)
 
       assert length(MyGuest.list_guests()) == 4
+      assert match?(%Guest{phone: "8475556149"}, MyGuest.get_guest!(4))
     end
 
     test "prevents duplicate guests", %{conn: conn, user: user} do

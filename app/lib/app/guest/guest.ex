@@ -19,6 +19,7 @@ defmodule App.Guest.Guest do
     field :brunch, :boolean, default: false
     field :sent_std, :boolean, default: false
     field :email, :string
+    field :phone, :string, default: ""
     has_one :rsvp, RSVP
     belongs_to :invitation, Invitation, on_replace: :update
 
@@ -36,7 +37,8 @@ defmodule App.Guest.Guest do
       :rehersal_dinner,
       :email,
       :sent_std,
-      :invitation_id
+      :invitation_id,
+      :phone
     ])
     |> cast_assoc(:invitation, with: &Invitation.changeset/2)
     |> validate_email()
