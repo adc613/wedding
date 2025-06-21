@@ -240,7 +240,7 @@ defmodule AppWeb.GuestManageLive do
   end
 
   defp sms_link(selected, guests) do
-    "sms:#{sms_phone(selected, guests)}?body=#{URI.encode(sms_body())}"
+    "sms:#{sms_phone(selected, guests)}?body=#{URI.encode(sms_body(), &(not URI.char_unescaped?(&1) or &1 != ?&))}"
   end
 
   defp sms_phone(selected, guests) do

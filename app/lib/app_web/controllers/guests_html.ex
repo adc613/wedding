@@ -86,6 +86,7 @@ defmodule AppWeb.GuestsHTML do
   attr :guests, :any, required: true, doc: "List of guests"
   attr :selected, :any, required: true, doc: "Map of selected guest"
   attr :row_click, :fun, required: false, doc: "The function that's called on row click"
+  attr :redirect, :string, default: "/guest", doc: "The rediret path for guest links"
 
   attr :fields, :list,
     required: false,
@@ -115,7 +116,7 @@ defmodule AppWeb.GuestsHTML do
         <.link
           :if={field == :links}
           class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
-          href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/guest"]}"}
+          href={~p"/guest/#{guest}/edit?#{[redirect: @redirect]}"}
         >
           Edit
         </.link>
