@@ -38,7 +38,8 @@ defmodule App.MyGuestTest do
           "email" => "test@test.test",
           "first_name" => "Adam",
           "last_name" => "Collins",
-          "secret" => "123456"
+          "secret" => "123456",
+          "phone" => "8475626149"
         })
 
       guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
@@ -46,6 +47,7 @@ defmodule App.MyGuestTest do
       assert guest.first_name == "Adam"
       assert guest.last_name == "Collins"
       assert guest.secret == "123456"
+      assert guest.phone == "8475626149"
     end
 
     test "supports no email addres" do

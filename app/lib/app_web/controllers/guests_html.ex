@@ -54,7 +54,8 @@ defmodule AppWeb.GuestsHTML do
       <input :if={@redirect} type="hidden" name="redirect" value={@redirect} />
       <.input field={f[:first_name]} type="text" label="First Name" />
       <.input field={f[:last_name]} type="text" label="Last Name" />
-      <.input field={f[:email]} type="text" label="Email" />
+      <.input field={f[:email]} type="email" label="Email" inputmode="email" />
+      <.input field={f[:phone]} type="tel" label="Phone" inputmode="tel" />
       {render_slot(@actions)}
     </.simple_form>
     """
@@ -71,9 +72,25 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
+  attr :guests, :any, required: true, doc: "Guest who's emails need to be listed"
+  attr :selected, :any, required: true, doc: "Map of selected guest"
+
+  def guest_phones(assigns) do
+    ~H"""
+    <div>
+      {get_phones(@guests, @selected)}
+    </div>
+    """
+  end
+
   attr :guests, :any, required: true, doc: "List of guests"
   attr :selected, :any, required: true, doc: "Map of selected guest"
   attr :row_click, :fun, required: false, doc: "The function that's called on row click"
+
+  attr :fields, :list,
+    required: false,
+    default: [:guest, :std, :email, :phone, :links],
+    doc: "The included column types"
 
   attr :checkbox_click, :fun, doc: "The function that's called on checkbox click"
 
@@ -86,13 +103,17 @@ defmodule AppWeb.GuestsHTML do
       row_click={@row_click}
       checkbox_click={@checkbox_click}
     >
-      <:col :let={guest} label="Guest">{guest.first_name} {guest.last_name}</:col>
-      <:col :let={guest} label="Email">{guest.email}</:col>
-      <:col :let={guest} label="Sent Save the Date">
-        <.check_icon checked={guest.sent_std} />
-      </:col>
-      <:col :let={guest} label="Links">
+      <:col :let={guest} :for={field <- @fields} label={get_label(field)}>
+        <%= if field == :guest do %>
+          {guest.first_name} {guest.last_name}
+        <% end %>
+        <.check_icon :if={field == :std} checked={guest.sent_std} />
+        <%= if field == :email do %>
+          {guest.email}
+        <% end %>
+        <p :if={field == :phone}>{guest.phone}</p>
         <.link
+          :if={field == :links}
           class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
           href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/guest"]}"}
         >
@@ -101,6 +122,39 @@ defmodule AppWeb.GuestsHTML do
       </:col>
     </.table>
     """
+  end
+
+  defp get_label(:guest) do
+    "Guest"
+  end
+
+  defp get_label(:links) do
+    "Links"
+  end
+
+  defp get_label(:email) do
+    "Email"
+  end
+
+  defp get_label(:std) do
+    "Sent Save the Date"
+  end
+
+  defp get_label(:phone) do
+    "Phone"
+  end
+
+  defp get_label(_) do
+    "Placeholder"
+  end
+
+  defp get_phones(guests, selected) do
+    guests
+    |> Enum.filter(&selected[&1.id])
+    |> Enum.map(fn guest ->
+      guest.phone
+    end)
+    |> Enum.join(",")
   end
 
   defp get_emails(guests, selected) do

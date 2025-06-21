@@ -26,9 +26,12 @@ defmodule AppWeb.GuestManageLive do
     />
 
     <.modal id="add-guest-modal">
-      <.flash :if={@new_guest != nil and @new_guest.ok?} kind={:info}>
+      <p
+        :if={@new_guest != nil and @new_guest.ok?}
+        class="mr-2 rounded-lg p-3 ring-1 bg-emerald-50 text-emerald-800 ring-emerald-500 fill-cyan-900"
+      >
         Successfully created {@new_guest.result.first_name} {@new_guest.result.last_name}
-      </.flash>
+      </p>
       <.flash_group id="modal" flash={@flash} />
       <.guest_form
         :if={changeset = @changeset.ok? && @changeset.result}
@@ -72,10 +75,16 @@ defmodule AppWeb.GuestManageLive do
         <% end %>
       </ul>
       <h2 class="text-lg mb-4 mt-8  font-semibold leading-8 text-zinc-800">
-        Recipients
+        Emails
       </h2>
       <p class="mb-8">
         <.guest_emails :if={@guests.ok?} guests={@guests.result} selected={@selected} />
+      </p>
+      <h2 class="text-lg mb-4 mt-8  font-semibold leading-8 text-zinc-800">
+        Phones
+      </h2>
+      <p class="mb-8">
+        <.guest_phones :if={@guests.ok?} guests={@guests.result} selected={@selected} />
       </p>
       <h2 class="text-lg mb-4 mt-8 font-semibold leading-8 text-zinc-800">
         Subject
@@ -84,11 +93,9 @@ defmodule AppWeb.GuestManageLive do
       <h2 class="text-lg mb-4 mt-8 font-semibold leading-8 text-zinc-800">
         Body
       </h2>
-      <p class="max-w-2xl mb-4">
-        Hi, <br /> <br /> We've got a venue. Save the date. <br /> <br />
-        <a href="http://wedding.adamcollins.io">http://wedding.adamcollins.io</a> <br /> <br />
-        Hope to see you on 2026.04.04, <br /> <br /> Helen & Adam <br />
-      </p>
+      <pre class="max-w-2xl mb-4 overflow-scroll">
+        {sms_body()}
+      </pre>
       <.button class="btn-action" phx-click={JS.push("mark_sent") |> hide_modal("std-modal")}>
         Mark Sent
       </.button>
@@ -96,8 +103,10 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
-      {# TODO: Change to user's phone number }
-      <a href={sms_message("+18475626149")}>
+      <a
+        :if={@guests.ok? and sms_phone(@selected, @guests.result) != ""}
+        href={sms_link(@selected, @guests.result)}
+      >
         <.button>Open text</.button>
       </a>
     </.modal>
@@ -230,8 +239,20 @@ defmodule AppWeb.GuestManageLive do
     Map.put(selected, id, new_value)
   end
 
-  defp sms_message(phone_number) do
-    message = """
+  defp sms_link(selected, guests) do
+    "sms:#{sms_phone(selected, guests)}?body=#{URI.encode(sms_body())}"
+  end
+
+  defp sms_phone(selected, guests) do
+    guests
+    |> Enum.filter(&selected[&1.id])
+    |> Enum.filter(&(&1.phone != ""))
+    |> Enum.map(& &1.phone)
+    |> Enum.join(",")
+  end
+
+  defp sms_body() do
+    """
     https://wedding.adamcollins.io/std
 
     We’re getting married on April 4th, 2026. Please save the date!
@@ -241,7 +262,5 @@ defmodule AppWeb.GuestManageLive do
     Can't wait to see you in Chicago,
     Helen & Adam
     """
-
-    "sms:#{phone_number}?body=#{URI.encode(message)}"
   end
 end
