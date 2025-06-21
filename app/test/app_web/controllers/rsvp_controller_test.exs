@@ -34,7 +34,7 @@ defmodule AppWeb.RSVPControllerTest do
 
       resp = html_response(conn, 302)
 
-      assert resp =~ "/rsvp/1"
+      assert resp =~ "/rsvp/invite"
     end
 
     test "Not found invitations", %{conn: conn} do
@@ -48,9 +48,9 @@ defmodule AppWeb.RSVPControllerTest do
     end
   end
 
-  describe "GET /rsvp/1" do
+  describe "GET /rsvp/invite" do
     test "RSVP page", %{conn: conn} do
-      conn = get(conn, ~p"/rsvp/1")
+      conn = get(conn, ~p"/rsvp/invite")
 
       resp = html_response(conn, 200)
 
@@ -61,7 +61,7 @@ defmodule AppWeb.RSVPControllerTest do
     end
   end
 
-  describe "PUT /rsvp/1" do
+  describe "PUT /rsvp/invite" do
     test "Create RSVP", %{conn: conn} do
       guest = MyGuest.get_guest!(1)
 

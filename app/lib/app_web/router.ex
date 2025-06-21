@@ -37,9 +37,9 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", RSVPController, :rsvp
-    get "/lookup", RSVPController, :find_rsvp
-    get "/:guest_id", RSVPController, :find_rsvp
-    put "/", RSVPController, :update_rsvp
+    get "/reset", RSVPController, :reset_guest_id
+    put "/invite", RSVPController, :update_rsvp
+    get "/lookup", RSVPController, :invite
   end
 
   scope "/", AppWeb do
