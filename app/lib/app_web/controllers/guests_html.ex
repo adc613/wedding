@@ -125,29 +125,12 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
-  defp get_label(:guest) do
-    "Guest"
-  end
-
-  defp get_label(:links) do
-    "Links"
-  end
-
-  defp get_label(:email) do
-    "Email"
-  end
-
-  defp get_label(:std) do
-    "Sent Save the Date"
-  end
-
-  defp get_label(:phone) do
-    "Phone"
-  end
-
-  defp get_label(_) do
-    "Placeholder"
-  end
+  defp get_label(:guest), do: "Guest"
+  defp get_label(:links), do: "Links"
+  defp get_label(:email), do: "Email"
+  defp get_label(:std), do: "Sent Save the Date"
+  defp get_label(:phone), do: "Phone"
+  defp get_label(_), do: "Placeholder"
 
   defp get_phones(guests, selected) do
     guests

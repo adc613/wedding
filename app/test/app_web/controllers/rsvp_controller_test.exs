@@ -52,6 +52,68 @@ defmodule AppWeb.RSVPControllerTest do
       assert resp =~ "/rsvp"
     end
 
+    test "Allows user to edit their info", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/guest/#{guest.id}/edit")
+        |> html_response(200)
+
+      assert resp =~ guest.first_name
+    end
+
+    test "Allows user to edit invite guests", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      {:ok, g2} =
+        MyGuest.create_guest(%{
+          "email" => "test2@test.com",
+          "first_name" => "Test",
+          "last_name" => "User",
+          "secret" => "123456"
+        })
+
+      assert :ok == MyGuest.create_invitation(guests: [guest, g2], events: [:brunch])
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/guest/#{g2.id}/edit")
+        |> html_response(200)
+
+      assert resp =~ g2.first_name
+    end
+
+    test "Redirect user editing a page thats not there's", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      {:ok, g2} =
+        MyGuest.create_guest(%{
+          "email" => "test@test.com",
+          "first_name" => "Test",
+          "last_name" => "User",
+          "secret" => "123456"
+        })
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/guest/42/edit")
+        |> html_response(302)
+
+      assert resp =~ "/users/log_in"
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/guest/#{g2.id}/edit")
+        |> html_response(302)
+
+      assert resp =~ "/users/log_in"
+    end
+
     test "Not found invitations", %{conn: conn} do
       bad_email = "not@found.com"
       conn = post(conn, ~p"/rsvp/lookup", %{"guest" => %{"email" => bad_email}})

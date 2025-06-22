@@ -230,8 +230,7 @@ defmodule AppWeb.UserAuth do
         true
 
       %{cookies: %{"guest-id" => cookie_id}} ->
-        invitation = MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
-        invitation != nil and Enum.any?(invitation.guests, &(&1.id == cookie_id))
+        is_valid_cookie_id?(cookie_id: cookie_id, guest_id: guest_id)
 
       _ ->
         false
@@ -244,6 +243,18 @@ defmodule AppWeb.UserAuth do
 
   def maybe_require_authenticated_user(conn, opts) do
     require_authenticated_user(conn, opts)
+  end
+
+  defp is_valid_cookie_id?(cookie_id: cookie_id, guest_id: guest_id) do
+    MyGuest.get_guest(guest_id)
+    |> case do
+      nil -> nil
+      _guest -> MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
+    end
+    |> case do
+      nil -> false
+      invitation -> Enum.any?(invitation.guests, &(&1.id == cookie_id))
+    end
   end
 
   defp put_token_in_session(conn, token) do
