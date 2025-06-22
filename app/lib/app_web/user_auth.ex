@@ -5,6 +5,7 @@ defmodule AppWeb.UserAuth do
   import Phoenix.Controller
 
   alias App.Accounts
+  alias App.MyGuest
 
   # Make the remember me cookie valid for 60 days.
   # If you want bump or reduce this value, also change
@@ -211,6 +212,38 @@ defmodule AppWeb.UserAuth do
       |> redirect(to: ~p"/users/log_in")
       |> halt()
     end
+  end
+
+  @doc """
+  Used to enforce that user is authentticated or that the guest in their cookie has permission to respond for a given guest
+  """
+  def maybe_require_authenticated_user(%Plug.Conn{assigns: %{current_user: user}} = conn, opts)
+      when user != nil do
+    require_authenticated_user(conn, opts)
+  end
+
+  def maybe_require_authenticated_user(%Plug.Conn{params: %{"id" => guest_id}} = conn, opts) do
+    conn
+    |> fetch_cookies(encrypted: ~w(guest-id))
+    |> case do
+      %{cookies: %{"guest-id" => ^guest_id}} ->
+        true
+
+      %{cookies: %{"guest-id" => cookie_id}} ->
+        invitation = MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
+        invitation != nil and Enum.any?(invitation.guests, &(&1.id == cookie_id))
+
+      _ ->
+        false
+    end
+    |> case do
+      true -> conn
+      false -> require_authenticated_user(conn, opts)
+    end
+  end
+
+  def maybe_require_authenticated_user(conn, opts) do
+    require_authenticated_user(conn, opts)
   end
 
   defp put_token_in_session(conn, token) do

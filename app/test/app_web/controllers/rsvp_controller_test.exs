@@ -25,34 +25,13 @@ defmodule AppWeb.RSVPControllerTest do
 
       assert resp =~ "Find Invitation"
     end
-  end
 
-  describe "GET /rsvp/lookup" do
-    test "Find invitations", %{conn: conn} do
-      guest = MyGuest.get_guest!(1)
-      conn = get(conn, ~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
-
-      resp = html_response(conn, 302)
-
-      assert resp =~ "/rsvp/invite"
-    end
-
-    test "Not found invitations", %{conn: conn} do
-      bad_email = "not@found.com"
-      conn = get(conn, ~p"/rsvp/lookup", %{"guest" => %{"email" => bad_email}})
-
-      resp = html_response(conn, 200)
-
-      assert resp =~ "Unable to find invitation"
-      assert resp =~ "for: \"#{bad_email}\""
-    end
-  end
-
-  describe "GET /rsvp/invite" do
-    test "RSVP page", %{conn: conn} do
-      conn = get(conn, ~p"/rsvp/invite")
-
-      resp = html_response(conn, 200)
+    test "Cache cookie for the RSVP page", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => "test@test.com"}})
+        |> get(~p"/rsvp")
+        |> html_response(200)
 
       assert resp =~ "You're invited"
       assert resp =~ "Adam Collins"
@@ -61,14 +40,41 @@ defmodule AppWeb.RSVPControllerTest do
     end
   end
 
+  describe "GET /rsvp/lookup" do
+    test "Find invitations", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> html_response(302)
+
+      assert resp =~ "/rsvp"
+    end
+
+    test "Not found invitations", %{conn: conn} do
+      bad_email = "not@found.com"
+      conn = post(conn, ~p"/rsvp/lookup", %{"guest" => %{"email" => bad_email}})
+
+      resp = html_response(conn, 200)
+
+      assert resp =~ "Unable to find invitation"
+      assert resp =~ "for: \"#{bad_email}\""
+    end
+  end
+
   describe "PUT /rsvp/invite" do
     test "Create RSVP", %{conn: conn} do
       guest = MyGuest.get_guest!(1)
 
       conn =
-        put(conn, ~p"/rsvp", %{"invitation_id" => 1, "wedding-1" => "yes", "rehersal-1" => "no"})
+        put(conn, ~p"/rsvp/invite", %{
+          "invitation_id" => 1,
+          "wedding-1" => "yes",
+          "rehersal-1" => "no"
+        })
 
-      html_response(conn, 302)
+      assert html_response(conn, 200) =~ "Thanks"
 
       %RSVP{events: events, declined_events: declined_events} = MyGuest.get_or_create_rsvp!(guest)
 

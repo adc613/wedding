@@ -23,7 +23,7 @@ defmodule AppWeb.RSVPController do
     |> redirect(to: ~p"/rsvp")
   end
 
-  def invite(conn, %{"guest" => %{"email" => email}}) do
+  def lookup_invite(conn, %{"guest" => %{"email" => email}}) do
     email = String.trim(email)
 
     case Guest.apply_lookup(%Guest{}, %{"email" => email}) do
@@ -36,7 +36,7 @@ defmodule AppWeb.RSVPController do
           %Guest{} = guest ->
             conn
             |> put_resp_cookie("guest-id", guest.id, encrypt: true)
-            |> render_invite(guest.id)
+            |> redirect(to: ~p"/rsvp")
 
           _ ->
             conn |> render(:no_invitation, email: email)
