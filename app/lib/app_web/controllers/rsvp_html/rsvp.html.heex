@@ -22,15 +22,13 @@
       {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
       <.link
         class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
-        href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/#{@guest_id}"]}"}
-      >
-        edit information
-      </.link>)
+        href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp"]}"}
+      >edit information</.link>)
     </li>
   <% end %>
 </ul>
 
-<.form for={%{}} action={~p"/rsvp"} method="put">
+<.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
   <.response
     :if={:wedding in @invitation.events}
@@ -62,3 +60,8 @@
 
   <.button class="btn-action" type="submit">Submit RSVP</.button>
 </.form>
+
+<h2 class="text-lg mt-8 mb-4 font-semibold">Is this the wrong invitation?</h2>
+<.link href={~p"/rsvp/reset"} method="post">
+  <.button>Find my invitaiton</.button>
+</.link>

@@ -37,15 +37,15 @@ defmodule AppWeb.Router do
     pipe_through :browser
 
     get "/", RSVPController, :rsvp
-    get "/lookup", RSVPController, :find_rsvp
-    get "/:guest_id", RSVPController, :find_rsvp
-    put "/", RSVPController, :update_rsvp
+    post "/reset", RSVPController, :reset_guest_id
+    put "/invite", RSVPController, :update_rsvp
+    post "/lookup", RSVPController, :lookup_invite
   end
 
-  scope "/", AppWeb do
-    pipe_through [:browser, :require_authenticated_user]
+  scope "/guest", AppWeb do
+    pipe_through [:browser, :maybe_require_authenticated_user]
 
-    resources "/guest", GuestsController
+    resources "/", GuestsController
   end
 
   # Other scopes may use custom stacks.

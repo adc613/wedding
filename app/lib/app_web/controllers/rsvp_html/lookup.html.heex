@@ -5,7 +5,7 @@
   Please enter your email below to see your invitation
 </p>
 
-<.simple_form :let={f} for={@changeset} action="/rsvp/lookup" method="get">
+<.simple_form :let={f} for={@changeset} action="/rsvp/lookup" method="post">
   <.input field={f[:email]} type="text" label="Email" />
   <:actions>
     <.button class="btn-action">Lookup invitation</.button>
