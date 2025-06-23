@@ -1,7 +1,6 @@
 defmodule AppWeb.DashboardLive do
   alias App.Guest.Invitation
   alias Phoenix.LiveView.AsyncResult
-  alias App.Guest.Guest
   alias App.MyGuest
   use AppWeb, :live_view
   import AppWeb.GuestsHTML
