@@ -104,12 +104,7 @@ defmodule AppWeb.GuestManageLive do
       <.button phx-click={hide_modal("std-modal")}>
         Cancel
       </.button>
-      <a
-        :if={@guests.ok? and sms_phone(@selected, @guests.result) != ""}
-        href={sms_link(@selected, @guests.result)}
-      >
-        <.button>Open text</.button>
-      </a>
+      <.sms_std_link :if={@guests.ok?} guests={only_selected(@selected, @guests.result)} />
     </.modal>
     """
   end
@@ -240,18 +235,9 @@ defmodule AppWeb.GuestManageLive do
     Map.put(selected, id, new_value)
   end
 
-  defp sms_link(selected, guests) do
-    "sms:#{sms_phone(selected, guests)}?body=#{URI.encode(sms_body(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
-  end
+  defp only_selected(selected, guests), do: guests |> Enum.filter(&selected[&1.id])
 
-  defp sms_phone(selected, guests) do
-    guests
-    |> Enum.filter(&selected[&1.id])
-    |> Enum.filter(&(&1.phone != ""))
-    |> Enum.map(& &1.phone)
-    |> Enum.join(",")
-  end
-
+  # TODO: Migrate to a different place
   defp sms_body() do
     """
     https://wedding.adamcollins.io/std

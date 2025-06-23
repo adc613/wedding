@@ -613,6 +613,27 @@ defmodule AppWeb.CoreComponents do
   end
 
   @doc """
+  """
+  attr :cards, :list, required: true, doc: "TODO"
+
+  def scorecards(assigns) do
+    ~H"""
+    <div class="flex mx-auto overflow-scroll pt-4 pb-4 pr-8 pl-8 border-solid border-gray-400 rounded-2xl border-2 justify-between">
+      <%= for card <- Enum.intersperse(@cards, :seperator) do %>
+        <%= if card == :seperator do %>
+          <div class="border-r-2 border-l-2 border-solid border-gray-400"></div>
+        <% else %>
+          <div class="p-2 w-[200px] flex-shrink-0">
+            <h2 class="font-semibold text-center">{card.title}</h2>
+            <p class="text-center text-lg">{card.info}</p>
+          </div>
+        <% end %>
+      <% end %>
+    </div>
+    """
+  end
+
+  @doc """
   Renders a [Heroicon](https://heroicons.com).
 
   Heroicons come in three styles – outline, solid, and mini.
