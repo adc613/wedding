@@ -125,6 +125,16 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
+  attr :guests, :list, required: true, doc: "TODO"
+
+  def sms_std_link(assigns) do
+    ~H"""
+    <a href={sms_link(@guests)}>
+      <.button>Open text</.button>
+    </a>
+    """
+  end
+
   defp get_label(:guest), do: "Guest"
   defp get_label(:links), do: "Links"
   defp get_label(:email), do: "Email"
@@ -148,5 +158,29 @@ defmodule AppWeb.GuestsHTML do
       guest.email
     end)
     |> Enum.join(",")
+  end
+
+  defp sms_link(guests) do
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(sms_body(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  end
+
+  defp sms_phone(guests) do
+    guests
+    |> Enum.filter(&(&1.phone != ""))
+    |> Enum.map(& &1.phone)
+    |> Enum.join(",")
+  end
+
+  defp sms_body() do
+    """
+    https://wedding.adamcollins.io/std
+
+    We’re getting married on April 4th, 2026. Please save the date!
+
+    Note: We’ll share more details including any information about hotel blocks when we send out invites in the coming months. 
+
+    Can't wait to see you in Chicago,
+    Helen & Adam
+    """
   end
 end

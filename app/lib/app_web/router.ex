@@ -92,8 +92,11 @@ defmodule AppWeb.Router do
   scope "/admin", AppWeb do
     pipe_through [:browser, :require_authenticated_user, :admin_layout]
 
+    get "/", AdminController, :landing
+
     live_session :require_authenticated_admin,
       on_mount: [{AppWeb.UserAuth, :ensure_authenticated}] do
+      live "/dash", DashboardLive
       live "/guest", GuestManageLive
       live "/invitation", InvitationManageLive
     end

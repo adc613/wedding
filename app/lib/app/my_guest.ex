@@ -7,6 +7,10 @@ defmodule App.MyGuest do
   alias App.Guest.Guest
   alias App.Guest.RSVP
 
+  def load(structs, preloads \\ []) do
+    apply_preloads(structs, preloads)
+  end
+
   def list_guests() do
     Repo.all(Guest) |> Repo.preload(:rsvp)
   end
