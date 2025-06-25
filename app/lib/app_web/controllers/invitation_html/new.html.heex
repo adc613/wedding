@@ -1,0 +1,17 @@
+<h1 class="text-lg text-brand">
+  Create invitation
+</h1>
+
+<p class="text-lg text-bold">
+  There's no input for guest please go to
+  <.link href={~p"/admin/invitaiton"}>the admin page</.link>
+  to create invitations
+</p>
+
+<.invitation_form changeset={@changeset} action={~p"/invitation"} />
+
+<div class="mt-2">
+  <a href="/guest">
+    <.button>Go Back</.button>
+  </a>
+</div>

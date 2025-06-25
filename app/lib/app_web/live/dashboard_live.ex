@@ -21,12 +21,13 @@ defmodule AppWeb.DashboardLive do
             <div>
               {guest.first_name} {guest.last_name}
             </div>
-            <div>
-              <.button class="btn-action" phx-click={JS.push("mark_sent", value: %{id: guest.id})}>
+            <div class="flex-grow-0">
+              <.button
+                class="mr-8 btn-action"
+                phx-click={JS.push("mark_sent", value: %{id: guest.id})}
+              >
                 Mark Sent
               </.button>
-            </div>
-            <div>
               <.sms_std_link guests={[guest]} />
             </div>
           </div>

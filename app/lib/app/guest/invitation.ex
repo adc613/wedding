@@ -8,6 +8,8 @@ defmodule App.Guest.Invitation do
   schema "invitations" do
     field :events, {:array, Ecto.Enum}, values: [:wedding, :brunch, :rehersal]
     has_many :guests, Guest
+    field :additional_guests, :integer
+    field :permit_kids, :boolean
 
     timestamps(type: :utc_datetime)
   end
@@ -15,7 +17,7 @@ defmodule App.Guest.Invitation do
   @doc false
   def changeset(invitation, attrs \\ %{}) do
     invitation
-    |> cast(attrs, [:events])
+    |> cast(attrs, [:events, :additional_guests, :permit_kids])
     |> validate_required([:events])
   end
 
@@ -42,6 +44,24 @@ defmodule App.Guest.Invitation do
         rehersal: rehersal
       }
     end)
+  end
+
+  def add_form_attrs(invitation) do
+    Enum.reduce(invitation.events, invitation, fn event, invitation ->
+      Map.put(invitation, event, true)
+    end)
+  end
+
+  def cast_form_attrs(attrs) do
+    events =
+      [
+        "brunch",
+        "rehersal",
+        "wedding"
+      ]
+      |> Enum.filter(&(attrs[&1] == "true"))
+
+    Map.put(attrs, "events", events)
   end
 
   defp count_events(events) do

@@ -6,20 +6,9 @@ defmodule AppWeb.GuestsHTML do
   attr :rsvp, :any, required: true, doc: "Render RSVP status"
 
   def status(assigns) do
-    rsvp =
-      case assigns.rsvp do
-        %{confirmed: true} -> :yes
-        %{confirmed: false} -> :no
-        nil -> :not_responded
-      end
-
-    assigns = assign(assigns, :rsvp, rsvp)
-
     ~H"""
     <div>
-      <span :if={@rsvp == :yes}>Yes</span>
-      <span :if={@rsvp == :no}>No</span>
-      <span :if={@rsvp == :not_responded}>No response</span>
+      TODO
     </div>
     """
   end
@@ -84,8 +73,13 @@ defmodule AppWeb.GuestsHTML do
   end
 
   attr :guests, :any, required: true, doc: "List of guests"
-  attr :selected, :any, required: true, doc: "Map of selected guest"
-  attr :row_click, :fun, required: false, doc: "The function that's called on row click"
+  attr :selected, :any, default: nil, doc: "Map of selected guest"
+
+  attr :row_click, :fun,
+    default: nil,
+    required: false,
+    doc: "The function that's called on row click"
+
   attr :redirect, :string, default: "/guest", doc: "The rediret path for guest links"
 
   attr :fields, :list,
@@ -93,7 +87,9 @@ defmodule AppWeb.GuestsHTML do
     default: [:guest, :std, :email, :phone, :links],
     doc: "The included column types"
 
-  attr :checkbox_click, :fun, doc: "The function that's called on checkbox click"
+  attr :checkbox_click, :fun, default: nil, doc: "The function that's called on checkbox click"
+
+  slot :action, required: false
 
   def guests_table(assigns) do
     ~H"""
@@ -120,6 +116,9 @@ defmodule AppWeb.GuestsHTML do
         >
           Edit
         </.link>
+      </:col>
+      <:col :let={guest} :if={@action} label="Action">
+        {render_slot(@action, guest)}
       </:col>
     </.table>
     """

@@ -20,6 +20,7 @@ defmodule App.Guest.Guest do
     field :sent_std, :boolean, default: false
     field :email, :string
     field :phone, :string, default: ""
+    field :is_kid, :boolean, default: false
     has_one :rsvp, RSVP
     belongs_to :invitation, Invitation, on_replace: :update
 
