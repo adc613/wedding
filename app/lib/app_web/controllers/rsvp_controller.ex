@@ -17,6 +17,31 @@ defmodule AppWeb.RSVPController do
     end
   end
 
+  def confirm_guest_details(conn, _params) do
+    guest_id =
+      conn
+      |> fetch_cookies(encrypted: ~w(guest-id))
+      |> case do
+        %{cookies: %{"guest-id" => guest_id}} -> guest_id
+        _ -> nil
+      end
+
+    invitation =
+      case guest_id do
+        nil -> nil
+        guest_id -> MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
+      end
+
+    if guest_id == nil or invitation == nil do
+      conn |> render_not_found()
+    else
+      changeset = RSVP.changeset(%RSVP{})
+
+      conn
+      |> render(:confirm, invitation: invitation, changeset: changeset, guest_id: guest_id)
+    end
+  end
+
   def reset_guest_id(conn, _params) do
     conn
     |> delete_resp_cookie("guest-id")
@@ -31,8 +56,13 @@ defmodule AppWeb.RSVPController do
         conn |> render_lookup(changeset: changeset)
 
       {:ok, _changeset} ->
-        MyGuest.get_guest(email: email)
+        MyGuest.get_guest(email: email, preload: :rsvp)
         |> case do
+          %Guest{rsvp: nil} = guest ->
+            conn
+            |> put_resp_cookie("guest-id", guest.id, encrypt: true)
+            |> redirect(to: ~p"/rsvp/confirm")
+
           %Guest{} = guest ->
             conn
             |> put_resp_cookie("guest-id", guest.id, encrypt: true)

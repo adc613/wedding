@@ -28,25 +28,6 @@
   <% end %>
 </ul>
 
-<%= if @invitation.additional_guests > 0 do %>
-  <h2 class="text-lg mt-8 mb-4 font-semibold">You've got a plus one!</h2>
-  <p>
-    You have permission to invite up to {@invitation.additional_guests} additional
-    Guest(s). If you'd like to bring any guests we'd love to have them, please add them
-    to your invitation so that we can plan accomodations:
-  </p>
-  <.link href={~p"/"}>Add guest(s)</.link>
-<% end %>
-
-<%= if @invitation.permit_kids do %>
-  <h2 class="text-lg mt-8 mb-4 font-semibold">It's a family-friendly wedding!</h2>
-  <p>
-    Would you like to bring any children to the event? If so, plase click the
-    button below:
-  </p>
-  <.link href={~p"/"}>Add kid(s)</.link>
-<% end %>
-
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
   <.response
@@ -79,6 +60,16 @@
 
   <.button class="btn-action" type="submit">Submit RSVP</.button>
 </.form>
+
+<h2
+  :if={@invitation.additional_guests > 0 or @invitation.permit_kids}
+  class="text-lg mt-8 mb-4 font-semibold"
+>
+  Want to add a plus one or children to your invite?
+</h2>
+<.link href={~p"/rsvp/confirm"}>
+  <.button>Add guest</.button>
+</.link>
 
 <h2 class="text-lg mt-8 mb-4 font-semibold">is this the wrong invitation?</h2>
 <.link href={~p"/rsvp/reset"} method="post">

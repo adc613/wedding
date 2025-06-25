@@ -1,0 +1,63 @@
+<h1 class="text-lg text-brand">
+  You're invited!
+</h1>
+
+<p>
+  Please take a moment to verify some details to help us plan the perfect day.
+</p>
+
+<p>
+  If things change, you can return to this page to upate your answers at any
+  time in the future
+</p>
+
+<br />
+
+<h2 class="text-lg mt-8 mb-4 font-semibold">Is our contact information up to date?</h2>
+
+<ul class="list-disc list-inside space-y-2 mb-8">
+  <%= for guest <- @invitation.guests do %>
+    <li>
+      {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
+      <.link
+        class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
+        href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/confirM"]}"}
+      >edit information</.link>)
+    </li>
+  <% end %>
+</ul>
+
+<%= if @invitation.additional_guests > 0 do %>
+  <h2 class="text-lg mt-8 mb-4 font-semibold">You've got a plus one!</h2>
+  <p class="mb-2">
+    You have permission to invite up to {@invitation.additional_guests} additional
+    Guest(s). If you'd like to bring any guests we'd love to have them.
+  </p>
+  <p class="mb-4">
+    Please click the button below to add guest:
+  </p>
+  <.link href={~p"/"}>
+    <.button>Add guest(s)</.button>
+  </.link>
+<% end %>
+
+<%= if @invitation.permit_kids do %>
+  <h2 class="text-lg mt-8 mb-4 font-semibold">It's a family-friendly wedding!</h2>
+  <p>
+    Would you like to bring any children to the event? If so, please click the
+    button below:
+  </p>
+  <.link href={~p"/"}>
+    <.button>Add kid(s)</.button>
+  </.link>
+<% end %>
+
+<h2 class="text-lg mt-8 mb-4 font-semibold">All good?</h2>
+<.link href={~p"/rsvp"}>
+  <.button>Confirm and continue to RSVP</.button>
+</.link>
+
+<h2 class="text-lg mt-8 mb-4 font-semibold">Is this the wrong invitation?</h2>
+<.link href={~p"/rsvp/reset"} method="post">
+  <.button>find my invitaiton</.button>
+</.link>
