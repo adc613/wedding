@@ -7,56 +7,95 @@ defmodule AppWeb.RSVPController do
 
   def rsvp(conn, _params) do
     conn
-    |> fetch_cookies(encrypted: ~w(guest-id))
+    |> get_guest_id()
     |> case do
-      %{cookies: %{"guest-id" => guest_id}} ->
-        conn |> render_invite(guest_id)
-
-      _ ->
-        conn |> render_lookup()
+      nil -> conn |> render_lookup()
+      guest_id -> conn |> render_invite(guest_id)
     end
   end
 
-  def confirm_guest_details(conn, _params) do
-    guest_id =
-      conn
-      |> fetch_cookies(encrypted: ~w(guest-id))
-      |> case do
-        %{cookies: %{"guest-id" => guest_id}} -> guest_id
-        _ -> nil
-      end
+  def confirm(conn, %{"step_id" => "0"}) do
+    %{guest_id: guest_id, invitation: invitation} = get_confirm_details(conn)
 
-    invitation =
-      case guest_id do
-        nil -> nil
-        guest_id -> MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
-      end
+    guest = MyGuest.get_guest!(guest_id)
+    changeset = Guest.changeset(guest)
 
     if guest_id == nil or invitation == nil do
       conn |> render_not_found()
     else
-      changeset = RSVP.changeset(%RSVP{})
-
       conn
-      |> render(:confirm, invitation: invitation, changeset: changeset, guest_id: guest_id)
+      |> render(:confirm_email,
+        invitation: invitation,
+        guest_id: guest_id,
+        step_id: 1,
+        guest: guest,
+        changeset: changeset
+      )
     end
   end
 
-  def reset_guest_id(conn, _params) do
-    conn
-    |> delete_resp_cookie("guest-id")
-    |> redirect(to: ~p"/rsvp")
+  def confirm(conn, %{"step_id" => "1"}) do
+    %{guest_id: guest_id, invitation: invitation} = get_confirm_details(conn)
+
+    cond do
+      guest_id == nil or invitation == nil ->
+        conn |> render_not_found()
+
+      invitation.additional_guests <= 0 ->
+        confirm(conn, %{"step_id" => "2"})
+
+      true ->
+        conn |> render(:confirm_plus_ones, invitation: invitation, guest_id: guest_id, step_id: 1)
+    end
   end
 
+  def confirm(conn, %{"step_id" => "2"}) do
+    %{guest_id: guest_id, invitation: invitation} = get_confirm_details(conn)
+
+    cond do
+      guest_id == nil or invitation == nil ->
+        conn |> render_not_found()
+
+      not invitation.permit_kids ->
+        confirm(conn, %{"step_id" => "3"})
+
+      true ->
+        conn
+        |> render(:confirm_kids, invitation: invitation, guest_id: guest_id, step_id: 2)
+    end
+  end
+
+  def confirm(conn, %{"step_id" => "3"}) do
+    %{guest_id: guest_id, invitation: invitation} = get_confirm_details(conn)
+
+    if guest_id == nil or invitation == nil do
+      conn |> render_not_found()
+    else
+      conn
+      |> render(:confirm_guests, invitation: invitation, guest_id: guest_id, step_id: 3)
+    end
+  end
+
+  def confirm(conn, %{"step_id" => _}), do: conn |> redirect(to: ~p"/rsvp")
+  def confirm(conn, _params), do: conn |> redirect(to: ~p"/rsvp/confirm/0")
+
+  def reset_guest_id(conn, _params),
+    do: conn |> delete_resp_cookie("guest-id") |> redirect(to: ~p"/rsvp")
+
   def lookup_invite(conn, %{"guest" => %{"email" => email}}) do
-    email = String.trim(email)
+    email = String.trim(email) |> String.downcase()
 
     case Guest.apply_lookup(%Guest{}, %{"email" => email}) do
       {:error, changeset} ->
         conn |> render_lookup(changeset: changeset)
 
       {:ok, _changeset} ->
-        MyGuest.get_guest(email: email, preload: :rsvp)
+        MyGuest.get_guest(email: email)
+        |> case do
+          nil -> nil
+          :many_matches -> :many_matches
+          guest -> MyGuest.load(guest, preload: :rsvp)
+        end
         |> case do
           %Guest{rsvp: nil} = guest ->
             conn
@@ -67,6 +106,13 @@ defmodule AppWeb.RSVPController do
             conn
             |> put_resp_cookie("guest-id", guest.id, encrypt: true)
             |> redirect(to: ~p"/rsvp")
+
+          :many_matches ->
+            conn
+            |> put_flash(
+              :error,
+              "There are multiple guest with the same information. Please contact Helen or Adam."
+            )
 
           _ ->
             conn |> render(:no_invitation, email: email)
@@ -96,6 +142,83 @@ defmodule AppWeb.RSVPController do
     conn
     |> put_flash(:info, "Updated RSVP")
     |> render_thanks()
+  end
+
+  def add_guest(conn, %{"guest" => guest_params, "redirect" => redirect}) do
+    guest_id = get_guest_id(conn)
+    invitation = MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
+
+    cond do
+      invitation == nil -> :denied
+      invitation.permit_kids and guest_params["is_kid"] == "true" -> :ok
+      invitation.additional_guests > 0 -> :ok
+      true -> :denied
+    end
+    |> case do
+      :ok ->
+        case MyGuest.create_guest(guest_params, invitation) do
+          {:ok, %Guest{is_kid: true} = guest} ->
+            conn
+            |> put_flash(
+              :info,
+              "#{guest.first_name} #{guest.last_name} was added to invite. Feel free to add more or click continue once done."
+            )
+            |> redirect(to: redirect)
+
+          {:ok, guest} ->
+            conn
+            |> put_flash(
+              :info,
+              "Added #{guest.first_name} #{guest.last_name} to your invitation."
+            )
+            |> redirect(to: redirect)
+
+          {:error, %Ecto.Changeset{} = changeset} ->
+            render(conn, :add_guest, changeset: changeset)
+        end
+
+      :denied ->
+        conn
+        |> put_flash(
+          :error,
+          "You do not have permission to add guest. If you think this is a mistake please contact Adam or Helen."
+        )
+        |> redirect(to: ~p"/rsvp/confirm/add_guest")
+    end
+  end
+
+  def add_guest_form(conn, _params) do
+    %{invitation: invitation} = get_confirm_details(conn)
+
+    changeset = Guest.changeset(%Guest{})
+    render(conn, :confirm_add_guest, changeset: changeset, step_id: 1, invitation: invitation)
+  end
+
+  def add_kid_form(conn, _params) do
+    %{invitation: invitation} = get_confirm_details(conn)
+
+    kids = Enum.filter(invitation.guests, & &1.is_kid)
+
+    changeset = Guest.changeset(%Guest{})
+
+    render(conn, :confirm_add_kids,
+      changeset: changeset,
+      step_id: 2,
+      invitation: invitation,
+      kids: kids
+    )
+  end
+
+  defp get_confirm_details(conn) do
+    guest_id = get_guest_id(conn)
+
+    invitation =
+      case guest_id do
+        nil -> nil
+        guest_id -> MyGuest.get_invitation(guest_id: guest_id, preload: :guests)
+      end
+
+    %{guest_id: guest_id, invitation: invitation}
   end
 
   defp render_thanks(conn) do

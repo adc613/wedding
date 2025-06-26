@@ -1,0 +1,35 @@
+<.rsvp_header />
+
+<br />
+
+<.confirmation_step header="Add kids" step_id={@step_id} hide_next={true}>
+  <p :if={length(@kids) > 0}>
+    We've added:
+    <ul class="list-disc list-inside">
+      <li :for={kid <- @kids}>{kid.first_name} {kid.last_name}</li>
+    </ul>
+    Once everyone is here, press <i>Continue</i>.
+  </p>
+  <.guest_form
+    changeset={@changeset}
+    action={~p"/rsvp/add_guest?#{[redirect: ~p"/rsvp/confirm/add_kids"]}"}
+    invitation_id={@invitation.id}
+    is_kid={true}
+  >
+    <:actions>
+      <div class="flex justify-between">
+        <.button class="btn-action">
+          Add child
+        </.button>
+        <.link
+          class="rounded-md font-semibold bg-black py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+          href={~p"/rsvp/confirm/#{@step_id + 1}"}
+        >
+          Continue
+        </.link>
+      </div>
+    </:actions>
+  </.guest_form>
+</.confirmation_step>
+
+<.footer />

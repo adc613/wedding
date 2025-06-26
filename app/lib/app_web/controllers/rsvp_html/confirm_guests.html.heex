@@ -1,0 +1,19 @@
+<.rsvp_header />
+
+<br />
+
+<.confirmation_step header="Is our contact information up to date?" step_id={@step_id}>
+  <ul class="list-disc list-inside space-y-2 mb-8">
+    <%= for guest <- @invitation.guests do %>
+      <li>
+        {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
+        <.link
+          class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
+          href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/confirm/3"]}"}
+        >edit information</.link>)
+      </li>
+    <% end %>
+  </ul>
+</.confirmation_step>
+
+<.footer />

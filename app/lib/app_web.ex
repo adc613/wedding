@@ -52,6 +52,15 @@ defmodule AppWeb do
       defp render_not_found(conn) do
         conn |> put_status(:not_found) |> put_view(ErrorHTML) |> render(:"404")
       end
+
+      defp get_guest_id(conn) do
+        conn
+        |> fetch_cookies(encrypted: ~w(guest-id))
+        |> case do
+          %{cookies: %{"guest-id" => guest_id}} -> guest_id
+          _ -> nil
+        end
+      end
     end
   end
 

@@ -213,9 +213,7 @@ defmodule AppWeb.GuestManageLive do
                  new_guest: guest
                }}
 
-            {:error, err} ->
-              IO.puts("Something happened")
-              IO.inspect(err)
+            {:error, _err} ->
               {:error, %{}}
           end
         end)

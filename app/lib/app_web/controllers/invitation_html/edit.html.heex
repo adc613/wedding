@@ -20,7 +20,7 @@
   </:actions>
 </.invitation_form>
 
-<.guests_table guests={@invitation.guests} fields={[:guest, :links]} hide_checkbox={true}>
+<.guests_table guests={@invitation.guests} fields={[:guest, :links]}>
   <:action :let={guest}>
     <.link
       method="put"

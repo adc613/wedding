@@ -66,6 +66,82 @@ defmodule App.MyGuestTest do
       assert guest.secret == "123456"
       assert guest.email == nil
     end
+
+    test "Adding guest to invitation" do
+      {:ok, invitation} =
+        MyGuest.create_invitation(%{
+          "events" => ["wedding"],
+          "additional_guests" => 2
+        })
+
+      assert invitation.additional_guests == 2
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adam",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert length(invitation.guests) == 1
+      {:ok, guest} = Enum.fetch(invitation.guests, 0)
+      assert guest.id == guest_id
+      assert invitation.additional_guests == 1
+
+      {:ok, %{id: _guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adm",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert invitation.additional_guests == 0
+    end
+
+    test "Add kids to invitation" do
+      {:ok, invitation} =
+        MyGuest.create_invitation(%{
+          "events" => ["wedding"],
+          "additional_guests" => 2
+        })
+
+      assert invitation.additional_guests == 2
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adam",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id,
+            "is_kid" => "true"
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert length(invitation.guests) == 1
+      {:ok, guest} = Enum.fetch(invitation.guests, 0)
+      assert guest.id == guest_id
+      assert guest.is_kid == true
+      assert invitation.additional_guests == 2
+    end
   end
 
   describe "get_guest()" do

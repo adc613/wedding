@@ -1,0 +1,17 @@
+<.rsvp_header />
+
+<br />
+
+<.confirmation_step header="It's a family-friendly wedding!" step_id={@step_id}>
+  <p>
+    Would you like to bring any children to the event? If so, please click the
+    button below:
+  </p>
+  <:action>
+    <.link href={~p"/rsvp/confirm/add_kids"}>
+      <.button class="btn-action">Add kid(s)</.button>
+    </.link>
+  </:action>
+</.confirmation_step>
+
+<.footer />

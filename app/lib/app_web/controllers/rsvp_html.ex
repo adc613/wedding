@@ -1,6 +1,7 @@
 defmodule AppWeb.RSVPHTML do
   use AppWeb, :html
   import AppWeb.PageHTML
+  import AppWeb.GuestsHTML
 
   embed_templates "rsvp_html/*"
 
@@ -30,9 +31,11 @@ defmodule AppWeb.RSVPHTML do
 
   def response_input(assigns) do
     ~H"""
-    <div class="flex gap-8">
-      <h2 class="text-lg font-semibold">{@guest.first_name} {@guest.last_name}</h2>
-      <div class="flex flex-col">
+    <div class="flex flex-col md:flex-row gap-8 justify-between p-4 rounded-xl border-2 rounded-2xl">
+      <h2 class="text-lg font-semibold m-auto">
+        {@guest.first_name} {@guest.last_name}
+      </h2>
+      <div class="flex flex-col gap-8">
         <div>
           <input type="radio" required name={@name} value={:yes} />
           <label> Will be attending</label>
@@ -54,7 +57,7 @@ defmodule AppWeb.RSVPHTML do
 
   def response(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8">
+    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8  border-zinc-300" >
       <div class="border-b-2 text-center">
         <h2 class="text-xl font-semibold">{@group_name}</h2>
         {render_slot(@inner_block)}
@@ -65,6 +68,35 @@ defmodule AppWeb.RSVPHTML do
           <.response_input name={@name <> "-" <> to_string(guest.id)} guest={guest} />
           <br />
         <% end %>
+      </div>
+    </div>
+    """
+  end
+
+  attr :header, :string, required: true
+  attr :step_id, :integer, required: true
+  attr :hide_next, :boolean, default: false
+  slot :inner_block, required: true
+  slot :action, required: false
+
+  def confirmation_step(assigns) do
+    ~H"""
+    <div class="rounded-2xl border-zinc-300 border-2 p-4">
+      <h2 class="text-lg mt-2 mb-4 font-semibold">{@header}</h2>
+      <div>
+        {render_slot(@inner_block)}
+      </div>
+      <div :if={not @hide_next or @action} class="mt-8 flex justify-between">
+        <div :if={@action}>
+          {render_slot(@action)}
+        </div>
+        <div :if={not @hide_next}>
+          <.link href={~p"/rsvp/confirm/#{@step_id + 1}"}>
+            <.button>
+              Next
+            </.button>
+          </.link>
+        </div>
       </div>
     </div>
     """

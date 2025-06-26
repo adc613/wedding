@@ -147,6 +147,25 @@ defmodule App.MyGuest do
     |> apply_preloads(keywords)
   end
 
+  def create_guest(attrs, %Invitation{} = invitation) do
+    Repo.transaction(fn ->
+      invitation = get_invitation(invitation.id)
+
+      guest =
+        %Guest{}
+        |> Guest.changeset(attrs)
+        |> Repo.insert!()
+
+      if not guest.is_kid do
+        invitation
+        |> Invitation.changeset(%{"additional_guests" => invitation.additional_guests - 1})
+        |> Repo.update!()
+      end
+
+      guest
+    end)
+  end
+
   def create_guest(attrs \\ %{}) do
     %Guest{}
     |> Guest.changeset(attrs)

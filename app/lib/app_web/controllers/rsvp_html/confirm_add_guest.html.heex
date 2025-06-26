@@ -1,0 +1,27 @@
+<.rsvp_header />
+
+<br />
+
+<.confirmation_step header="Add guest" step_id={@step_id} hide_next={true}>
+  <.guest_form
+    changeset={@changeset}
+    action={~p"/rsvp/add_guest?#{[redirect: ~p"/rsvp/confirm/#{@step_id + 1}"]}"}
+    invitation_id={@invitation.id}
+  >
+    <:actions>
+      <div class="flex justify-between">
+        <.button class="btn-action">
+          Add
+        </.button>
+        <.link
+          class="rounded-md font-semibold bg-black py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+          href={~p"/rsvp/confirm/#{@step_id + 1}"}
+        >
+          Continue
+        </.link>
+      </div>
+    </:actions>
+  </.guest_form>
+</.confirmation_step>
+
+<.footer />
