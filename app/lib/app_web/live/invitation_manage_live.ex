@@ -185,7 +185,7 @@ defmodule AppWeb.InvitationManageLive do
         guests = Enum.map(ids, &MyGuest.get_guest(&1))
         events = Enum.filter([:brunch, :rehersal], &events_map[&1])
 
-        result =
+        {:ok, _invitation} =
           MyGuest.create_invitation(
             guests: guests,
             events: [:wedding | events],
@@ -195,7 +195,7 @@ defmodule AppWeb.InvitationManageLive do
 
         refreshed_invites = MyGuest.list_invitations(preload: :guests)
 
-        {result, %{invitations: refreshed_invites}}
+        {:ok, %{invitations: refreshed_invites}}
       end)
     }
   end

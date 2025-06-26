@@ -151,6 +151,7 @@ defmodule AppWeb.RSVPController do
       MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
 
     cond do
+      guest_params["invitation_id"] != invitation.id -> :denied
       invitation == nil -> :denied
       invitation.permit_kids and guest_params["is_kid"] == "true" -> :ok
       invitation.additional_guests > 0 -> :ok
@@ -185,7 +186,7 @@ defmodule AppWeb.RSVPController do
           :error,
           "You do not have permission to add guest. If you think this is a mistake please contact Adam or Helen."
         )
-        |> redirect(to: ~p"/rsvp/confirm/add_guest")
+        |> redirect(to: ~p"/rsvp/confirm")
     end
   end
 
