@@ -146,7 +146,9 @@ defmodule AppWeb.RSVPController do
 
   def add_guest(conn, %{"guest" => guest_params, "redirect" => redirect}) do
     guest_id = get_guest_id(conn)
-    invitation = MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
+
+    invitation =
+      MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
 
     cond do
       invitation == nil -> :denied

@@ -232,6 +232,10 @@ defmodule App.MyGuest do
     |> Enum.reduce(element, fn with, element -> Repo.preload(element, with) end)
   end
 
-  defp cast_plus_one(true), do: 1
-  defp cast_plus_one(false), do: 1
+  defp cast_plus_one(value) do
+    case value do
+      true -> 1
+      false -> 0
+    end
+  end
 end
