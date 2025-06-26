@@ -3,19 +3,19 @@
 <br />
 
 <.confirmation_step header="You've got a plus one!" step_id={@step_id}>
-  <p class="mb-2">
-    You have permission to invite up to {@invitation.additional_guests} additional
-    Guest(s).
-  </p>
-  <p :if={length(@invitation.guests) > 0}>
-    On your invite we have added:
+  <p :if={length(@invitation.guests) > 0} class="mb-2">
+    On your invite we have:
     <ul class="list-disc list-inside">
       <li :for={guest <- @invitation.guests}>{guest.first_name} {guest.last_name}</li>
     </ul>
   </p>
+  <p>
+    You have permission to invite up to {@invitation.additional_guests} additional
+    Guest(s).
+  </p>
   <p class="mb-4 mt-8">
-    If you'd like to add anyone please click <i>Add guest(s)</i>. Otherwise you
-    can proceed by clicking <i>Next</i>.
+    If you'd like to invite someone please click <i>Add guest(s)</i>. Otherwise,
+    you can proceed by clicking <i>Next</i>.
   </p>
   <:action>
     <.link href={~p"/rsvp/confirm/add_guest"}>
