@@ -67,7 +67,7 @@ defmodule AppWeb.PageHTML do
   def rehersal_event(assigns) do
     ~H"""
     <.event
-      title="Rehersal"
+      title="Rehearsal"
       date="2026.04.04"
       time="5:00 PM - 7:00 PM"
       location="Garfield Park Conservatory"

@@ -34,7 +34,7 @@ defmodule App.MyGuestTest do
   test "list_invitations()" do
     g1 = MyGuest.get_guest!(1, preload: :rsvp)
 
-    :ok =
+    {:ok, _invitation} =
       MyGuest.create_invitation(
         guests: [g1],
         events: [:wedding, :rehersal],
@@ -45,7 +45,7 @@ defmodule App.MyGuestTest do
     g2 = MyGuest.get_guest!(2, preload: :rsvp)
     g3 = MyGuest.get_guest!(3, preload: :rsvp)
 
-    :ok =
+    {:ok, _invitaiton} =
       MyGuest.create_invitation(
         guests: [g2, g3],
         events: [:wedding],
@@ -93,7 +93,7 @@ defmodule App.MyGuestTest do
 
     g1 = MyGuest.get_guest!(1, preload: :rsvp)
 
-    :ok =
+    {:ok, _invitation} =
       MyGuest.create_invitation(
         guests: [g1],
         events: [:wedding, :rehersal],

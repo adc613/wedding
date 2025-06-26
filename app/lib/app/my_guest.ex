@@ -116,26 +116,24 @@ defmodule App.MyGuest do
   end
 
   def create_invitation(guests: guests, events: events, kids: kids?, plus_one: plus_one?) do
-    # Repo.transaction(fn -> 
-    invitation =
-      %Invitation{}
-      |> Invitation.changeset(%{
-        "events" => events,
-        "additional_guests" => cast_plus_one(plus_one?),
-        "permit_kids" => kids?
-      })
-      |> Repo.insert!()
+    Repo.transaction(fn ->
+      invitation =
+        %Invitation{}
+        |> Invitation.changeset(%{
+          "events" => events,
+          "additional_guests" => cast_plus_one(plus_one?),
+          "permit_kids" => kids?
+        })
+        |> Repo.insert!()
 
-    for guest <- guests do
-      guest
-      # |> Repo.preload(:invitation)
-      |> Guest.changeset(%{"invitation_id" => invitation.id})
-      |> Repo.update!()
-    end
+      for guest <- guests do
+        guest
+        |> Guest.changeset(%{"invitation_id" => invitation.id})
+        |> Repo.update!()
+      end
 
-    :ok
-    # {:ok, invitation}
-    # end)
+      invitation
+    end)
   end
 
   def create_invitation(attrs) do

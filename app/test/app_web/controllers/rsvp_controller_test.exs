@@ -12,11 +12,15 @@ defmodule AppWeb.RSVPControllerTest do
         "secret" => "123456"
       })
 
-    MyGuest.create_invitation(guests: [guest], events: ["wedding"], kids: false, plus_one: false)
+    {:ok, invitation} =
+      MyGuest.create_invitation(
+        guests: [guest],
+        events: ["wedding"],
+        kids: false,
+        plus_one: false
+      )
 
-    invitation = MyGuest.get_invitation(1, preload: :guests)
-
-    %{guest: guest, invitation: invitation}
+    %{guest: guest, invitation: MyGuest.load(invitation, preload: :guests)}
   end
 
   describe "GET /rsvp" do
@@ -77,7 +81,7 @@ defmodule AppWeb.RSVPControllerTest do
           "secret" => "123456"
         })
 
-      assert :ok ==
+      assert {:ok, _invitation} =
                MyGuest.create_invitation(
                  guests: [guest, g2],
                  events: [:brunch],
@@ -368,6 +372,33 @@ defmodule AppWeb.RSVPControllerTest do
       assert length(invitation.guests) == 2
       {:ok, new_guest} = Enum.fetch(invitation.guests, 1)
       assert new_guest.first_name == "Adam 2"
+    end
+
+    test "Block users from adding guests to invites they're not on", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.additional_guests == 0
+      assert length(invitation.guests) == 1
+
+      {:ok, i2} =
+        MyGuest.create_invitation(guests: [], events: ["wedding"], kids: false, plus_one: true)
+
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> post(~p"/rsvp/add_guest", %{
+        "guest" => %{
+          "email" => "test@test.test",
+          "first_name" => "Adam 2",
+          "last_name" => "Collins",
+          "invitation_id" => i2.id
+        },
+        "redirect" => "/test"
+      })
+
+      assert MyGuest.get_invitation(i2.id, preload: :guests)
+             |> then(&length(&1.guests)) == 0
     end
   end
 end

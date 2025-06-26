@@ -5,10 +5,17 @@
 <.confirmation_step header="You've got a plus one!" step_id={@step_id}>
   <p class="mb-2">
     You have permission to invite up to {@invitation.additional_guests} additional
-    Guest(s). If you'd like to bring any guests we'd love to have them.
+    Guest(s).
   </p>
-  <p class="mb-4">
-    Please click the button below to add guest:
+  <p :if={length(@invitation.guests) > 0}>
+    On your invite we have added:
+    <ul class="list-disc list-inside">
+      <li :for={guest <- @invitation.guests}>{guest.first_name} {guest.last_name}</li>
+    </ul>
+  </p>
+  <p class="mb-4 mt-8">
+    If you'd like to add anyone please click <i>Add guest(s)</i>. Otherwise you
+    can proceed by clicking <i>Next</i>.
   </p>
   <:action>
     <.link href={~p"/rsvp/confirm/add_guest"}>
