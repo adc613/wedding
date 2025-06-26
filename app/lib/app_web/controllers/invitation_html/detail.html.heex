@@ -1,0 +1,24 @@
+<h1 class="text-lg text-brand">
+  Details: <.invitation_display invitation={@invitation} />
+</h1>
+
+<ul>
+  <li>
+    <.link href={~p"/invitation/#{@invitation}/edit"}>
+      <.button>
+        Edit
+      </.button>
+    </.link>
+  </li>
+  <li>
+    <.link href={~p"/invitation/#{@invitation}"} method="delete" data-confirm="Are you sure?">
+      <.button>
+        Delete
+      </.button>
+    </.link>
+  </li>
+</ul>
+
+<p>
+  <a href={~p"/invitation"}>Go Back</a>
+</p>

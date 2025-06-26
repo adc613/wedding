@@ -53,6 +53,11 @@ defmodule App.MyGuest do
     |> apply_preloads(keywords)
   end
 
+  def get_invitation!(id, keywords \\ []) do
+    Repo.get!(Invitation, id)
+    |> apply_preloads(keywords)
+  end
+
   def update!(%Guest{} = guest, attrs) do
     guest
     |> Guest.changeset(attrs)
@@ -68,6 +73,12 @@ defmodule App.MyGuest do
   def update(%RSVP{} = rsvp, attrs) do
     rsvp
     |> RSVP.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def update(%Invitation{} = invitation, attrs) do
+    invitation
+    |> Invitation.changeset(attrs)
     |> Repo.update()
   end
 
@@ -87,21 +98,48 @@ defmodule App.MyGuest do
     Repo.delete(invitation)
   end
 
-  def create_invitation(guests: guests, events: events) do
-    {:ok, invitation} =
+  def create_invitation(attrs, guests: guests) do
+    Repo.transaction(fn ->
+      invitation =
+        %Invitation{}
+        |> Invitation.changeset(attrs)
+        |> Repo.insert!()
+
+      for guest <- guests do
+        guest
+        |> Guest.changeset(%{"invitation_id" => invitation.id})
+        |> Repo.update!()
+      end
+
+      invitation
+    end)
+  end
+
+  def create_invitation(guests: guests, events: events, kids: kids?, plus_one: plus_one?) do
+    # Repo.transaction(fn -> 
+    invitation =
       %Invitation{}
-      |> Invitation.changeset(%{"events" => events})
-      |> Repo.insert()
+      |> Invitation.changeset(%{
+        "events" => events,
+        "additional_guests" => cast_plus_one(plus_one?),
+        "permit_kids" => kids?
+      })
+      |> Repo.insert!()
 
     for guest <- guests do
-      {:ok, _} =
-        guest
-        |> Repo.preload(:invitation)
-        |> Guest.changeset(%{"invitation_id" => invitation.id})
-        |> Repo.update()
+      guest
+      # |> Repo.preload(:invitation)
+      |> Guest.changeset(%{"invitation_id" => invitation.id})
+      |> Repo.update!()
     end
 
     :ok
+    # {:ok, invitation}
+    # end)
+  end
+
+  def create_invitation(attrs) do
+    create_invitation(attrs, guests: [])
   end
 
   def list_invitations(keywords \\ []) do
@@ -174,4 +212,7 @@ defmodule App.MyGuest do
     |> Enum.filter(&(&1 != nil))
     |> Enum.reduce(element, fn with, element -> Repo.preload(element, with) end)
   end
+
+  defp cast_plus_one(true), do: 1
+  defp cast_plus_one(false), do: 1
 end

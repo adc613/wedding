@@ -1,0 +1,59 @@
+<h1 class="text-lg text-brand">
+  Detail view
+</h1>
+
+<.invitation_form
+  changeset={@changeset}
+  action={~p"/invitation/#{@invitation}?#{[redirect: @redirect]}"}
+>
+  <:actions>
+    <.button class="btn-action">
+      Update
+    </.button>
+    <.link
+      :if={@redirect}
+      class="rounded-md font-semibold bg-black py-2 px-4 border border-transparent text-center text-sm text-white transition-all shadow-md hover:shadow-lg focus:bg-slate-700 focus:shadow-none active:bg-slate-700 hover:bg-slate-700 active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none ml-2"
+      href={@redirect}
+    >
+      Go back
+    </.link>
+  </:actions>
+</.invitation_form>
+
+<.guests_table guests={@invitation.guests} fields={[:guest, :links]}>
+  <:action :let={guest}>
+    <.link
+      method="put"
+      href={~p"/invitation/#{@invitation}/remove_guest?#{[guest_id: guest.id]}"}
+      data-confirm="Would you like to remove guest from invite?"
+    >
+      <.button>
+        Remove guest
+      </.button>
+    </.link>
+  </:action>
+</.guests_table>
+
+<.button phx-click={show_modal("add-guest-modal")}>
+  Add guest
+</.button>
+
+<.modal id="add-guest-modal">
+  <.guests_table guests={@all_guests} fields={[:guest, :links]}>
+    <:action :let={guest}>
+      <.link
+        method="put"
+        href={~p"/invitation/#{@invitation}/add_guest?#{[guest_id: guest.id]}"}
+        data-confirm="Would you like to add guest to invite?"
+      >
+        <.button>
+          Add guest
+        </.button>
+      </.link>
+    </:action>
+  </.guests_table>
+
+  <.button type="reset" phx-click={hide_modal("add-guest-modal")}>
+    Close
+  </.button>
+</.modal>

@@ -60,11 +60,12 @@ defmodule AppWeb.InvitationManageLiveTest do
 
       assert lv
              |> element("#invite_form")
-             |> render_change(%{"rehersal" => true, "brunch" => false})
-
-      assert lv
-             |> element(~s|[id="invitation-modal"] button|, "Create")
-             |> render_click()
+             |> render_submit(%{
+               "rehersal" => true,
+               "brunch" => false,
+               "plus_one" => true,
+               "permit_kids" => false
+             })
 
       render_async(lv)
 
@@ -79,7 +80,12 @@ defmodule AppWeb.InvitationManageLiveTest do
     end
 
     test "delete invitation", %{conn: conn, user: user} do
-      MyGuest.create_invitation(guests: [MyGuest.get_guest!(1)], events: [:wedding])
+      MyGuest.create_invitation(
+        guests: [MyGuest.get_guest!(1)],
+        events: [:wedding],
+        kids: false,
+        plus_one: false
+      )
 
       {:ok, lv, _html} =
         conn

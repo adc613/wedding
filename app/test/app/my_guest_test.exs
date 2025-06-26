@@ -117,7 +117,14 @@ defmodule App.MyGuestTest do
 
   test "create_invitation()" do
     guest = MyGuest.get_guest(1, preload: :rsvp)
-    MyGuest.create_invitation(guests: [guest], events: [:wedding, :rehersal])
+
+    MyGuest.create_invitation(
+      guests: [guest],
+      events: [:wedding, :rehersal],
+      kids: false,
+      plus_one: false
+    )
+
     g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
 
     assert guest != g2
@@ -127,10 +134,26 @@ defmodule App.MyGuestTest do
 
   test "list_invitations()" do
     g1 = MyGuest.get_guest!(1, preload: :rsvp)
-    :ok = MyGuest.create_invitation(guests: [g1], events: [:wedding, :rehersal])
+
+    :ok =
+      MyGuest.create_invitation(
+        guests: [g1],
+        events: [:wedding, :rehersal],
+        kids: false,
+        plus_one: false
+      )
+
     g2 = MyGuest.get_guest!(2, preload: :rsvp)
     g3 = MyGuest.get_guest!(3, preload: :rsvp)
-    :ok = MyGuest.create_invitation(guests: [g2, g3], events: [:wedding])
+
+    :ok =
+      MyGuest.create_invitation(
+        guests: [g2, g3],
+        events: [:wedding],
+        kids: false,
+        plus_one: false
+      )
+
     i1 = MyGuest.get_invitation(guest_id: 1)
     i2 = MyGuest.get_invitation(guest_id: 2)
     i3 = MyGuest.get_invitation(guest_id: 3)
@@ -170,7 +193,14 @@ defmodule App.MyGuestTest do
     assert length(MyGuest.list_invitations()) == 0
 
     g1 = MyGuest.get_guest!(1, preload: :rsvp)
-    :ok = MyGuest.create_invitation(guests: [g1], events: [:wedding, :rehersal])
+
+    :ok =
+      MyGuest.create_invitation(
+        guests: [g1],
+        events: [:wedding, :rehersal],
+        kids: false,
+        plus_one: false
+      )
 
     invitation = MyGuest.get_invitation(1)
     MyGuest.delete(invitation)

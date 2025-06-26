@@ -12,7 +12,7 @@ defmodule AppWeb.RSVPControllerTest do
         "secret" => "123456"
       })
 
-    MyGuest.create_invitation(guests: [guest], events: ["wedding"])
+    MyGuest.create_invitation(guests: [guest], events: ["wedding"], kids: false, plus_one: false)
 
     :ok
   end
@@ -75,7 +75,13 @@ defmodule AppWeb.RSVPControllerTest do
           "secret" => "123456"
         })
 
-      assert :ok == MyGuest.create_invitation(guests: [guest, g2], events: [:brunch])
+      assert :ok ==
+               MyGuest.create_invitation(
+                 guests: [guest, g2],
+                 events: [:brunch],
+                 kids: false,
+                 plus_one: false
+               )
 
       resp =
         conn

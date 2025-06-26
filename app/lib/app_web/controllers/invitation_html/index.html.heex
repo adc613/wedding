@@ -1,0 +1,32 @@
+<h1 class="text-lg text-brand">
+  Invitation Overview
+</h1>
+
+<.table id="invitations" rows={@invitations}>
+  <:col :let={invitation} label="Guests">
+    <.invitation_display invitation={invitation} />
+  </:col>
+  <:col :let={invitation} label="Rehersal">
+    <.check_icon checked={:rehersal in invitation.events} />
+  </:col>
+  <:col :let={invitation} label="Wedding">
+    <.check_icon checked={:wedding in invitation.events} />
+  </:col>
+  <:col :let={invitation} label="Brunch">
+    <.check_icon checked={:brunch in invitation.events} />
+  </:col>
+  <:col :let={invitation} label="Additional Guest">
+    <p>{invitation.additional_guests}</p>
+  </:col>
+  <:col :let={invitation} label="Permit Kids">
+    <.check_icon checked={invitation.permit_kids} />
+  </:col>
+
+  <:col :let={invitation} label="Links">
+    <.link href={~p"/invitation/#{invitation}/edit?#{[redirect: ~p"/invitation"]}"}>
+      <.button>
+        Edit
+      </.button>
+    </.link>
+  </:col>
+</.table>

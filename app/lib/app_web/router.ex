@@ -42,6 +42,14 @@ defmodule AppWeb.Router do
     post "/lookup", RSVPController, :lookup_invite
   end
 
+  scope "/invitation", AppWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    resources "/", InvitationController
+    put "/:id/remove_guest", InvitationController, :remove_guest
+    put "/:id/add_guest", InvitationController, :add_guest
+  end
+
   scope "/guest", AppWeb do
     pipe_through [:browser, :maybe_require_authenticated_user]
 
