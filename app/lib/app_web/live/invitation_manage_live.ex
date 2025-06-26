@@ -28,7 +28,7 @@ defmodule AppWeb.InvitationManageLive do
       <:col :let={invitation} label="Guests">
         <.invitation_display invitation={invitation} />
       </:col>
-      <:col :let={invitation} label="Rehersal">
+      <:col :let={invitation} label="Rehearsal">
         <.check_icon checked={:rehersal in invitation.events} />
       </:col>
       <:col :let={invitation} label="Wedding">
@@ -66,7 +66,7 @@ defmodule AppWeb.InvitationManageLive do
       <div class="mb-4">
         <.simple_form for={@invite_form} id="invite_form" phx-submit="create_invite">
           <.input field={@invite_form[:brunch]} id="brunch" type="checkbox" label="Brunch" />
-          <.input field={@invite_form[:rehersal]} id="rehersal" type="checkbox" label="Rehersal" />
+          <.input field={@invite_form[:rehersal]} id="rehersal" type="checkbox" label="Rehearsal" />
           <.input
             field={@invite_form[:plus_one]}
             id="plus-one"

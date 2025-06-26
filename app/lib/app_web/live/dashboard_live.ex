@@ -115,7 +115,7 @@ defmodule AppWeb.DashboardLive do
           info: counts.brunch
         },
         %{
-          title: "Yes to Rehersal",
+          title: "Yes to Rehearsal",
           info: counts.rehersal
         }
       ]
