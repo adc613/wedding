@@ -245,6 +245,20 @@ defmodule AppWeb.UserAuth do
     require_authenticated_user(conn, opts)
   end
 
+  def require_rsvp_lookup(conn, _opts) do
+    conn
+    |> fetch_cookies(encrypted: ~w(guest-id))
+    |> case do
+      %{cookies: %{"guest-id" => _id}} ->
+        conn
+
+      _ ->
+        conn
+        |> redirect(to: ~p"/rsvp")
+        |> halt()
+    end
+  end
+
   defp is_valid_cookie_id?(cookie_id: cookie_id, guest_id: guest_id) do
     MyGuest.get_guest(guest_id)
     |> case do

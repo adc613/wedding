@@ -31,107 +31,6 @@ defmodule App.MyGuestTest do
     :ok
   end
 
-  describe("create_guests()") do
-    test "with email" do
-      {:ok, %{id: guest_id}} =
-        MyGuest.create_guest(%{
-          "email" => "test@test.test",
-          "first_name" => "Adam",
-          "last_name" => "Collins",
-          "secret" => "123456",
-          "phone" => "8475626149"
-        })
-
-      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
-
-      assert guest.first_name == "Adam"
-      assert guest.last_name == "Collins"
-      assert guest.secret == "123456"
-      assert guest.phone == "8475626149"
-    end
-
-    test "supports no email addres" do
-      {:ok, %{id: guest_id}} =
-        MyGuest.create_guest(%{
-          "email" => "",
-          "first_name" => "Adam",
-          "last_name" => "Collins",
-          "secret" => "123456"
-        })
-
-      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
-
-      assert guest.first_name == "Adam"
-      assert guest.last_name == "Collins"
-      assert guest.secret == "123456"
-      assert guest.email == nil
-    end
-  end
-
-  describe "get_guest()" do
-    test "with email" do
-      {:ok, guest} =
-        MyGuest.create_guest(%{
-          "email" => "test4@test.com",
-          "first_name" => "Adam4",
-          "last_name" => "Collins",
-          "secret" => "123456"
-        })
-
-      db_guest = MyGuest.get_guest(email: guest.email)
-
-      assert guest == db_guest
-
-      MyGuest.create_guest(%{
-        "email" => "test4@test.com",
-        "first_name" => "Adam5",
-        "last_name" => "Collins",
-        "secret" => "123456"
-      })
-
-      db_guest = MyGuest.get_guest(email: guest.email)
-
-      assert db_guest == :many_matches
-
-      db_guest = MyGuest.get_guest(email: "does@not.exist")
-
-      assert db_guest == nil
-    end
-
-    test "happy case" do
-      {:ok, guest} =
-        MyGuest.create_guest(%{
-          "email" => "test4@test.com",
-          "first_name" => "Adam4",
-          "last_name" => "Collins",
-          "secret" => "123456"
-        })
-
-      db_guest = MyGuest.get_guest!(guest.id, preload: :rsvp)
-      guest = Repo.preload(guest, :rsvp)
-
-      assert guest == db_guest
-      assert nil == MyGuest.get_guest(42)
-    end
-  end
-
-  test "create_invitation()" do
-    guest = MyGuest.get_guest(1, preload: :rsvp)
-
-    MyGuest.create_invitation(
-      guests: [guest],
-      events: [:wedding, :rehersal],
-      kids: false,
-      plus_one: false
-    )
-
-    g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
-
-    assert guest != g2
-    assert g2.invitation == MyGuest.get_invitation(guest_id: 1)
-    assert nil == MyGuest.get_invitation(42)
-  end
-
   test "list_invitations()" do
     g1 = MyGuest.get_guest!(1, preload: :rsvp)
 
@@ -224,5 +123,205 @@ defmodule App.MyGuestTest do
 
     result = MyGuest.send_std(guest)
     assert {:error, :duplicate_std} = result
+  end
+
+  describe "create_invitation()" do
+    test "Happy case" do
+      guest = MyGuest.get_guest(1, preload: :rsvp)
+
+      MyGuest.create_invitation(
+        guests: [guest],
+        events: [:wedding, :rehersal],
+        kids: false,
+        plus_one: false
+      )
+
+      g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
+
+      assert guest != g2
+      assert g2.invitation == MyGuest.get_invitation(guest_id: 1)
+      assert nil == MyGuest.get_invitation(42)
+      assert g2.invitation.additional_guests == 0
+      assert g2.invitation.permit_kids == false
+    end
+
+    test "With additional guests" do
+      guest = MyGuest.get_guest(1, preload: :rsvp)
+
+      MyGuest.create_invitation(
+        guests: [guest],
+        events: [:rehersal],
+        kids: true,
+        plus_one: true
+      )
+
+      g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
+
+      assert guest != g2
+      assert g2.invitation == MyGuest.get_invitation(guest_id: 1)
+      assert nil == MyGuest.get_invitation(42)
+      assert g2.invitation.additional_guests == 1
+      assert g2.invitation.permit_kids == true
+    end
+  end
+
+  describe "get_guest()" do
+    test "with email" do
+      {:ok, guest} =
+        MyGuest.create_guest(%{
+          "email" => "test4@test.com",
+          "first_name" => "Adam4",
+          "last_name" => "Collins",
+          "secret" => "123456"
+        })
+
+      db_guest = MyGuest.get_guest(email: guest.email)
+
+      assert guest == db_guest
+
+      MyGuest.create_guest(%{
+        "email" => "test4@test.com",
+        "first_name" => "Adam5",
+        "last_name" => "Collins",
+        "secret" => "123456"
+      })
+
+      db_guest = MyGuest.get_guest(email: guest.email)
+
+      assert db_guest == :many_matches
+
+      db_guest = MyGuest.get_guest(email: "does@not.exist")
+
+      assert db_guest == nil
+    end
+
+    test "happy case" do
+      {:ok, guest} =
+        MyGuest.create_guest(%{
+          "email" => "test4@test.com",
+          "first_name" => "Adam4",
+          "last_name" => "Collins",
+          "secret" => "123456"
+        })
+
+      db_guest = MyGuest.get_guest!(guest.id, preload: :rsvp)
+      guest = Repo.preload(guest, :rsvp)
+
+      assert guest == db_guest
+      assert nil == MyGuest.get_guest(42)
+    end
+  end
+
+  describe("create_guests()") do
+    test "with email" do
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "test@test.test",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "8475626149"
+        })
+
+      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
+
+      assert guest.first_name == "Adam"
+      assert guest.last_name == "Collins"
+      assert guest.secret == "123456"
+      assert guest.phone == "8475626149"
+    end
+
+    test "supports no email addres" do
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456"
+        })
+
+      guest = MyGuest.get_guest!(guest_id, preload: :rsvp)
+
+      assert guest.first_name == "Adam"
+      assert guest.last_name == "Collins"
+      assert guest.secret == "123456"
+      assert guest.email == nil
+    end
+
+    test "Adding guest to invitation" do
+      {:ok, invitation} =
+        MyGuest.create_invitation(%{
+          "events" => ["wedding"],
+          "additional_guests" => 2
+        })
+
+      assert invitation.additional_guests == 2
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adam",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert length(invitation.guests) == 1
+      {:ok, guest} = Enum.fetch(invitation.guests, 0)
+      assert guest.id == guest_id
+      assert invitation.additional_guests == 1
+
+      {:ok, %{id: _guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adm",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert invitation.additional_guests == 0
+    end
+
+    test "Add kids to invitation" do
+      {:ok, invitation} =
+        MyGuest.create_invitation(%{
+          "events" => ["wedding"],
+          "additional_guests" => 2
+        })
+
+      assert invitation.additional_guests == 2
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(
+          %{
+            "email" => "",
+            "first_name" => "Adam",
+            "last_name" => "Collins",
+            "secret" => "123456",
+            "invitation_id" => invitation.id,
+            "is_kid" => "true"
+          },
+          invitation
+        )
+
+      invitation = MyGuest.get_invitation!(invitation.id, preload: :guests)
+
+      assert length(invitation.guests) == 1
+      {:ok, guest} = Enum.fetch(invitation.guests, 0)
+      assert guest.id == guest_id
+      assert guest.is_kid == true
+      assert invitation.additional_guests == 2
+    end
   end
 end

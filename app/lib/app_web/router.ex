@@ -40,6 +40,16 @@ defmodule AppWeb.Router do
     post "/reset", RSVPController, :reset_guest_id
     put "/invite", RSVPController, :update_rsvp
     post "/lookup", RSVPController, :lookup_invite
+    post "/add_guest", RSVPController, :add_guest
+  end
+
+  scope "/rsvp/confirm", AppWeb do
+    pipe_through [:browser, :require_rsvp_lookup]
+
+    get "/", RSVPController, :confirm
+    get "/add_guest", RSVPController, :add_guest_form
+    get "/add_kids", RSVPController, :add_kid_form
+    get "/:step_id", RSVPController, :confirm
   end
 
   scope "/invitation", AppWeb do

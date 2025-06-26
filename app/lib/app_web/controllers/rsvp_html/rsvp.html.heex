@@ -1,51 +1,6 @@
-<h1 class="text-lg text-brand">
-  You're invited!
-</h1>
-
-<p>
-  Please answer the following questions to help us plan a perfect day.
-</p>
-
-<p>
-  If things change, you can return to this page to upate your answers at any
-  time in the future
-</p>
+<.rsvp_header />
 
 <br />
-
-<p>
-  You are permitted to Respond for:
-</p>
-<ul class="list-disc list-inside space-y-2 mb-8">
-  <%= for guest <- @invitation.guests do %>
-    <li>
-      {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
-      <.link
-        class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
-        href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp"]}"}
-      >edit information</.link>)
-    </li>
-  <% end %>
-</ul>
-
-<%= if @invitation.additional_guests > 0 do %>
-  <h2 class="text-lg mt-8 mb-4 font-semibold">You've got a plus one!</h2>
-  <p>
-    You have permission to invite up to {@invitation.additional_guests} additional
-    Guest(s). If you'd like to bring any guests we'd love to have them, please add them
-    to your invitation so that we can plan accomodations:
-  </p>
-  <.link href={~p"/"}>Add guest(s)</.link>
-<% end %>
-
-<%= if @invitation.permit_kids do %>
-  <h2 class="text-lg mt-8 mb-4 font-semibold">It's a family-friendly wedding!</h2>
-  <p>
-    Would you like to bring any children to the event? If so, plase click the
-    button below:
-  </p>
-  <.link href={~p"/"}>Add kid(s)</.link>
-<% end %>
 
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
@@ -80,7 +35,4 @@
   <.button class="btn-action" type="submit">Submit RSVP</.button>
 </.form>
 
-<h2 class="text-lg mt-8 mb-4 font-semibold">is this the wrong invitation?</h2>
-<.link href={~p"/rsvp/reset"} method="post">
-  <.button>find my invitaiton</.button>
-</.link>
+<.footer />

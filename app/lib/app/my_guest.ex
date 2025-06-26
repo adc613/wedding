@@ -147,6 +147,25 @@ defmodule App.MyGuest do
     |> apply_preloads(keywords)
   end
 
+  def create_guest(attrs, %Invitation{} = invitation) do
+    Repo.transaction(fn ->
+      invitation = get_invitation(invitation.id)
+
+      guest =
+        %Guest{}
+        |> Guest.changeset(attrs)
+        |> Repo.insert!()
+
+      if not guest.is_kid do
+        invitation
+        |> Invitation.changeset(%{"additional_guests" => invitation.additional_guests - 1})
+        |> Repo.update!()
+      end
+
+      guest
+    end)
+  end
+
   def create_guest(attrs \\ %{}) do
     %Guest{}
     |> Guest.changeset(attrs)
@@ -213,6 +232,10 @@ defmodule App.MyGuest do
     |> Enum.reduce(element, fn with, element -> Repo.preload(element, with) end)
   end
 
-  defp cast_plus_one(true), do: 1
-  defp cast_plus_one(false), do: 1
+  defp cast_plus_one(value) do
+    case value do
+      true -> 1
+      false -> 0
+    end
+  end
 end

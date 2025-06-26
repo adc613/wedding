@@ -1,0 +1,20 @@
+<.rsvp_header />
+
+<br />
+
+<.confirmation_step header="You've got a plus one!" step_id={@step_id}>
+  <p class="mb-2">
+    You have permission to invite up to {@invitation.additional_guests} additional
+    Guest(s). If you'd like to bring any guests we'd love to have them.
+  </p>
+  <p class="mb-4">
+    Please click the button below to add guest:
+  </p>
+  <:action>
+    <.link href={~p"/rsvp/confirm/add_guest"}>
+      <.button class="btn-action">Add guest(s)</.button>
+    </.link>
+  </:action>
+</.confirmation_step>
+
+<.footer />

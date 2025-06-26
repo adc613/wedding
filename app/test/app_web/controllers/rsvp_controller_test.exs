@@ -14,7 +14,9 @@ defmodule AppWeb.RSVPControllerTest do
 
     MyGuest.create_invitation(guests: [guest], events: ["wedding"], kids: false, plus_one: false)
 
-    :ok
+    invitation = MyGuest.get_invitation(1, preload: :guests)
+
+    %{guest: guest, invitation: invitation}
   end
 
   describe "GET /rsvp" do
@@ -148,6 +150,224 @@ defmodule AppWeb.RSVPControllerTest do
 
       assert events == [:wedding]
       assert declined_events == [:rehersal]
+    end
+  end
+
+  describe("confirmation flow") do
+    test "Lookup redirect to confirm only when there's not an existing RSVP", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/confirm"
+
+      conn =
+        put(conn, ~p"/rsvp/invite", %{
+          "invitation_id" => 1,
+          "wedding-1" => "yes",
+          "rehersal-1" => "no"
+        })
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> html_response(302)
+
+      refute resp =~ "/rsvp/confirm"
+    end
+
+    test "Redirect to /rsvp when no guest ID is found", %{conn: conn} do
+      resp =
+        conn
+        |> get(~p"/rsvp/confirm")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp"
+      refute resp =~ "/rsvp/confirm"
+    end
+
+    test "Redirect to /rsvp/confirm0 as first step", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/confirm/0"
+    end
+
+    test "Render step 0", %{conn: conn, guest: guest} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/0")
+        |> html_response(200)
+
+      assert resp =~ "s a good email?"
+    end
+
+    test "Only render step 1 when invitation has permission to add guests", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.additional_guests == 0
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/1")
+        |> html_response(200)
+
+      assert resp =~ "information up to date"
+      refute resp =~ "got a plus one"
+
+      MyGuest.update(invitation, %{"additional_guests" => 1})
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/1")
+        |> html_response(200)
+
+      refute resp =~ "information up to date"
+      assert resp =~ "got a plus one"
+    end
+
+    test "Only render step 2 when invitation has permission to add kids", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.permit_kids == false
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/2")
+        |> html_response(200)
+
+      assert resp =~ "information up to date"
+      refute resp =~ "family-friendly"
+
+      MyGuest.update(invitation, %{"permit_kids" => "true"})
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/2")
+        |> html_response(200)
+
+      refute resp =~ "information up to date"
+      assert resp =~ "family-friendly"
+    end
+
+    test "Render step 3", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.permit_kids == false
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+        |> get(~p"/rsvp/confirm/3")
+        |> html_response(200)
+
+      assert resp =~ "information up to date"
+    end
+
+    test "Block users from adding guests when they don't have permission", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.additional_guests == 0
+      assert length(invitation.guests) == 1
+
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> post(~p"/rsvp/add_guest", %{
+        "guest" => %{
+          "email" => "test@test.test",
+          "first_name" => "Adam 2",
+          "last_name" => "Collins",
+          "invitation_id" => invitation.id
+        },
+        "redirect" => "/test"
+      })
+
+      assert MyGuest.get_invitation(invitation.id, preload: :guests)
+             |> then(&length(&1.guests)) == 1
+
+      MyGuest.update(invitation, %{"additional_guests" => 1})
+
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> post(~p"/rsvp/add_guest", %{
+        "guest" => %{
+          "email" => "test@test.test",
+          "first_name" => "Adam 2",
+          "last_name" => "Collins",
+          "invitation_id" => invitation.id
+        },
+        "redirect" => "/test"
+      })
+
+      invitation = MyGuest.get_invitation(invitation.id, preload: :guests)
+      assert length(invitation.guests) == 2
+      {:ok, new_guest} = Enum.fetch(invitation.guests, 1)
+      assert new_guest.first_name == "Adam 2"
+    end
+
+    test "Block users from adding kids when they don't have permission", %{
+      conn: conn,
+      guest: guest,
+      invitation: invitation
+    } do
+      assert invitation.permit_kids == false
+
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> post(~p"/rsvp/add_guest", %{
+        "guest" => %{
+          "email" => "test@test.test",
+          "first_name" => "Adam 2",
+          "last_name" => "Collins",
+          "is_kid" => "true",
+          "invitation_id" => invitation.id
+        },
+        "redirect" => "/test"
+      })
+
+      assert MyGuest.get_invitation(invitation.id, preload: :guests)
+             |> then(&length(&1.guests)) == 1
+
+      MyGuest.update(invitation, %{"permit_kids" => "true"})
+
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> post(~p"/rsvp/add_guest", %{
+        "guest" => %{
+          "email" => "test@test.test",
+          "first_name" => "Adam 2",
+          "last_name" => "Collins",
+          "is_kid" => "true",
+          "invitation_id" => invitation.id
+        },
+        "redirect" => "/test"
+      })
+
+      invitation = MyGuest.get_invitation(invitation.id, preload: :guests)
+      assert length(invitation.guests) == 2
+      {:ok, new_guest} = Enum.fetch(invitation.guests, 1)
+      assert new_guest.first_name == "Adam 2"
     end
   end
 end

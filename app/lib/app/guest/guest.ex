@@ -39,6 +39,7 @@ defmodule App.Guest.Guest do
       :email,
       :sent_std,
       :invitation_id,
+      :is_kid,
       :phone
     ])
     |> cast_assoc(:invitation, with: &Invitation.changeset/2)
