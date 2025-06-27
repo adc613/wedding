@@ -8,6 +8,51 @@ defmodule AppWeb.PageHTML do
 
   embed_templates "page_html/*"
 
+  attr :event, :atom, required: true
+  slot :footer, required: true
+
+  def predefined_group(%{event: :wedding} = assigns) do
+    ~H"""
+    <.event_group group_name="Wedding day">
+      <:events>
+        <!-- Hide cocktail event for now -->
+    <!--<.cocktail_event /> -->
+        <.reception_event />
+        <.ceremony_event />
+      </:events>
+      <:footer>
+        {render_slot(@footer)}
+      </:footer>
+    </.event_group>
+    """
+  end
+
+  def predefined_group(%{event: :brunch} = assigns) do
+    ~H"""
+    <.event_group group_name="Brunch">
+      <:events>
+        <.brunch_event />
+      </:events>
+      <:footer>
+        {render_slot(@footer)}
+      </:footer>
+    </.event_group>
+    """
+  end
+
+  def predefined_group(%{event: :rehersal} = assigns) do
+    ~H"""
+    <.event_group group_name="Reherseal dinner">
+      <:events>
+        <.rehersal_event />
+      </:events>
+      <:footer>
+        {render_slot(@footer)}
+      </:footer>
+    </.event_group>
+    """
+  end
+
   def brunch_event(assigns) do
     ~H"""
     <.event

@@ -171,7 +171,7 @@ defmodule AppWeb.RSVPController do
 
     conn
     |> put_flash(:info, "Updated RSVP")
-    |> render_thanks()
+    |> redirect(to: ~p"/rsvp/thanks")
   end
 
   def add_guest(conn, %{"guest" => guest_params, "redirect" => redirect}) do
@@ -242,6 +242,12 @@ defmodule AppWeb.RSVPController do
     )
   end
 
+  def thanks(conn, _params) do
+    %{invitation: invitation} = get_confirm_details(conn)
+    guests = invitation.guests |> MyGuest.load(preload: :rsvp)
+    conn |> render(:thanks, invitation: invitation, guests: guests)
+  end
+
   defp get_confirm_details(conn) do
     guest_id = get_guest_id(conn)
 
@@ -252,10 +258,6 @@ defmodule AppWeb.RSVPController do
       end
 
     %{guest_id: guest_id, invitation: invitation}
-  end
-
-  defp render_thanks(conn) do
-    conn |> render(:thanks)
   end
 
   defp render_lookup(conn, changeset: changeset) do

@@ -43,13 +43,17 @@ defmodule AppWeb.Router do
     post "/add_guest", RSVPController, :add_guest
   end
 
-  scope "/rsvp/confirm", AppWeb do
+  scope "/rsvp", AppWeb do
     pipe_through [:browser, :require_rsvp_lookup]
 
-    get "/", RSVPController, :confirm
-    get "/add_guest", RSVPController, :add_guest_form
-    get "/add_kids", RSVPController, :add_kid_form
-    get "/:step_id", RSVPController, :confirm
+    get "/thanks", RSVPController, :thanks
+
+    scope "/confirm" do
+      get "/", RSVPController, :confirm
+      get "/add_guest", RSVPController, :add_guest_form
+      get "/add_kids", RSVPController, :add_kid_form
+      get "/:step_id", RSVPController, :confirm
+    end
   end
 
   scope "/invitation", AppWeb do

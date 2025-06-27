@@ -1,3 +1,15 @@
 <h1 class="text-lg text-brand">
   Thanks for responding!
 </h1>
+<div :for={event <- @invitation.events}>
+  <.predefined_group event={event}>
+    <:footer>
+      <ul>
+        <li :for={guest <- @guests}>
+          <.check_icon checked={event in guest.rsvp.events} />
+          {guest.first_name} {guest.last_name}
+        </li>
+      </ul>
+    </:footer>
+  </.predefined_group>
+</div>
