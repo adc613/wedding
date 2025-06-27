@@ -2,7 +2,7 @@
 
 <br />
 
-<.confirmation_step header="Is our contact information up to date?" step_id={@step_id}>
+<.confirmation_step header="Please check our information one last time." step_id={@step_id}>
   <ul class="list-disc list-inside space-y-2 mb-8">
     <%= for guest <- @invitation.guests do %>
       <li>
@@ -14,6 +14,9 @@
       </li>
     <% end %>
   </ul>
+  <p>
+    Click <i>Next</i> if everything looks good.
+  </p>
 </.confirmation_step>
 
 <.footer />

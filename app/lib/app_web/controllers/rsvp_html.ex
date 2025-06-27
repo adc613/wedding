@@ -31,7 +31,7 @@ defmodule AppWeb.RSVPHTML do
 
   def response_input(assigns) do
     ~H"""
-    <div class="flex flex-col md:flex-row gap-8 justify-between p-4 rounded-xl border-2 rounded-2xl">
+    <div class="w-full flex flex-col gap-8 justify-between p-4 rounded-xl border-2 rounded-2xl">
       <h2 class="text-lg font-semibold m-auto">
         {@guest.first_name} {@guest.last_name}
       </h2>
@@ -57,13 +57,13 @@ defmodule AppWeb.RSVPHTML do
 
   def response(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8  border-zinc-300" >
+    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8  border-zinc-300">
       <div class="border-b-2 text-center">
         <h2 class="text-xl font-semibold">{@group_name}</h2>
         {render_slot(@inner_block)}
       </div>
 
-      <div>
+      <div class="w-full">
         <%= for guest <- @guests do %>
           <.response_input name={@name <> "-" <> to_string(guest.id)} guest={guest} />
           <br />
