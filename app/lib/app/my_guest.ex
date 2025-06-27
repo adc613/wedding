@@ -57,21 +57,25 @@ defmodule App.MyGuest do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
     |> Repo.preload(:guests)
+    |> load_phone_str()
   end
 
   def get_invitation(guest_id: id) do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
+    |> load_phone_str()
   end
 
   def get_invitation(id, keywords \\ []) do
     Repo.get(Invitation, id)
     |> apply_preloads(keywords)
+    |> load_phone_str()
   end
 
   def get_invitation!(id, keywords \\ []) do
     Repo.get!(Invitation, id)
     |> apply_preloads(keywords)
+    |> load_phone_str()
   end
 
   def update!(%Guest{} = guest, attrs) do
@@ -127,7 +131,7 @@ defmodule App.MyGuest do
         |> Repo.update!()
       end
 
-      invitation
+      invitation |> load_phone_str()
     end)
   end
 
@@ -159,6 +163,7 @@ defmodule App.MyGuest do
   def list_invitations(keywords \\ []) do
     Repo.all(Invitation)
     |> apply_preloads(keywords)
+    |> Enum.map(&load_phone_str(&1))
   end
 
   def create_guest(attrs, %Invitation{} = invitation) do
@@ -256,4 +261,15 @@ defmodule App.MyGuest do
       false -> 0
     end
   end
+
+  defp load_phone_str(%Invitation{} = invitation) do
+    if is_list(invitation.guests) do
+      updated_guests = Enum.map(invitation.guests, &Guest.add_phone(&1))
+      Map.put(invitation, :guests, updated_guests)
+    else
+      invitation
+    end
+  end
+
+  defp load_phone_str(nil), do: nil
 end

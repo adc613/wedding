@@ -87,7 +87,7 @@ defmodule App.Guest.Guest do
     |> Integer.to_string()
   end
 
-  def convert_phone(phone), do: translate_legacy_to_number(phone)
+  def convert_phone(phone), do: parse_phone_str(phone)
 
   def add_phone(nil), do: nil
 
@@ -119,7 +119,7 @@ defmodule App.Guest.Guest do
 
   defp clean_phone(%{"phone" => _phone} = attrs) do
     {country_code, phone_number} =
-      Map.get(attrs, "phone", "") |> translate_legacy_to_number()
+      Map.get(attrs, "phone", "") |> parse_phone_str()
 
     # Ecto throws an error where there's a mix of string keys and atom keys.
     if Map.keys(attrs) |> Enum.all?(&is_atom(&1)) do
@@ -135,9 +135,9 @@ defmodule App.Guest.Guest do
 
   defp clean_phone(attrs), do: attrs
 
-  defp translate_legacy_to_number(""), do: {0, 0}
+  defp parse_phone_str(""), do: {0, 0}
 
-  defp translate_legacy_to_number(number_str) do
+  defp parse_phone_str(number_str) do
     num_list =
       to_charlist(number_str)
       |> Enum.filter(&(&1 >= ?0 and &1 <= ?9))
