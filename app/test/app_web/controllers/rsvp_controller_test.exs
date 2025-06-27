@@ -9,7 +9,8 @@ defmodule AppWeb.RSVPControllerTest do
         "email" => "test@test.com",
         "first_name" => "Adam",
         "last_name" => "Collins",
-        "secret" => "123456"
+        "secret" => "123456",
+        "phone" => "8475551234"
       })
 
     {:ok, invitation} =
@@ -36,6 +37,20 @@ defmodule AppWeb.RSVPControllerTest do
       resp =
         conn
         |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => "test@test.com"}})
+        |> get(~p"/rsvp")
+        |> html_response(200)
+
+      assert resp =~ "You're invited"
+      assert resp =~ "Adam Collins"
+      assert resp =~ "Ceremony"
+      assert resp =~ "Reception"
+    end
+
+    @tag only: true
+    test "Lookup phone number", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
         |> get(~p"/rsvp")
         |> html_response(200)
 
@@ -228,7 +243,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/1")
         |> html_response(200)
 
-      assert resp =~ "information up to date"
+      assert resp =~ "confirm contact information"
       refute resp =~ "got a plus one"
 
       MyGuest.update(invitation, %{"additional_guests" => 1})
@@ -239,7 +254,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/1")
         |> html_response(200)
 
-      refute resp =~ "information up to date"
+      refute resp =~ "confirm contact information"
       assert resp =~ "got a plus one"
     end
 
@@ -256,7 +271,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/2")
         |> html_response(200)
 
-      assert resp =~ "information up to date"
+      assert resp =~ "confirm contact information"
       refute resp =~ "family-friendly"
 
       MyGuest.update(invitation, %{"permit_kids" => "true"})
@@ -267,7 +282,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/2")
         |> html_response(200)
 
-      refute resp =~ "information up to date"
+      refute resp =~ "confirm contact information"
       assert resp =~ "family-friendly"
     end
 
@@ -284,7 +299,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/3")
         |> html_response(200)
 
-      assert resp =~ "information up to date"
+      assert resp =~ "confirm contact information"
     end
 
     test "Block users from adding guests when they don't have permission", %{

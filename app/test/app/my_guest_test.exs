@@ -1,4 +1,5 @@
 defmodule App.MyGuestTest do
+  alias App.Guest.Guest
   alias App.Guest.RSVP
   alias App.MyGuest
   use App.DataCase
@@ -166,6 +167,7 @@ defmodule App.MyGuestTest do
   end
 
   describe "get_guest()" do
+    @tag only: true
     test "with email" do
       {:ok, guest} =
         MyGuest.create_guest(%{
@@ -195,19 +197,53 @@ defmodule App.MyGuestTest do
       assert db_guest == nil
     end
 
+    test "with phone number" do
+      {:ok, guest} =
+        MyGuest.create_guest(%{
+          "email" => "test4@test.com",
+          "first_name" => "Adam4",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "+1(847)562-6149"
+        })
+
+      db_guest = MyGuest.get_guest(phone: "8475626149")
+
+      assert guest == db_guest |> Guest.add_phone()
+
+      MyGuest.create_guest(%{
+        "email" => "test4@test.com",
+        "first_name" => "Adam5",
+        "last_name" => "Collins",
+        "secret" => "123456",
+        "phone" => "+1(847)562-6149"
+      })
+
+      db_guest = MyGuest.get_guest(phone: "8475626149")
+
+      assert db_guest == :many_matches
+
+      db_guest = MyGuest.get_guest(email: "8475554321")
+
+      assert db_guest == nil
+    end
+
+    @tag only: true
     test "happy case" do
       {:ok, guest} =
         MyGuest.create_guest(%{
           "email" => "test4@test.com",
           "first_name" => "Adam4",
           "last_name" => "Collins",
-          "secret" => "123456"
+          "secret" => "123456",
+          "phone_number" => "8475551234",
+          "country_code" => 1
         })
 
       db_guest = MyGuest.get_guest!(guest.id, preload: :rsvp)
       guest = Repo.preload(guest, :rsvp)
 
-      assert guest == db_guest
+      assert guest |> Guest.add_phone() == db_guest
       assert nil == MyGuest.get_guest(42)
     end
   end
@@ -228,7 +264,7 @@ defmodule App.MyGuestTest do
       assert guest.first_name == "Adam"
       assert guest.last_name == "Collins"
       assert guest.secret == "123456"
-      assert guest.phone == "8475626149"
+      assert guest.phone == "+1(847)562-6149"
     end
 
     test "supports no email addres" do
@@ -246,6 +282,61 @@ defmodule App.MyGuestTest do
       assert guest.last_name == "Collins"
       assert guest.secret == "123456"
       assert guest.email == nil
+    end
+
+    @tag only: true
+    test "supports phone number in various formats" do
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "8475551234"
+        })
+
+      guest = MyGuest.get_guest!(guest_id)
+
+      assert match?(%{first_name: "Adam", phone_number: 847_555_1234, country_code: 1}, guest)
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "18475551234"
+        })
+
+      guest = MyGuest.get_guest!(guest_id)
+
+      assert match?(%{first_name: "Adam", phone_number: 847_555_1234, country_code: 1}, guest)
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "1(847)555-1234"
+        })
+
+      guest = MyGuest.get_guest!(guest_id)
+
+      assert match?(%{first_name: "Adam", phone_number: 847_555_1234, country_code: 1}, guest)
+
+      {:ok, %{id: guest_id}} =
+        MyGuest.create_guest(%{
+          "email" => "",
+          "first_name" => "Adam",
+          "last_name" => "Collins",
+          "secret" => "123456",
+          "phone" => "+1 (847) 555 - 1234"
+        })
+
+      guest = MyGuest.get_guest!(guest_id)
+
+      assert match?(%{first_name: "Adam", phone_number: 847_555_1234, country_code: 1}, guest)
     end
 
     test "Adding guest to invitation" do

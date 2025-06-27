@@ -12,7 +12,21 @@ defmodule App.MyGuest do
   end
 
   def list_guests() do
-    Repo.all(Guest) |> Repo.preload(:rsvp)
+    Repo.all(Guest) |> Repo.preload(:rsvp) |> Enum.map(&Guest.add_phone(&1))
+  end
+
+  def get_guest(phone: phone) do
+    {country_code, phone_number} = Guest.convert_phone(phone)
+
+    query =
+      from g in Guest, where: g.phone_number == ^phone_number and g.country_code == ^country_code
+
+    Repo.all(query)
+    |> case do
+      [] -> nil
+      [guest] -> guest
+      _ -> :many_matches
+    end
   end
 
   def get_guest(email: email) do
@@ -30,11 +44,13 @@ defmodule App.MyGuest do
   def get_guest(id, keywords \\ []) do
     Repo.get(Guest, id)
     |> apply_preloads(keywords)
+    |> then(&Guest.add_phone(&1))
   end
 
   def get_guest!(id, keywords \\ []) do
     Repo.get!(Guest, id)
     |> apply_preloads(keywords)
+    |> then(&Guest.add_phone(&1))
   end
 
   def get_invitation(guest_id: id, preload: :guests) do
@@ -168,6 +184,10 @@ defmodule App.MyGuest do
     %Guest{}
     |> Guest.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, guest} -> {:ok, Guest.add_phone(guest)}
+      result -> result
+    end
   end
 
   def update_rsvp!(guest_id, attrs) do

@@ -82,6 +82,36 @@ defmodule AppWeb.RSVPController do
   def reset_guest_id(conn, _params),
     do: conn |> delete_resp_cookie("guest-id") |> redirect(to: ~p"/rsvp")
 
+  def lookup_invite(conn, %{"guest" => %{"phone" => phone}}) do
+    MyGuest.get_guest(phone: phone)
+    |> case do
+      nil -> nil
+      :many_matches -> :many_matches
+      guest -> MyGuest.load(guest, preload: :rsvp)
+    end
+    |> case do
+      %Guest{rsvp: nil} = guest ->
+        conn
+        |> put_resp_cookie("guest-id", guest.id, encrypt: true)
+        |> redirect(to: ~p"/rsvp/confirm")
+
+      %Guest{} = guest ->
+        conn
+        |> put_resp_cookie("guest-id", guest.id, encrypt: true)
+        |> redirect(to: ~p"/rsvp")
+
+      :many_matches ->
+        conn
+        |> put_flash(
+          :error,
+          "There are multiple guest with the same information. Please contact Helen or Adam."
+        )
+
+      _ ->
+        conn |> render(:no_invitation, email: nil, phone: phone)
+    end
+  end
+
   def lookup_invite(conn, %{"guest" => %{"email" => email}}) do
     email = String.trim(email) |> String.downcase()
 
@@ -115,7 +145,7 @@ defmodule AppWeb.RSVPController do
             )
 
           _ ->
-            conn |> render(:no_invitation, email: email)
+            conn |> render(:no_invitation, email: email, phone: nil)
         end
     end
   end
