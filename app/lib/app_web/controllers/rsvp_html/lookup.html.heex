@@ -6,7 +6,7 @@
 </p>
 
 <.simple_form :let={f} for={@changeset} action="/rsvp/lookup" method="post">
-  <.input field={f[:phone]} type="text" inputmode="phone" label="Phone" />
+  <.input field={f[:phone]} type="tel" inputmode="tel" label="Phone" />
   <:actions>
     <.button class="btn-action">Lookup invitation</.button>
   </:actions>

@@ -167,7 +167,6 @@ defmodule App.MyGuestTest do
   end
 
   describe "get_guest()" do
-    @tag only: true
     test "with email" do
       {:ok, guest} =
         MyGuest.create_guest(%{
@@ -228,7 +227,6 @@ defmodule App.MyGuestTest do
       assert db_guest == nil
     end
 
-    @tag only: true
     test "happy case" do
       {:ok, guest} =
         MyGuest.create_guest(%{
@@ -284,7 +282,6 @@ defmodule App.MyGuestTest do
       assert guest.email == nil
     end
 
-    @tag only: true
     test "supports phone number in various formats" do
       {:ok, %{id: guest_id}} =
         MyGuest.create_guest(%{

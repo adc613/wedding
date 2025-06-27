@@ -46,7 +46,6 @@ defmodule AppWeb.RSVPControllerTest do
       assert resp =~ "Reception"
     end
 
-    @tag only: true
     test "Lookup phone number", %{conn: conn} do
       resp =
         conn
