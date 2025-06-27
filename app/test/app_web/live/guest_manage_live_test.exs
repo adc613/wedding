@@ -60,7 +60,7 @@ defmodule AppWeb.GuestManageLiveTest do
       render_async(lv)
 
       assert length(MyGuest.list_guests()) == 4
-      assert match?(%Guest{phone: "8475556149"}, MyGuest.get_guest!(4))
+      assert match?(%Guest{phone: "+1(847)555-6149"}, MyGuest.get_guest!(4))
     end
 
     test "prevents duplicate guests", %{conn: conn, user: user} do

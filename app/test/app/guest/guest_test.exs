@@ -15,6 +15,11 @@ defmodule App.Guest.GuestTest do
     assert errors == %{}
   end
 
+  test "Construct virutal fields" do
+    guest = %Guest{phone_number: 847_562_6149, country_code: 1} |> Guest.add_phone()
+    assert "+1(847)562-6149" = guest.phone
+  end
+
   test "Do not require an email" do
     errors =
       %Guest{}

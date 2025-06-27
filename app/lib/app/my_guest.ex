@@ -12,7 +12,21 @@ defmodule App.MyGuest do
   end
 
   def list_guests() do
-    Repo.all(Guest) |> Repo.preload(:rsvp)
+    Repo.all(Guest) |> Repo.preload(:rsvp) |> Enum.map(&Guest.add_phone(&1))
+  end
+
+  def get_guest(phone: phone) do
+    {country_code, phone_number} = Guest.convert_phone(phone)
+
+    query =
+      from g in Guest, where: g.phone_number == ^phone_number and g.country_code == ^country_code
+
+    Repo.all(query)
+    |> case do
+      [] -> nil
+      [guest] -> guest
+      _ -> :many_matches
+    end
   end
 
   def get_guest(email: email) do
@@ -30,32 +44,38 @@ defmodule App.MyGuest do
   def get_guest(id, keywords \\ []) do
     Repo.get(Guest, id)
     |> apply_preloads(keywords)
+    |> then(&Guest.add_phone(&1))
   end
 
   def get_guest!(id, keywords \\ []) do
     Repo.get!(Guest, id)
     |> apply_preloads(keywords)
+    |> then(&Guest.add_phone(&1))
   end
 
   def get_invitation(guest_id: id, preload: :guests) do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
     |> Repo.preload(:guests)
+    |> load_phone_str()
   end
 
   def get_invitation(guest_id: id) do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
+    |> load_phone_str()
   end
 
   def get_invitation(id, keywords \\ []) do
     Repo.get(Invitation, id)
     |> apply_preloads(keywords)
+    |> load_phone_str()
   end
 
   def get_invitation!(id, keywords \\ []) do
     Repo.get!(Invitation, id)
     |> apply_preloads(keywords)
+    |> load_phone_str()
   end
 
   def update!(%Guest{} = guest, attrs) do
@@ -111,7 +131,7 @@ defmodule App.MyGuest do
         |> Repo.update!()
       end
 
-      invitation
+      invitation |> load_phone_str()
     end)
   end
 
@@ -143,6 +163,7 @@ defmodule App.MyGuest do
   def list_invitations(keywords \\ []) do
     Repo.all(Invitation)
     |> apply_preloads(keywords)
+    |> Enum.map(&load_phone_str(&1))
   end
 
   def create_guest(attrs, %Invitation{} = invitation) do
@@ -168,6 +189,10 @@ defmodule App.MyGuest do
     %Guest{}
     |> Guest.changeset(attrs)
     |> Repo.insert()
+    |> case do
+      {:ok, guest} -> {:ok, Guest.add_phone(guest)}
+      result -> result
+    end
   end
 
   def update_rsvp!(guest_id, attrs) do
@@ -236,4 +261,15 @@ defmodule App.MyGuest do
       false -> 0
     end
   end
+
+  defp load_phone_str(%Invitation{} = invitation) do
+    if is_list(invitation.guests) do
+      updated_guests = Enum.map(invitation.guests, &Guest.add_phone(&1))
+      Map.put(invitation, :guests, updated_guests)
+    else
+      invitation
+    end
+  end
+
+  defp load_phone_str(nil), do: nil
 end

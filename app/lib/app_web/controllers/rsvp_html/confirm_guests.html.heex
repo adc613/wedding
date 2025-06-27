@@ -2,11 +2,14 @@
 
 <br />
 
-<.confirmation_step header="Please check our information one last time." step_id={@step_id}>
+<.confirmation_step header="Please confirm contact information one last time." step_id={@step_id}>
   <ul class="list-disc list-inside space-y-2 mb-8">
     <%= for guest <- @invitation.guests do %>
       <li>
-        {guest.first_name} {guest.last_name} - {guest.email} (<i class="text-sm">See a mistake?</i>
+        {guest.first_name} {guest.last_name} - {guest.phone}
+        <%= if guest.email != nil and guest.email != "" do %>
+          - {guest.email}
+        <% end %>(<i class="text-sm">See a mistake?</i>
         <.link
           class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
           href={~p"/guest/#{guest}/edit?#{[redirect: ~p"/rsvp/confirm/3"]}"}
