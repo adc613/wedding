@@ -10,46 +10,47 @@ defmodule AppWeb.PageHTML do
 
   attr :event, :atom, required: true
   slot :footer, required: true
+  attr :full_width_footer, :boolean, default: false
 
-  def predefined_group(%{event: :wedding} = assigns) do
+  def event_group(%{event: :wedding} = assigns) do
     ~H"""
-    <.event_group group_name="Wedding day">
+    <.event_card group_name="Wedding day" full_width_footer={@full_width_footer}>
       <:events>
         <!-- Hide cocktail event for now -->
-    <!--<.cocktail_event /> -->
+        <!--<.cocktail_event /> -->
         <.reception_event />
         <.ceremony_event />
       </:events>
       <:footer>
         {render_slot(@footer)}
       </:footer>
-    </.event_group>
+    </.event_card>
     """
   end
 
-  def predefined_group(%{event: :brunch} = assigns) do
+  def event_group(%{event: :brunch} = assigns) do
     ~H"""
-    <.event_group group_name="Brunch">
+    <.event_card group_name="Brunch" full_width_footer={@full_width_footer}>
       <:events>
         <.brunch_event />
       </:events>
       <:footer>
         {render_slot(@footer)}
       </:footer>
-    </.event_group>
+    </.event_card>
     """
   end
 
-  def predefined_group(%{event: :rehersal} = assigns) do
+  def event_group(%{event: :rehersal} = assigns) do
     ~H"""
-    <.event_group group_name="Reherseal dinner">
+    <.event_card group_name="Reherseal dinner" full_width_footer={@full_width_footer}>
       <:events>
         <.rehersal_event />
       </:events>
       <:footer>
         {render_slot(@footer)}
       </:footer>
-    </.event_group>
+    </.event_card>
     """
   end
 
@@ -72,7 +73,7 @@ defmodule AppWeb.PageHTML do
     <.event
       title="Ceremony"
       date="2026.04.04"
-      time="5:00 PM - 7:00 PM"
+      time="TBD"
       location="Garfield Park Conservatory"
       attire="Cocktail"
       location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
@@ -86,7 +87,7 @@ defmodule AppWeb.PageHTML do
     <.event
       title="Reception"
       date="2026.04.04"
-      time="7:00 PM - TBD"
+      time="TBD"
       location="Ovation"
       attire="Cocktail"
       location_link="https://maps.app.goo.gl/5fnzavcBJPoiYeN96"
@@ -120,6 +121,80 @@ defmodule AppWeb.PageHTML do
       location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
       suffix=""
     />
+    """
+  end
+
+  attr :group_name, :string, required: true
+  attr :full_width_footer, :boolean, required: true
+
+  slot :events, required: true
+  slot :footer, required: true
+
+  defp event_card(assigns) do
+    ~H"""
+    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8  border-zinc-300">
+      <div class="border-b-2 text-center">
+        <h2 class="text-xl font-semibold">{@group_name}</h2>
+        {render_slot(@events)}
+      </div>
+
+      <div class={
+        if @full_width_footer do
+          "w-full"
+        else
+          ""
+        end
+      }>
+        {render_slot(@footer)}
+      </div>
+    </div>
+    """
+  end
+
+  attr :title, :string, required: true
+  attr :date, :string, required: true
+  attr :time, :string, required: true
+  attr :location_link, :string, required: true
+  attr :location, :string, required: true
+  attr :attire, :string, required: true
+  attr :suffix, :string, required: true
+
+  defp event(assigns) do
+    ~H"""
+    <div class="mb-8">
+      <div class="mx-auto">
+        <h2 class="text-2xl text-center">
+          {@title}
+        </h2>
+      </div>
+      <div class="mx-auto">
+        <p class="text-xl text-center">
+          {@date}
+        </p>
+      </div>
+      <div class="mx-auto">
+        <p class="text-md text-center">
+          <b>Time: </b>
+          {@time}
+        </p>
+      </div>
+      <div class="mx-auto">
+        <p class="text-md text-center">
+          <b>Location: </b>
+          <a href={@location_link}>{@location} <i class="fa fa-map-marker"></i></a>
+        </p>
+      </div>
+      <div class="mx-auto">
+        <p class="text-md text-center">
+          <b>Attire: </b>{@attire}
+        </p>
+      </div>
+      <div class="mx-auto">
+        <p class="text-md text-center">
+          {@suffix}
+        </p>
+      </div>
+    </div>
     """
   end
 end

@@ -46,6 +46,7 @@ defmodule AppWeb.Router do
   scope "/rsvp", AppWeb do
     pipe_through [:browser, :require_rsvp_lookup]
 
+    get "/edit", RSVPController, :edit
     get "/thanks", RSVPController, :thanks
 
     scope "/confirm" do
