@@ -6,7 +6,87 @@ body {
   background-color: #f5f4ef
 }
 
+.story p {
+  margin-top: 24px;
+  margin-bottom: 24px;
+}
+
 /* This file is for your main application CSS */
 .btn-action {
   @apply bg-blue-500;
+}
+
+.chat-conversation {
+  background-color: #fffefd;
+  padding: 12px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  border-radius: 12px;
+}
+
+.chat-group {
+  display: flex;
+}
+
+.chat-message {
+  width: max-content;
+  max-width: 70%;
+  border-top-left-radius: 8px;
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  border-bottom-left-radius: 8px;
+  padding: 4px;
+}
+
+.chat-message.helen {
+  background-color: #67295F;
+  text-align: right;
+  margin-left: auto;
+  color: #fffefd;
+  border-bottom-right-radius: 0;
+}
+
+.chat-group {
+  margin-top: 24px;
+}
+
+.chat-group.helen + .chat-group.helen {
+  margin-top: 4px;
+}
+
+.chat-group.adam + .chat-group.adam {
+  margin-top: 4px;
+}
+
+.chat-message.adam {
+  background-color: #67295F0A;
+  min-height: 32px;
+  text-align: left;
+  margin-right: auto;
+  border-bottom-left-radius: 0;
+}
+
+.chat-image {
+  margin-top: auto;
+  width: 32px;
+  height: 32px;
+}
+
+.chat-image .headshot {
+  border-radius: 50%;
+  width: 32px;
+  height: 32px;
+  border: solid 2px #fffefd;
+}
+
+.chat-image .indicator {
+  position: relative;
+  x: 35px;
+  y: 35px;
+  top: -10px;
+  left: 22px;
+  width: 10px;
+  height: 10px;
+  background-color: #67295F0A;
 }

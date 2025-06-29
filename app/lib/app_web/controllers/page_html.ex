@@ -197,4 +197,42 @@ defmodule AppWeb.PageHTML do
     </div>
     """
   end
+
+  attr :messages, :list, required: true
+
+  def conversation(assigns) do
+    ~H"""
+    <div class="chat-conversation">
+      <.chat_bubble :for={message <- @messages} message={message} />
+    </div>
+    """
+  end
+
+  attr :message, :list, required: true
+
+  def chat_bubble(assigns) do
+    ~H"""
+    <div class={
+      if @message.adam? do
+        "chat-group adam"
+      else
+        "chat-group helen"
+      end
+    }>
+      <div :if={@message.adam?} class="chat-image">
+        <img :if={@message.show_img?} src="/images/adam_headshot.jpg" class="headshot" />
+        <div :if={@message.show_img?} class="indicator" />
+      </div>
+      <p class={
+        if @message.adam? do
+          "chat-message adam"
+        else
+          "chat-message helen"
+        end
+      }>
+        {@message.text}
+      </p>
+    </div>
+    """
+  end
 end
