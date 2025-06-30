@@ -52,16 +52,13 @@ defmodule AppWeb.RSVPHTML do
   attr :guests, :any, required: true, doc: "Guest that are being answer for"
   attr :event, :atom, required: true
 
-  slot :inner_block, required: true
-
   def response(assigns) do
     ~H"""
     <.event_group event={@event} full_width_footer={true}>
       <:footer>
         <%= for guest <- @guests do %>
           <.response_input name={Atom.to_string(@event) <> "-" <> to_string(guest.id)} guest={guest} />
-          <br />            
-                         
+          <br />
         <% end %>
       </:footer>
     </.event_group>
