@@ -224,19 +224,31 @@ defmodule AppWeb.PageHTML do
       end
     }>
       <div :if={@message.adam?} class="chat-image">
-        <img :if={@message.indicator?} src="/images/adam_headshot.jpg" class="headshot" />
+        <div class="headshot">
+          <img :if={@message.indicator?} src="/images/adam_headshot.jpg" />
+        </div>
         <div :if={@message.indicator?} class="indicator" />
       </div>
       <p class={
-        if @message.adam? do
-          "chat-message adam"
-        else
+        classes = []
+
+        classes =
           if @message.indicator? do
-            "chat-message helen indicator"
+            ["indicator" | classes]
           else
-            "chat-message helen"
+            ["" | classes]
           end
-        end
+
+        classes =
+          if @message.adam? do
+            ["adam" | classes]
+          else
+            ["helen" | classes]
+          end
+
+        classes = ["chat-message" | classes]
+
+        Enum.join(classes, " ")
       }>
         {@message.text}
       </p>

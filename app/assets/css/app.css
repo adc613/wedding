@@ -1,9 +1,14 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-
 body {
   background-color: #f5f4ef
+}
+
+:root {
+  --hinge-conversation-bg-color: #fffefd;
+  --hinge-purple: #67295F;
+  --hinge-gray-bg: #f5f5f1;
 }
 
 /* This file is for your main application CSS */
@@ -18,7 +23,7 @@ body {
 }
 
 .chat-conversation {
-  background-color: #fffefd;
+  background-color: var(--hinge-conversation-bg-color);
   padding: 12px;
   font-family: "IBM Plex Sans", sans-serif;
   font-optical-sizing: auto;
@@ -29,6 +34,10 @@ body {
 
 .chat-group {
   display: flex;
+
+  &.helen.indicator {
+    margin-right: -6px;
+  }
 }
 
 .chat-message {
@@ -39,82 +48,93 @@ body {
   border-bottom-right-radius: 12px;
   border-bottom-left-radius: 12px;
   padding: 8px;
-}
 
-.chat-message.helen {
-  background-color: #67295F;
-  text-align: left;
-  margin-left: auto;
-  color: #fffefd;
-  border-bottom-right-radius: 0;
-}
+  &.helen {
+    background-color: var(--hinge-purple);
+    text-align: left;
+    margin-left: auto;
+    color: #fffefd;
+    border-bottom-right-radius: 0;
+  }
 
-.chat-group.helen.indicator {
-  margin-right: -6px;
-}
-
-.chat-group.helen.indicator::after {
-  background-color: #fffefd;
-  position: relative;
-  bottom: 0px;
-  right: 0px;
-  content: "";
-  display: inline;
-  border-right: solid 6px transparent;
-  border-bottom: 6px solid #67295F;
-  border-bottom-right-radius: 3px;
+  &.adam {
+    background-color: var(--hinge-gray-bg);
+    min-height: 32px;
+    text-align: left;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+  }
 }
 
 .chat-group {
   margin-top: 24px;
-}
 
-.chat-group.helen:has(+ .chat-group.helen) {
-  border-bottom-right-radius: 0;
-}
+  &.helen {
+    &.indicator::after {
+      background-color: var(--hinge-conversation-bg-color);
+      position: relative;
+      bottom: 0px;
+      right: 0px;
+      content: "";
+      display: inline;
+      border-right: solid 6px transparent;
+      border-bottom: 6px solid var(--hinge-purple);
+      border-bottom-right-radius: 3px;
+    }
 
-.chat-group.helen + .chat-group.helen {
-  margin-top: 4px;
-}
+    &:has(+ .chat-group.helen) {
+      border-bottom-right-radius: 0;
+    }
 
-.chat-group.helen + .chat-group.helen .chat-message {
-  border-top-right-radius: 0;
-}
+    + .chat-group.helen  {
+      margin-top: 4px;
+      .chat-message {
+        border-top-right-radius: 0;
+      }
+    }
+  }
 
-.chat-group.adam + .chat-group.adam {
-  margin-top: 4px;
-}
+  &.adam {
+    + .chat-group.adam {
+      margin-top: 4px;
 
-.chat-group.adam + .chat-group.adam .chat-message {
-  border-top-left-radius: 0;
-}
-
-.chat-message.adam {
-  background-color: #f5f5f1;
-  min-height: 32px;
-  text-align: left;
-  margin-right: auto;
-  border-bottom-left-radius: 0;
+      .chat-message {
+        border-top-left-radius: 0;
+      }
+    }
+  }
 }
 
 .chat-image {
   margin-top: auto;
   width: 32px;
   height: 32px;
+
+  .headshot {
+     border-radius: 50%;
+     width: 32px;
+     height: 32px;
+     overflow: hidden;
+     border: 2px solid var(--hinge-conversation-bg-color);
+
+     img {
+       position: relative;
+       left: -5px;
+       width: 40px;
+       max-width: none;
+     }
+  }
+
+  .indicator {
+    position: relative;
+    top: -10px;
+    left: 22px;
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 8px solid var(--hinge-gray-bg);
+    border-bottom-left-radius: 3px;
+  }
 }
 
-.chat-image .headshot {
-  border-radius: 50%;
-  width: 32px;
-  height: 32px;
-  border: solid 2px #fffefd;
-}
-
-.chat-image .indicator {
-  position: relative;
-  top: -10px;
-  left: 22px;
-  width: 10px;
-  height: 10px;
-  background-color: #67295F0A;
-}
