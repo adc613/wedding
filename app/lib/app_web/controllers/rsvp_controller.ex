@@ -9,8 +9,31 @@ defmodule AppWeb.RSVPController do
     conn
     |> get_guest_id()
     |> case do
-      nil -> conn |> render_lookup()
-      guest_id -> conn |> render_invite(guest_id)
+      nil ->
+        nil
+
+      guest_id ->
+        MyGuest.get_guest(guest_id, preload: :rsvp)
+    end
+    |> case do
+      nil -> render_lookup(conn)
+      %Guest{rsvp: nil} -> redirect(conn, to: ~p"/rsvp/edit")
+      _guest -> redirect(conn, to: ~p"/rsvp/thanks")
+    end
+  end
+
+  def edit(conn, _params) do
+    guest_id = get_guest_id(conn)
+
+    case MyGuest.get_invitation(guest_id: guest_id, preload: :guests) do
+      nil ->
+        render(conn, :no_invitation, email: nil)
+
+      invitation ->
+        changeset = RSVP.changeset(%RSVP{})
+
+        conn
+        |> render(:rsvp, invitation: invitation, changeset: changeset, guest_id: guest_id)
     end
   end
 
@@ -171,7 +194,7 @@ defmodule AppWeb.RSVPController do
 
     conn
     |> put_flash(:info, "Updated RSVP")
-    |> render_thanks()
+    |> redirect(to: ~p"/rsvp/thanks")
   end
 
   def add_guest(conn, %{"guest" => guest_params, "redirect" => redirect}) do
@@ -242,6 +265,12 @@ defmodule AppWeb.RSVPController do
     )
   end
 
+  def thanks(conn, _params) do
+    %{invitation: invitation} = get_confirm_details(conn)
+    guests = invitation.guests |> MyGuest.load(preload: :rsvp)
+    conn |> render(:thanks, invitation: invitation, guests: guests)
+  end
+
   defp get_confirm_details(conn) do
     guest_id = get_guest_id(conn)
 
@@ -254,10 +283,6 @@ defmodule AppWeb.RSVPController do
     %{guest_id: guest_id, invitation: invitation}
   end
 
-  defp render_thanks(conn) do
-    conn |> render(:thanks)
-  end
-
   defp render_lookup(conn, changeset: changeset) do
     conn |> render(:lookup, changeset: changeset, guests: [])
   end
@@ -265,19 +290,6 @@ defmodule AppWeb.RSVPController do
   defp render_lookup(conn) do
     changeset = Guest.lookup_changeset(%Guest{})
     conn |> render(:lookup, changeset: changeset, guests: [])
-  end
-
-  defp render_invite(conn, guest_id) do
-    case MyGuest.get_invitation(guest_id: guest_id, preload: :guests) do
-      nil ->
-        render(conn, :no_invitation, email: nil)
-
-      invitation ->
-        changeset = RSVP.changeset(%RSVP{})
-
-        conn
-        |> render(:rsvp, invitation: invitation, changeset: changeset, guest_id: guest_id)
-    end
   end
 
   defp parse_key(key, value, form_key) do

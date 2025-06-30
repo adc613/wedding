@@ -38,6 +38,43 @@ defmodule AppWeb.RSVPControllerTest do
         conn
         |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => "test@test.com"}})
         |> get(~p"/rsvp")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/edit"
+    end
+
+    test "Lookup phone number", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
+        |> get(~p"/rsvp")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/edit"
+    end
+
+    test "Redirect to thanks when the user has submitted an RSVP in the past", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
+        |> put(~p"/rsvp/invite", %{
+          "invitation_id" => 1,
+          "wedding-1" => "yes",
+          "rehersal-1" => "no"
+        })
+        |> get(~p"/rsvp")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/thanks"
+    end
+  end
+
+  describe "GET /rsvp/edit" do
+    test "Loads page successfully", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => "test@test.com"}})
+        |> get(~p"/rsvp/edit")
         |> html_response(200)
 
       assert resp =~ "You're invited"
@@ -46,17 +83,15 @@ defmodule AppWeb.RSVPControllerTest do
       assert resp =~ "Reception"
     end
 
-    test "Lookup phone number", %{conn: conn} do
-      resp =
-        conn
-        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
-        |> get(~p"/rsvp")
-        |> html_response(200)
+    test "Does not create RSVP until submit action", %{conn: conn, guest: guest} do
+      conn
+      |> post(~p"/rsvp/lookup", %{"guest" => %{"email" => guest.email}})
+      |> get(~p"/rsvp/edit")
+      |> html_response(200)
 
-      assert resp =~ "You're invited"
-      assert resp =~ "Adam Collins"
-      assert resp =~ "Ceremony"
-      assert resp =~ "Reception"
+      guest = MyGuest.get_guest(guest.id, preload: :rsvp)
+
+      assert guest.rsvp == nil
     end
   end
 
@@ -155,14 +190,15 @@ defmodule AppWeb.RSVPControllerTest do
     test "Create RSVP", %{conn: conn} do
       guest = MyGuest.get_guest!(1)
 
-      conn =
+      resp =
         put(conn, ~p"/rsvp/invite", %{
           "invitation_id" => 1,
           "wedding-1" => "yes",
           "rehersal-1" => "no"
         })
+        |> html_response(302)
 
-      assert html_response(conn, 200) =~ "Thanks"
+      assert resp =~ "/rsvp/thanks"
 
       %RSVP{events: events, declined_events: declined_events} = MyGuest.get_or_create_rsvp!(guest)
 

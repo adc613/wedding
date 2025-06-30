@@ -50,26 +50,18 @@ defmodule AppWeb.RSVPHTML do
   end
 
   attr :guests, :any, required: true, doc: "Guest that are being answer for"
-  attr :name, :string, required: true, doc: "Name of the response input"
-  attr :group_name, :string, required: true, doc: "Title for the group"
-
-  slot :inner_block, required: true
+  attr :event, :atom, required: true
 
   def response(assigns) do
     ~H"""
-    <div class="flex flex-col items-center gap-8 rounded-2xl border-2 p-4 mb-8  border-zinc-300">
-      <div class="border-b-2 text-center">
-        <h2 class="text-xl font-semibold">{@group_name}</h2>
-        {render_slot(@inner_block)}
-      </div>
-
-      <div class="w-full">
+    <.event_group event={@event} full_width_footer={true}>
+      <:footer>
         <%= for guest <- @guests do %>
-          <.response_input name={@name <> "-" <> to_string(guest.id)} guest={guest} />
+          <.response_input name={Atom.to_string(@event) <> "-" <> to_string(guest.id)} guest={guest} />
           <br />
         <% end %>
-      </div>
-    </div>
+      </:footer>
+    </.event_group>
     """
   end
 

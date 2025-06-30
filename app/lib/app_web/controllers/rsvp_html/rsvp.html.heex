@@ -4,34 +4,7 @@
 
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
-  <.response
-    :if={:wedding in @invitation.events}
-    group_name="Wedding day"
-    guests={@invitation.guests}
-    name="wedding"
-  >
-    <!-- Hide cocktail event for now -->
-    <!--<.cocktail_event /> -->
-    <.reception_event />
-    <.ceremony_event />
-  </.response>
-  <.response
-    :if={:rehersal in @invitation.events}
-    group_name="Rehearsal Dinner"
-    guests={@invitation.guests}
-    name="rehersal"
-  >
-    <.rehersal_event />
-  </.response>
-  <.response
-    :if={:brunch in @invitation.events}
-    group_name="Brunch"
-    guests={@invitation.guests}
-    name="brunch"
-  >
-    <.brunch_event />
-  </.response>
-
+  <.response :for={event <- @invitation.events} event={event} guests={@invitation.guests} />
   <.button class="btn-action" type="submit">Submit RSVP</.button>
 </.form>
 
