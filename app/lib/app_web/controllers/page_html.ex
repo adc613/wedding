@@ -216,18 +216,26 @@ defmodule AppWeb.PageHTML do
       if @message.adam? do
         "chat-group adam"
       else
-        "chat-group helen"
+        if @message.indicator? do
+          "chat-group helen indicator"
+        else
+          "chat-group helen"
+        end
       end
     }>
       <div :if={@message.adam?} class="chat-image">
-        <img :if={@message.show_img?} src="/images/adam_headshot.jpg" class="headshot" />
-        <div :if={@message.show_img?} class="indicator" />
+        <img :if={@message.indicator?} src="/images/adam_headshot.jpg" class="headshot" />
+        <div :if={@message.indicator?} class="indicator" />
       </div>
       <p class={
         if @message.adam? do
           "chat-message adam"
         else
-          "chat-message helen"
+          if @message.indicator? do
+            "chat-message helen indicator"
+          else
+            "chat-message helen"
+          end
         end
       }>
         {@message.text}

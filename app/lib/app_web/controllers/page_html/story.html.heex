@@ -1,117 +1,182 @@
-<h1 class="text-4xl text-center font-serif mb-8">
+<h1 class="text-4xl text-center font-serif mb-8 hinge-header">
   Our Story
 </h1>
 
 <p class="mt-4 mb-4">
-  Our stories, like many stories of the age, began with a swipe and a conversation,
-  on the well known dating app Hinge. Helen saved our messages and we've transcribed them here
-  for the world:
+  Our story, like so many of the modern age, began on the dating app Hinge.
+  Over the holidays of 2021, Helen, irked by her troubles on the apps,
+  was venting to her sisters; "I'm only meeting boys of low quality and I don't know
+  why!" she probably exclaimed. In response, Susan and Karen, always there to
+  be Helen's guiding compass, reviewed her profile; only to be appalled by what
+  they found.
+</p>
+<p class="mt-4 mb-4">
+  "No wonder you're only matching with miscreants. A profile like this is no
+  good." They may have responded. Unable to tolerate the mess they saw before
+  them, they jumped into action, and together with the power of sisterhood they
+  channeled their lifelong knowledge and love of Helen's essence to perform a
+  Cinderellian tranformation of Helen's Hinge profile. It was not but a few
+  days later that Helen would match with a cute boy named Adam (<i>maybe at
+  midnight, we'll never know</i>).
+</p>
+<p class="mt-4 mb-4">
+  Our first conversation went like this:
 </p>
 
 <.conversation messages={[
-  %{adam?: true, show_img?: true, text: "Hey how was your weekend?"},
-  %{adam?: false, show_img?: false, text: "It was good"},
+  %{adam?: true, indicator?: true, text: "Hey how was your weekend?"},
+  %{adam?: false, indicator?: false, text: "It was good"},
   %{
     adam?: false,
-    show_img?: false,
+    indicator?: true,
     text: "I went on a hike to Alamere falls today it was gorgeous"
   },
   %{
     adam?: true,
-    show_img?: true,
+    indicator?: true,
     text:
       "Oh I love that hike. I did it with a friend and we had trouble finding the waterfall and almost turned around before it"
   },
   %{
     adam?: false,
-    show_img?: false,
-    text: "Did you post a photo with a caption about cahsing waterfalls?"
+    indicator?: true,
+    text: "Did you post a photo with a caption about chasing waterfalls?"
   },
-  %{adam?: true, show_img?: false, text: "hahaha no missed opportunity there"},
-  %{adam?: true, show_img?: false, text: "Did you?"},
+  %{adam?: true, indicator?: false, text: "hahaha no missed opportunity there"},
+  %{adam?: true, indicator?: false, text: "Did you?"},
   %{
     adam?: true,
-    show_img?: true,
+    indicator?: true,
     text: "I'm also a minority in that I don't have an instagram"
   },
-  %{adam?: false, show_img?: true, text: "No but I wondered how many people had"},
-  %{adam?: true, show_img?: false, text: "Yeah it's too cheesy of a caption to not be used"},
-  %{adam?: true, show_img?: true, text: "So what brought you to SF?"},
-  %{adam?: false, show_img?: true, text: "Cool startup"}
+  %{adam?: false, indicator?: true, text: "No but I wondered how many people had"},
+  %{adam?: true, indicator?: false, text: "Yeah it's too cheesy of a caption to not be used"},
+  %{adam?: true, indicator?: true, text: "So what brought you to SF?"},
+  %{adam?: false, indicator?: true, text: "Cool startup"}
 ]} />
 
 <p class="mt-4 mb-4">
   It was at this point in our Story that Adam thought to himself.
   <i>
-    Did she really just respond with, "Cool startup." This conversation is really going south, but
-    she is cute. Time to shoot my shot.
+    Did she really just respond , "Cool startup"!? I can't do anything with
+    this. Well what do I have to lose... on one hand this conversation is going
+    south fast, on the other hand she's cute and I'm not doing anything
+    tomorrow. Time to shoot my shot.
   </i>
 </p>
 
 <.conversation messages={[
   %{
     adam?: true,
-    show_img?: true,
+    indicator?: true,
     text:
-      "Cool lol. Well you've officially pass my rigorous \"probalby not a serial killer test\". Are you doing anything tomorrow night? Would you want to get a drink at noc noc? It's a cool wine bar in lower haight."
-  },
-  %{
-    adam?: false,
-    show_img?: false,
-    text:
-      "Hahaha wow I passed?? Yay! Tomorrow's trivai night but I could stop by beforehand, like 6?"
-  },
-  %{
-    adam?: true,
-    show_img?: false,
-    text: "Wow just moved here and already a regular at trivia night . I impressed 🤓"
-  },
-  %{
-    adam?: true,
-    show_img?: true,
-    text: "6 works for me. See you tomorrow :)"
+      "Cool lol. Well you've officially pass my rigorous \"probably not a serial killer test\". Are you doing anything tomorrow night? Would you want to get a drink at noc noc? It's a cool wine bar in lower haight."
   }
 ]} />
 
 <p class="mt-4 mb-4">
   It was at this point in our Story that Helen thought to herself.
-  <i>His grammer is terrible, but not being on instagram is a
-    green flag and I'm not doing anything else tomorrow night.</i>
-</p>
-
-<p class="mt-4 mb-4">
-  Adam being a punctional person arrived at Noc Noc around aproximately 5:45pm. After waiting around
-  for a bit Adam sent Helen one last message around 6:10pm.
+  <i>Wow his grammer is terrible. However, not being on instagram is a
+    green flag and I have some time tomorrow before trivia.</i>
 </p>
 
 <.conversation messages={[
-  %{adam?: true, show_img?: true, text: "Hey everything ok?"}
+  %{
+    adam?: false,
+    indicator?: true,
+    text:
+      "Hahaha wow I passed?? Yay! Tomorrow's trivia night but I could stop by beforehand, like 6?"
+  },
+  %{
+    adam?: true,
+    indicator?: false,
+    text: "Wow just moved here and already a regular at trivia night. I impressed 🤓"
+  },
+  %{
+    adam?: true,
+    indicator?: true,
+    text: "6 works for me. See you tomorrow :)"
+  }
+]} />
+<p class="mt-4 mb-4">
+  The date was set. The next night, Adam sent a check-in text to verify that everything
+  was still on.
+</p>
+
+<.conversation messages={[
+  %{
+    adam?: true,
+    indicator?: true,
+    text:
+      "Hey just confirming that we're still on for noc noc in an hour. I'm not always the best at checking hinge. Here's my number is anything comes up (847)555-1234"
+  },
+  %{
+    adam?: false,
+    indicator?: true,
+    text: "Ya I'm about to bike that way"
+  }
 ]} />
 
 <p class="mt-4 mb-4">
-  After waiting for a response, and being maybe a little impatient, Adam thought <i>well I guess
-    the girl from the "cool startup"isn't showing up.</i>
-  It was a long shot anyway, time to go home.
-  So he stood up and walked out. As he was walking out he saw a cute blonde walking with a bicyle.
+  Being a man of quality, Adam arrived at Noc Noc at a punctual 5:45pm.
+  After waiting around for a bit, Adam thought it was odd that he hadn't heard
+  from or seen Helen yet...
 </p>
 
 <p class="mt-4 mb-4">
-  "Helen?" he asked.
+  Meanwhile, across town, Helen was lost cycling through unfamiliar territory.
+  She was still learning San Francisco's confusing geopgraphy, and had fallen
+  behind Google Maps' prediction
 </p>
 
 <p class="mt-4 mb-4">
-  "Adam?" Helen responsed "were you leaving?".
+  However, Adam didn't know that and was confused as to why he hadn't received a
+  running late text. So, he sent a messsage (<i>not a text as Helen did not
+   reciprocate her phone number</i>).
+</p>
+
+<.conversation messages={[
+  %{adam?: true, indicator?: true, text: "Hey everything ok?"}
+]} />
+
+<p class="mt-4 mb-4">
+  No response. So, approximately 15 minutes passed the hour, Adam thought
+  <i>well I guess the girl from the "cool startup" isn't showing up. It was a
+    long shot anyway, time to go home</i>
+  and he stood up to walk out the bar. As
+  he was striding out. Adam spotted a cute vaguely familiar looking blonde
+  walking with a bicycle; "Helen?" he quieried.
 </p>
 
 <p class="mt-4 mb-4">
-  "Can I help you with your bike? How was your day?" And Adam reached for her bike to help guide her
-  into the bar and the rest is history... Since then we've lived through
-  <.link target="_blank" href="https://travel.adamcollins.io"> many adventures</.link>
+  "Adam?" Helen responsed "were you leaving?"
 </p>
 
-<p>
-  <i>All chat threads in the making of this story are real</i>
+<p class="mt-4 mb-4">
+  "Can I help you with your bike? How was your day?" Adam asked as he tried to
+  smoothy cover the fact that he was in the midst of leaving. Adam then helped
+  Helen guide her bike into a corner of the quiet bar and the rest
+  <.link
+    target="_blank"
+    class="text-blue-500 hover:underline hover:text-blue-600"
+    href="https://travel.adamcollins.io"
+  >
+    is history...
+  </.link>
 </p>
-<p>
-  <i>No, Noc Noc is not a wine bar</i>
+
+<p class="mt-4 mb-4">
+  Over the coming years Helen and Adam's love would grow with every adventure.
+  Whether it was making gingerbread houses for christmas, skiing at Kirkwood,
+  traveling across Asia, or playing video games in their beloved San Franciso
+  apartment. Over the next 3 years they'd come to create some the best memories
+  of their young lives as they prepared to move to Chicago and start the next
+  chapter; together.
+</p>
+
+<p class="mt-4 mb-4">
+  <i>All chat threads used in the making of this story are real.</i>
+</p>
+<p class="mt-4 mb-4">
+  <i>For those from San Francisco, no, Adam was confused Noc Noc is not a wine bar.</i>
 </p>
