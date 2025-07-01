@@ -31,20 +31,12 @@ defmodule AppWeb.RSVPHTML do
 
   def response_input(assigns) do
     ~H"""
-    <div class="w-full flex flex-col gap-8 justify-between p-4 rounded-xl border-2 rounded-2xl">
-      <h2 class="text-lg font-semibold m-auto">
-        {@guest.first_name} {@guest.last_name}
-      </h2>
-      <div class="flex flex-col gap-8">
-        <div>
-          <input type="radio" required name={@name} value={:yes} />
-          <label> Will be attending</label>
-        </div>
-        <div>
-          <input type="radio" required name={@name} value={:no} />
-          <label> Regretfully, declines</label>
-        </div>
-      </div>
+    <div class="w-full p-4 rounded-xl border-2 rounded-2xl">
+      <.radio_group
+        legend={@guest.first_name <> " " <> @guest.last_name}
+        name={@name}
+        options={[yes: "Will be attending", no: "Regretfully, declines"]}
+      />
     </div>
     """
   end

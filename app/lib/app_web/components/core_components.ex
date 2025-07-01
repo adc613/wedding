@@ -749,4 +749,34 @@ defmodule AppWeb.CoreComponents do
     <i :if={not @checked} class="fa fa-times text-red-600"></i>
     """
   end
+
+  attr :options, :list, required: true
+  attr :name, :string, required: true
+  attr :legend, :string, required: true
+
+  def radio_group(assigns) do
+    ~H"""
+    <fieldset>
+      <legend class="text-lg font-semibold m-auto">{@legend}</legend>
+      <%= for {value, label} <- @options do %>
+        <div class="mt-4 mb-4">
+          <input
+            class="hover:bg-blue-100 transition duration-300 ease-in-out"
+            type="radio"
+            required
+            id={"#{@name}-#{value}"}
+            name={@name}
+            value={value}
+          />
+          <label
+            class="w-full p-2 hover:bg-blue-100 transition duration-300 ease-in-out"
+            for={"#{@name}-#{value}"}
+          >
+            {label}
+          </label>
+        </div>
+      <% end %>
+    </fieldset>
+    """
+  end
 end
