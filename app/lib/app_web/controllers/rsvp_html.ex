@@ -28,6 +28,7 @@ defmodule AppWeb.RSVPHTML do
 
   attr :name, :string, required: true, doc: "Name of the response input"
   attr :guest, :any, required: true, doc: "Guest that are being answer for"
+  attr :event, :any, required: true
 
   def response_input(assigns) do
     ~H"""
@@ -36,6 +37,14 @@ defmodule AppWeb.RSVPHTML do
         legend={@guest.first_name <> " " <> @guest.last_name}
         name={@name}
         options={[yes: "Will be attending", no: "Regretfully, declines"]}
+        current_value={
+          cond do
+            @guest.rsvp == nil -> nil
+            @event in @guest.rsvp.events -> :yes
+            @event in @guest.rsvp.declined_events -> :no
+            true -> nil
+          end
+        }
       />
     </div>
     """
@@ -49,7 +58,11 @@ defmodule AppWeb.RSVPHTML do
     <.event_group event={@event} full_width_footer={true}>
       <:footer>
         <%= for guest <- @guests do %>
-          <.response_input name={Atom.to_string(@event) <> "-" <> to_string(guest.id)} guest={guest} />
+          <.response_input
+            event={@event}
+            name={Atom.to_string(@event) <> "-" <> to_string(guest.id)}
+            guest={guest}
+          />
           <br />
         <% end %>
       </:footer>

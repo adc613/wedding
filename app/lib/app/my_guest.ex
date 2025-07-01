@@ -56,7 +56,7 @@ defmodule App.MyGuest do
   def get_invitation(guest_id: id, preload: :guests) do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
-    |> Repo.preload(:guests)
+    |> Repo.preload(guests: :rsvp)
     |> load_phone_str()
   end
 

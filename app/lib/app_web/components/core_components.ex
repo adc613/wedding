@@ -753,25 +753,27 @@ defmodule AppWeb.CoreComponents do
   attr :options, :list, required: true
   attr :name, :string, required: true
   attr :legend, :string, required: true
+  attr :current_value, :any, default: nil
 
   def radio_group(assigns) do
     ~H"""
     <fieldset>
       <legend class="text-lg font-semibold m-auto">{@legend}</legend>
       <%= for {value, label} <- @options do %>
-        <div class="mt-4 mb-4">
-          <input
-            class="hover:bg-blue-100 transition duration-300 ease-in-out"
-            type="radio"
-            required
-            id={"#{@name}-#{value}"}
-            name={@name}
-            value={value}
-          />
+        <div class="inline-block w-full">
           <label
-            class="w-full p-2 hover:bg-blue-100 transition duration-300 ease-in-out"
+            class="w-full inline-block p-4 hover:bg-slate-200 transition duration-300 ease-in-out"
             for={"#{@name}-#{value}"}
           >
+            <input
+              class="mr-4 mb-1"
+              type="radio"
+              required
+              id={"#{@name}-#{value}"}
+              name={@name}
+              value={value}
+              checked={value == @current_value}
+            />
             {label}
           </label>
         </div>
