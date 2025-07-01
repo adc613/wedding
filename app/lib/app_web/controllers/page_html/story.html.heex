@@ -4,36 +4,56 @@
 
 <p class="mt-4 mb-4">
   Our story, like so many of the modern age, began on the dating app Hinge.
-  Cozied up with family over the holidays of 2021
-  vented to her sisters: "I'm only meeting people of low quality and I don't know
-  why!" she exclaimed. Susan and Karen, always there to
-  be Helen's guiding compass, took a look at her profile; they were apalled by what
-  they found.
+  While enjoying the holidays with her family, Helen vented to her
+  sisters: "I'm only meeting people of low quality and I don't know why!"
+  Susan and Karen, always there to be Helen's guiding compass, took
+  a look at her profile and were apalled by what they found.
 </p>
 <p class="mt-4 mb-4">
   "No wonder you're only matching with miscreants. A profile like this is no
-  good!" You've got to fully represent yourself and put the energy out
-  there that you want to find, a nerdy, athletic, honest person." They decalred.
-  Unable to tolerate the mess before them, Susan and Karen joined forces, and
-  together with the power of sisterhood they channeled their lifelong knowledge
-  and love of Helen's essence to perform a Cinderellian transformation of
+  good! You've got to accurately display yourself and put the energy out
+  there that you want to find &mdash; a nerdy, active, honest person."
+  Unable to tolerate the mess of misrepresentation before them, Susan and Karen joined forces.
+  Together they channeled the power of sisterhood and their lifelong love of Helen's essence to perform a Cinderellian transformation of
   Helen's Hinge profile.
 </p>
 
 <p class="mt-4 mb-4">
-  Naught but a few days later, Helen, on Saturday January 8th at 2:21 AM liked
-  the profile of a cute a dashing young nerd named Adam. Our first conversation
+  Naught but a few days later, Helen liked
+  the profile of a dashing young nerd named Adam. Our first conversation
   went like this:
 </p>
 
 <.conversation messages={
   build_conversation([
+    %{
+      type: :date,
+      date: "Sat, Jan 8,",
+      time: "2:21 AM"
+    },
+    %{
+      type: :image,
+      adam?: false,
+      indicator?: true,
+      text: "You liked Adam's photo",
+      src: ~p"/images/adam_mountains.jpg"
+    },
+    %{
+      type: :date,
+      date: "Sun, Jan 9,",
+      time: "1:42 PM"
+    },
     %{adam?: true, indicator?: true, text: "Hey, how are you liking SF?"},
     %{adam?: false, indicator?: false, text: "Hi I love it, it's so beautiful"},
     %{
       adam?: false,
       indicator?: true,
       text: "I went on a hike to Alamere falls today it was gorgeous"
+    },
+    %{
+      type: :date,
+      date: "Mon, Jan 10,",
+      time: "7:12 PM"
     },
     %{
       adam?: true,
@@ -67,13 +87,13 @@
 <p class="mt-4 mb-4">
   It was at this point in our Story that Adam thought to himself.
   <i>
-    Did she really just respond, "Cool startup"?! I can't do anything with
-    this. Well what do I have to lose... on one hand this conversation is going
-    nowhere, on the other hand she's cute and I'm not doing anything
-    tomorrow. Time to shoot my shot.
+    Did she really just respond, "Cool startup"?! This conversation is going
+    nowhere, but she is cute and I'm not doing anything
+    tomorrow... Time to shoot my shot.
   </i>
 </p>
-<p>
+
+<p class="mt-4 mb-4">
   And shoot his shot he did.
 </p>
 
@@ -84,7 +104,18 @@
       indicator?: true,
       text:
         "Cool lol. Well you've officially pass my rigorous \"probably not a serial killer test\". Are you doing anything tomorrow night? Would you want to get a drink at noc noc? It's a cool wine bar in lower haight."
-    },
+    }
+  ])
+} />
+
+<p class="mt-4 mb-4">
+  It was at this point in our Story that Helen thought to herself.
+  <i>"Pass"?! Well he clearly doesn't proofread his texts... Maybe I'll just
+    schedule a hard cutoff in case the date goes south.</i>
+</p>
+
+<.conversation messages={
+  build_conversation([
     %{
       adam?: false,
       indicator?: true,
@@ -105,17 +136,16 @@
 } />
 
 <p class="mt-4 mb-4">
-  It was at this point in our Story that Helen thought to herself.
-  <i>Huh I am not impressed with that typo, but maybe be with someone less detailed
-    oriented than myself... And besides I already committed to a date.</i>
-</p>
-
-<p class="mt-4 mb-4">
-  The date was set and the next night, Adam sent a quick check-in.
+  The date was set, and the next night Adam sent a quick check-in.
 </p>
 
 <.conversation messages={
   build_conversation([
+    %{
+      type: :date,
+      date: "Mon, Jan 11,",
+      time: "5:01 PM"
+    },
     %{
       adam?: true,
       indicator?: true,
@@ -137,17 +167,17 @@
 </p>
 
 <p class="mt-4 mb-4">
-  Meanwhile, across town, Helen was lost pedaling her way up San
+  Meanwhile across town, Helen was huffing and puffing her way up San
   Francisco's notorious hills in an unfamiliar part of the city. Due to her
-  lack of navigational excellence (<i>a trait she would come to deeply
-  appreciate in her life partner</i>), Helen had fallen significantly behind
-  Google Maps' predicted arrival time.
+  lack of navigational excellence (a trait she would come to deeply
+  appreciate in her life partner), Helen had fallen significantly behind the
+  Google Maps ETA.
 </p>
 
 <p class="mt-4 mb-4">
-  However, Adam didn't know any of this and was sitting alone in a bar with
-  nothing but his thought &mdash; contemplating whether or not Helen was going to
-  show up. Unsure what to do, he sent a quick messsage.
+  Adam continued to sit alone in the bar. He contemplated whether or not the
+  girl Helen was going to show up and unsure what to do, he sent a quick
+  messsage.
 </p>
 
 <.conversation messages={
@@ -157,12 +187,13 @@
 } />
 
 <p class="mt-4 mb-4">
-  No response. So, approximately 15 minutes past the hour, Adam thought
-  <i>well I guess the girl from the "cool startup" isn't showing up. It was a
-    long shot anyway, time to go home.</i>
-  He stood up to leave. As he was striding out,
-  Adam spotted a vaguely familiar blonde walking with a bicycle;
-  "Helen?" he queried.
+  No response. At approximately 15 minutes past the hour, Adam called it quits.
+  <i>Well I guess the girl from the "cool startup" isn't showing up. It was a
+    long shot anyway.</i>
+  He thought as he stood up to leave. Striding out of the bar,
+  Adam locked eyes with a vaguely familiar blonde haired woman.
+  She was walking towards him
+  with a bicycle by her side; "Helen?" he queried.
 </p>
 
 <p class="mt-4 mb-4">
@@ -170,13 +201,13 @@
 </p>
 
 <p class="mt-4 mb-4">
-  "Can I help you with your bike? How was your day?" Adam asked as he gave his
-  most charming smile, hoping to smooth over the that he was leaving.
+  "Can I help you with your bike? How was your day?" Adam asked flashing his
+  most charming smile.
 </p>
-<p>
-  "It was good but I got lost on the way over!" said Helen, who was immediately
-  impressed with his bright smile. Adam then helped Helen guide her bike into a
-  safe corner of the quiet bar, they ordered a drink, and the rest
+<p class="mt-4 mb-4">
+  "It was good!" Helen exclaimed, as both of our anxieties dissipated. Adam
+  helped Helen guide her bike into a safe corner of the quiet bar, they ordered
+  a drink, and the rest
   <.link
     target="_blank"
     class="text-blue-500 hover:underline hover:text-blue-600"
@@ -188,12 +219,11 @@
 
 <p class="mt-4 mb-4">
   Over the coming years Helen and Adam's love would grow with every adventure.
-  Whether it was making skiing at Kirkwood,
-  traveling across Asia, or playing video games in their beloved San Francisco
-  apartment, there were most happy and fully themselves in each other's company.
-  In the coming years they'd come to create some of the best memories
-  of their young lives as they prepared to move to Chicago and start the next
-  chapter; together.
+  They would experience everything from the excitement of skiing The Wall at Kirkwood and traveling
+  across Asia, to the simple joys of playing video games in their beloved San
+  Francisco apartment. These next few years would hold the best memories of
+  their young lives, and forge the foundation of their
+  relationship.
 </p>
 
 <p class="mt-4 mb-4">
@@ -205,4 +235,7 @@
     <.link target="_blank" href="https://maps.app.goo.gl/uq1ZKBKVZcuLweQCA">Noc Noc</.link>
     is not a wine bar.
   </i>
+</p>
+<p class="mt-4 mb-4">
+  <i>Helen no longer stays up until 2:21 AM</i>
 </p>

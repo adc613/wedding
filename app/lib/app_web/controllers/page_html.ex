@@ -207,6 +207,7 @@ defmodule AppWeb.PageHTML do
       <%= for message <- @messages do %>
         <.chat_bubble :if={message.type == :message} message={message} />
         <.chat_image :if={message.type == :image} message={message} />
+        <.chat_date :if={message.type == :date} message={message} />
       <% end %>
     </div>
     """
@@ -264,12 +265,22 @@ defmodule AppWeb.PageHTML do
 
   def chat_image(assigns) do
     ~H"""
-    <div class="chat-image">
+    <div class="chat-group helen indicator image">
       <div>
         <img src={@message.src} />
       </div>
-      <p class="chat-message indicator">
+      <p class="chat-message helen indicator image">
         {@message.text}
+      </p>
+    </div>
+    """
+  end
+
+  def chat_date(assigns) do
+    ~H"""
+    <div class="chat-group date">
+      <p>
+        <b>{@message.date}</b> {@message.time}
       </p>
     </div>
     """
@@ -281,7 +292,7 @@ defmodule AppWeb.PageHTML do
 
   defmodule Conversation do
     defmodule Entry do
-      defstruct [:type, :src, adam?: false, indicator?: false, text: ""]
+      defstruct [:type, :src, :date, :time, adam?: false, indicator?: false, text: ""]
 
       def new(%{type: :image} = entry) do
         %Entry{
@@ -290,6 +301,14 @@ defmodule AppWeb.PageHTML do
           indicator?: entry.indicator?,
           text: entry.text,
           src: entry.src
+        }
+      end
+
+      def new(%{type: :date} = entry) do
+        %Entry{
+          type: :date,
+          date: entry.date,
+          time: entry.time
         }
       end
 
