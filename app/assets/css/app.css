@@ -1,12 +1,184 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
-
 body {
   background-color: #f5f4ef
+}
+
+:root {
+  --hinge-conversation-bg-color: #fffefd;
+  --hinge-purple: #67295F;
+  --hinge-purple-muted: #ffeae5;
+  --hinge-date: #999;
+  --hinge-gray-bg: #f5f5f1;
 }
 
 /* This file is for your main application CSS */
 .btn-action {
   @apply bg-blue-500;
 }
+
+.hinge-header {
+  font-family: "Tinos", serif;
+  font-weight: 400;
+  font-style: normal;
+}
+
+.chat-conversation {
+  background-color: var(--hinge-conversation-bg-color);
+  padding: 12px;
+  font-family: "IBM Plex Sans", sans-serif;
+  font-optical-sizing: auto;
+  font-style: normal;
+  border-radius: 12px;
+  padding-right:24px;
+}
+
+.chat-group {
+  display: flex;
+
+  &.date {
+    text-align: center;
+    width: 100%;
+    margin-bottom: -14px;
+
+    p {
+      margin: auto;
+      color: var(--hinge-date);
+      font-size: 14px;
+    }
+  }
+
+  &.helen.indicator {
+    margin-right: -6px;
+  }
+
+  &.image {
+    flex-direction: column;
+    margin-bottom: -40px;
+    
+    .chat-message {
+      position: relative;
+      bottom: 32px;
+    }
+
+    img {
+      max-width:70%;
+      margin-left: auto;
+      border-radius: 12px; 
+    }
+  }
+}
+
+.chat-message {
+  width: max-content;
+  max-width: 70%;
+  border-top-left-radius: 12px;
+  border-top-right-radius: 12px;
+  border-bottom-right-radius: 12px;
+  border-bottom-left-radius: 12px;
+  padding: 8px;
+
+  &.helen {
+    background-color: var(--hinge-purple);
+    text-align: left;
+    margin-left: auto;
+    color: #fffefd;
+    border-bottom-right-radius: 0;
+
+    &.image {
+      background-color: var(--hinge-purple-muted);
+      color: black;
+      font-style: italic;
+    }
+  }
+
+  &.adam {
+    background-color: var(--hinge-gray-bg);
+    min-height: 32px;
+    text-align: left;
+    margin-right: auto;
+    border-bottom-left-radius: 0;
+  }
+}
+
+.chat-group {
+  margin-top: 24px;
+
+  &.helen {
+    &.indicator::after {
+      background-color: var(--hinge-conversation-bg-color);
+      position: relative;
+      bottom: 0px;
+      right: 0px;
+      content: "";
+      display: inline;
+      border-right: solid 6px transparent;
+      border-bottom: 6px solid var(--hinge-purple);
+      border-bottom-right-radius: 3px;
+
+    }
+
+    &.indicator.image::after {
+      bottom: calc(32px + 6px);
+      left: calc(100% - 4px);
+      width: 10px;
+      border-bottom: 6px solid var(--hinge-purple-muted);
+    }
+
+    &:has(+ .chat-group.helen) {
+      border-bottom-right-radius: 0;
+    }
+
+    + .chat-group.helen  {
+      margin-top: 4px;
+      .chat-message {
+        border-top-right-radius: 0;
+      }
+    }
+  }
+
+  &.adam {
+    + .chat-group.adam {
+      margin-top: 4px;
+
+      .chat-message {
+        border-top-left-radius: 0;
+      }
+    }
+  }
+}
+
+.chat-image {
+  margin-top: auto;
+  width: 32px;
+  height: 32px;
+
+  .headshot {
+     border-radius: 50%;
+     width: 32px;
+     height: 32px;
+     overflow: hidden;
+     border: 2px solid var(--hinge-conversation-bg-color);
+
+     img {
+       position: relative;
+       left: -5px;
+       width: 40px;
+       max-width: none;
+     }
+  }
+
+  .indicator {
+    position: relative;
+    top: -10px;
+    left: 22px;
+    width: 10px;
+    height: 10px;
+    background-color: transparent;
+    border-left: 10px solid transparent;
+    border-bottom: 8px solid var(--hinge-gray-bg);
+    border-bottom-left-radius: 3px;
+  }
+}
+

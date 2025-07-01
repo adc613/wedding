@@ -4,6 +4,7 @@ defmodule AppWeb.PageHTML do
 
   See the `page_html` directory for all templates available.
   """
+  alias AppWeb.PageHTML.Conversation
   use AppWeb, :html
 
   embed_templates "page_html/*"
@@ -196,5 +197,133 @@ defmodule AppWeb.PageHTML do
       </div>
     </div>
     """
+  end
+
+  attr :messages, :list, required: true
+
+  def conversation(assigns) do
+    ~H"""
+    <div class="chat-conversation">
+      <%= for message <- @messages do %>
+        <.chat_bubble :if={message.type == :message} message={message} />
+        <.chat_image :if={message.type == :image} message={message} />
+        <.chat_date :if={message.type == :date} message={message} />
+      <% end %>
+    </div>
+    """
+  end
+
+  attr :message, :list, required: true
+
+  def chat_bubble(assigns) do
+    ~H"""
+    <div class={
+      if @message.adam? do
+        "chat-group adam"
+      else
+        if @message.indicator? do
+          "chat-group helen indicator"
+        else
+          "chat-group helen"
+        end
+      end
+    }>
+      <div :if={@message.adam?} class="chat-image">
+        <div class="headshot">
+          <img :if={@message.indicator?} src="/images/adam_headshot.jpg" />
+        </div>
+        <div :if={@message.indicator?} class="indicator" />
+      </div>
+      <p class={
+        classes = []
+
+        classes =
+          if @message.indicator? do
+            ["indicator" | classes]
+          else
+            ["" | classes]
+          end
+
+        classes =
+          if @message.adam? do
+            ["adam" | classes]
+          else
+            ["helen" | classes]
+          end
+
+        classes = ["chat-message" | classes]
+
+        Enum.join(classes, " ")
+      }>
+        {@message.text}
+      </p>
+    </div>
+    """
+  end
+
+  attr :message, :list, required: true
+
+  def chat_image(assigns) do
+    ~H"""
+    <div class="chat-group helen indicator image">
+      <div>
+        <img src={@message.src} />
+      </div>
+      <p class="chat-message helen indicator image">
+        {@message.text}
+      </p>
+    </div>
+    """
+  end
+
+  def chat_date(assigns) do
+    ~H"""
+    <div class="chat-group date">
+      <p>
+        <b>{@message.date}</b> {@message.time}
+      </p>
+    </div>
+    """
+  end
+
+  def build_conversation(entries) do
+    Conversation.new(entries)
+  end
+
+  defmodule Conversation do
+    defmodule Entry do
+      defstruct [:type, :src, :date, :time, adam?: false, indicator?: false, text: ""]
+
+      def new(%{type: :image} = entry) do
+        %Entry{
+          type: :image,
+          adam?: entry.adam?,
+          indicator?: entry.indicator?,
+          text: entry.text,
+          src: entry.src
+        }
+      end
+
+      def new(%{type: :date} = entry) do
+        %Entry{
+          type: :date,
+          date: entry.date,
+          time: entry.time
+        }
+      end
+
+      def new(entry) do
+        %Entry{
+          type: :message,
+          adam?: entry.adam?,
+          indicator?: entry.indicator?,
+          text: entry.text
+        }
+      end
+    end
+
+    def new(entries) when is_list(entries) do
+      Enum.map(entries, &Entry.new(&1))
+    end
   end
 end
