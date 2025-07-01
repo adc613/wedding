@@ -4,6 +4,7 @@ defmodule AppWeb.PageHTML do
 
   See the `page_html` directory for all templates available.
   """
+  alias AppWeb.PageHTML.Conversation
   use AppWeb, :html
 
   embed_templates "page_html/*"
@@ -203,7 +204,10 @@ defmodule AppWeb.PageHTML do
   def conversation(assigns) do
     ~H"""
     <div class="chat-conversation">
-      <.chat_bubble :for={message <- @messages} message={message} />
+      <%= for message <- @messages do %>
+        <.chat_bubble :if={message.type == :message} message={message} />
+        <.chat_image :if={message.type == :image} message={message} />
+      <% end %>
     </div>
     """
   end
@@ -254,5 +258,53 @@ defmodule AppWeb.PageHTML do
       </p>
     </div>
     """
+  end
+
+  attr :message, :list, required: true
+
+  def chat_image(assigns) do
+    ~H"""
+    <div class="chat-image">
+      <div>
+        <img src={@message.src} />
+      </div>
+      <p class="chat-message indicator">
+        {@message.text}
+      </p>
+    </div>
+    """
+  end
+
+  def build_conversation(entries) do
+    Conversation.new(entries)
+  end
+
+  defmodule Conversation do
+    defmodule Entry do
+      defstruct [:type, :src, adam?: false, indicator?: false, text: ""]
+
+      def new(%{type: :image} = entry) do
+        %Entry{
+          type: :image,
+          adam?: entry.adam?,
+          indicator?: entry.indicator?,
+          text: entry.text,
+          src: entry.src
+        }
+      end
+
+      def new(entry) do
+        %Entry{
+          type: :message,
+          adam?: entry.adam?,
+          indicator?: entry.indicator?,
+          text: entry.text
+        }
+      end
+    end
+
+    def new(entries) when is_list(entries) do
+      Enum.map(entries, &Entry.new(&1))
+    end
   end
 end

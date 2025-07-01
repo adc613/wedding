@@ -4,122 +4,131 @@
 
 <p class="mt-4 mb-4">
   Our story, like so many of the modern age, began on the dating app Hinge.
-  Over the holidays of 2021, Helen, irked by her troubles on the apps,
-  was vented to her sisters. "I'm only meeting boys of low quality and I don't know
-  why!" she probably exclaimed. In response, Susan and Karen, always there to
-  be Helen's guiding compass, reviewed her profile; only to be appalled by what
+  Cozied up with family over the holidays of 2021
+  vented to her sisters: "I'm only meeting people of low quality and I don't know
+  why!" she exclaimed. Susan and Karen, always there to
+  be Helen's guiding compass, took a look at her profile; they were apalled by what
   they found.
 </p>
 <p class="mt-4 mb-4">
   "No wonder you're only matching with miscreants. A profile like this is no
-  good." They may have responded. Unable to tolerate the mess that laid before
-  them, they joined forces, and together with the power of sisterhood they
-  channeled their lifelong knowledge and love of Helen's essence to perform a
-  Cinderellian tranformation of Helen's Hinge profile. It was not but a few
-  days later that Helen would match with a cute boy named Adam (<i>maybe at
-  midnight</i>).
-</p>
-<p class="mt-4 mb-4">
-  Our first conversation went like this:
+  good!" You've got to fully represent yourself and put the energy out
+  there that you want to find, a nerdy, athletic, honest person." They decalred.
+  Unable to tolerate the mess before them, Susan and Karen joined forces, and
+  together with the power of sisterhood they channeled their lifelong knowledge
+  and love of Helen's essence to perform a Cinderellian transformation of
+  Helen's Hinge profile.
 </p>
 
-<.conversation messages={[
-  %{adam?: true, indicator?: true, text: "Hey how was your weekend?"},
-  %{adam?: false, indicator?: false, text: "It was good"},
-  %{
-    adam?: false,
-    indicator?: true,
-    text: "I went on a hike to Alamere falls today it was gorgeous"
-  },
-  %{
-    adam?: true,
-    indicator?: true,
-    text:
-      "Oh I love that hike. I did it with a friend and we had trouble finding the waterfall and almost turned around before it"
-  },
-  %{
-    adam?: false,
-    indicator?: true,
-    text: "Did you post a photo with a caption about chasing waterfalls?"
-  },
-  %{adam?: true, indicator?: false, text: "hahaha no missed opportunity there"},
-  %{adam?: true, indicator?: false, text: "Did you?"},
-  %{
-    adam?: true,
-    indicator?: true,
-    text: "I'm also a minority in that I don't have an instagram"
-  },
-  %{
-    adam?: false,
-    indicator?: true,
-    text: "No but I wondered how many people had"
-  },
-  %{adam?: true, indicator?: false, text: "Yeah it's too cheesy of a caption to not be used"},
-  %{adam?: true, indicator?: true, text: "So what brought you to SF?"},
-  %{adam?: false, indicator?: true, text: "Cool startup"}
-]} />
+<p class="mt-4 mb-4">
+  Naught but a few days later, Helen, on Saturday January 8th at 2:21 AM liked
+  the profile of a cute a dashing young nerd named Adam. Our first conversation
+  went like this:
+</p>
+
+<.conversation messages={
+  build_conversation([
+    %{adam?: true, indicator?: true, text: "Hey, how are you liking SF?"},
+    %{adam?: false, indicator?: false, text: "Hi I love it, it's so beautiful"},
+    %{
+      adam?: false,
+      indicator?: true,
+      text: "I went on a hike to Alamere falls today it was gorgeous"
+    },
+    %{
+      adam?: true,
+      indicator?: true,
+      text:
+        "Oh I love that hike. I did it with a friend and we had trouble finding the waterfall and almost turned around before it"
+    },
+    %{
+      adam?: false,
+      indicator?: true,
+      text: "Did you post a photo with a caption about chasing waterfalls?"
+    },
+    %{adam?: true, indicator?: false, text: "hahaha no missed opportunity there"},
+    %{adam?: true, indicator?: false, text: "Did you?"},
+    %{
+      adam?: true,
+      indicator?: true,
+      text: "I'm also a minority in that I don't have an instagram"
+    },
+    %{
+      adam?: false,
+      indicator?: true,
+      text: "No but I wondered how many people had"
+    },
+    %{adam?: true, indicator?: false, text: "Yeah it's too cheesy of a caption to not be used"},
+    %{adam?: true, indicator?: true, text: "So what brought you to SF?"},
+    %{adam?: false, indicator?: true, text: "Cool startup"}
+  ])
+} />
 
 <p class="mt-4 mb-4">
   It was at this point in our Story that Adam thought to himself.
   <i>
-    Did she really just respond, "Cool startup"!? I can't do anything with
+    Did she really just respond, "Cool startup"?! I can't do anything with
     this. Well what do I have to lose... on one hand this conversation is going
     nowhere, on the other hand she's cute and I'm not doing anything
     tomorrow. Time to shoot my shot.
   </i>
+</p>
+<p>
   And shoot his shot he did.
 </p>
 
-<.conversation messages={[
-  %{
-    adam?: true,
-    indicator?: true,
-    text:
-      "Cool lol. Well you've officially pass my rigorous \"probably not a serial killer test\". Are you doing anything tomorrow night? Would you want to get a drink at noc noc? It's a cool wine bar in lower haight."
-  }
-]} />
+<.conversation messages={
+  build_conversation([
+    %{
+      adam?: true,
+      indicator?: true,
+      text:
+        "Cool lol. Well you've officially pass my rigorous \"probably not a serial killer test\". Are you doing anything tomorrow night? Would you want to get a drink at noc noc? It's a cool wine bar in lower haight."
+    },
+    %{
+      adam?: false,
+      indicator?: true,
+      text:
+        "Hahaha wow I passed?? Yay! Tomorrow's trivia night but I could stop by beforehand, like 6?"
+    },
+    %{
+      adam?: true,
+      indicator?: false,
+      text: "Wow just moved here and already a regular at trivia night. I impressed 🤓"
+    },
+    %{
+      adam?: true,
+      indicator?: true,
+      text: "6 works for me. See you tomorrow :)"
+    }
+  ])
+} />
 
 <p class="mt-4 mb-4">
   It was at this point in our Story that Helen thought to herself.
-  <i>Wow his grammar is terrible. However, not being on instagram is a
-    green flag and I have some free time tomorrow before trivia.</i>
+  <i>Huh I am not impressed with that typo, but maybe be with someone less detailed
+    oriented than myself... And besides I already committed to a date.</i>
 </p>
 
-<.conversation messages={[
-  %{
-    adam?: false,
-    indicator?: true,
-    text:
-      "Hahaha wow I passed?? Yay! Tomorrow's trivia night but I could stop by beforehand, like 6?"
-  },
-  %{
-    adam?: true,
-    indicator?: false,
-    text: "Wow just moved here and already a regular at trivia night. I impressed 🤓"
-  },
-  %{
-    adam?: true,
-    indicator?: true,
-    text: "6 works for me. See you tomorrow :)"
-  }
-]} />
 <p class="mt-4 mb-4">
   The date was set and the next night, Adam sent a quick check-in.
 </p>
 
-<.conversation messages={[
-  %{
-    adam?: true,
-    indicator?: true,
-    text:
-      "Hey just confirming that we're still on for noc noc in an hour. I'm not always the best at checking hinge. Here's my number if anything comes up (847)555-1234"
-  },
-  %{
-    adam?: false,
-    indicator?: true,
-    text: "Ya I'm about to bike that way"
-  }
-]} />
+<.conversation messages={
+  build_conversation([
+    %{
+      adam?: true,
+      indicator?: true,
+      text:
+        "Hey just confirming that we're still on for noc noc in an hour. I'm not always the best at checking hinge. Here's my number if anything comes up (847)555-1234"
+    },
+    %{
+      adam?: false,
+      indicator?: true,
+      text: "Ya I'm about to bike that way"
+    }
+  ])
+} />
 
 <p class="mt-4 mb-4">
   Being a man of quality, Adam arrived at Noc Noc at a punctual 5:45pm. After
@@ -128,40 +137,46 @@
 </p>
 
 <p class="mt-4 mb-4">
-  Meanwhile, across town, Helen was lost cycling through up San Francisco's
-  notroious hills through an unfamiliar part of the city. Due to her lack of
-  navigational excellence, Helen had fallen significantly behind Google Maps'
-  predicted arrival time.
+  Meanwhile, across town, Helen was lost pedaling her way up San
+  Francisco's notorious hills in an unfamiliar part of the city. Due to her
+  lack of navigational excellence (<i>a trait she would come to deeply
+  appreciate in her life partner</i>), Helen had fallen significantly behind
+  Google Maps' predicted arrival time.
 </p>
 
 <p class="mt-4 mb-4">
-  However, Adam didn't know this and was sitting alone in a bar with nothing
-  but his thought to contemplating whether or not Helen was going to show up.
-  Unsure what to do, he sent a quick messsage.
+  However, Adam didn't know any of this and was sitting alone in a bar with
+  nothing but his thought &mdash; contemplating whether or not Helen was going to
+  show up. Unsure what to do, he sent a quick messsage.
 </p>
 
-<.conversation messages={[
-  %{adam?: true, indicator?: true, text: "Hey everything ok?"}
-]} />
+<.conversation messages={
+  build_conversation([
+    %{adam?: true, indicator?: true, text: "Hey everything ok?"}
+  ])
+} />
 
 <p class="mt-4 mb-4">
-  No response. So, approximately 15 minutes passed the hour, Adam thought
+  No response. So, approximately 15 minutes past the hour, Adam thought
   <i>well I guess the girl from the "cool startup" isn't showing up. It was a
     long shot anyway, time to go home.</i>
-  He stood up and he walked out of the bar. As he was striding out.
-  Adam spotted a cute vaguely familiar looking blonde walking with a bicycle;
-  "Helen?" he quieried.
+  He stood up to leave. As he was striding out,
+  Adam spotted a vaguely familiar blonde walking with a bicycle;
+  "Helen?" he queried.
 </p>
 
 <p class="mt-4 mb-4">
-  "Adam?" Helen responsed "were you leaving?"
+  "Adam?" Helen responded "Were you leaving?"
 </p>
 
 <p class="mt-4 mb-4">
-  "Can I help you with your bike? How was your day?" Adam asked as he tried to
-  smoothy cover the fact that he was in the midst of leaving. Adam then helped
-  Helen guide her bike into a visible corner of the quiet bar, they ordered a
-  drink, and the rest
+  "Can I help you with your bike? How was your day?" Adam asked as he gave his
+  most charming smile, hoping to smooth over the that he was leaving.
+</p>
+<p>
+  "It was good but I got lost on the way over!" said Helen, who was immediately
+  impressed with his bright smile. Adam then helped Helen guide her bike into a
+  safe corner of the quiet bar, they ordered a drink, and the rest
   <.link
     target="_blank"
     class="text-blue-500 hover:underline hover:text-blue-600"
@@ -173,9 +188,10 @@
 
 <p class="mt-4 mb-4">
   Over the coming years Helen and Adam's love would grow with every adventure.
-  Whether it was making gingerbread houses for Christmas, skiing at Kirkwood,
-  traveling across Asia, or playing video games in their beloved San Franciso
-  apartment. In the coming years they'd come to create some the best memories
+  Whether it was making skiing at Kirkwood,
+  traveling across Asia, or playing video games in their beloved San Francisco
+  apartment, there were most happy and fully themselves in each other's company.
+  In the coming years they'd come to create some of the best memories
   of their young lives as they prepared to move to Chicago and start the next
   chapter; together.
 </p>
@@ -185,7 +201,7 @@
 </p>
 <p class="mt-4 mb-4">
   <i>
-    For those from San Francisco, no, Adam was confused
+    For those from San Francisco, Adam was confused
     <.link target="_blank" href="https://maps.app.goo.gl/uq1ZKBKVZcuLweQCA">Noc Noc</.link>
     is not a wine bar.
   </i>
