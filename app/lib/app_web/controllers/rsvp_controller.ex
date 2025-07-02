@@ -221,7 +221,7 @@ defmodule AppWeb.RSVPController do
       invitation == nil -> :denied
       invitation.permit_kids and guest_params["is_kid"] == "true" -> :ok
       invitation.additional_guests > 0 -> :ok
-      true -> :denied_3
+      true -> :denied
     end
     |> case do
       :ok ->
@@ -246,7 +246,7 @@ defmodule AppWeb.RSVPController do
             render(conn, :add_guest, changeset: changeset)
         end
 
-      _ ->
+      :denied ->
         conn
         |> put_flash(
           :error,
