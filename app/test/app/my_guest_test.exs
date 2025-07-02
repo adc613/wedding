@@ -1,4 +1,5 @@
 defmodule App.MyGuestTest do
+  alias App.Guest.Invitation
   alias App.Guest.Guest
   alias App.Guest.RSVP
   alias App.MyGuest
@@ -410,6 +411,38 @@ defmodule App.MyGuestTest do
       assert guest.id == guest_id
       assert guest.is_kid == true
       assert invitation.additional_guests == 2
+    end
+  end
+
+  describe "all_rsvp?()" do
+    test "should only return true once all guests have RSVP'd" do
+      g1 = MyGuest.get_guest(1)
+
+      {:ok, g2} =
+        MyGuest.create_guest(%{
+          "email" => "test2@test.com",
+          "first_name" => "Adam2",
+          "last_name" => "Collins2",
+          "secret" => "12345"
+        })
+
+      {:ok, %Invitation{id: id}} =
+        MyGuest.create_invitation(
+          guests: [g1, g2],
+          events: [:wedding, :rehersal],
+          kids: false,
+          plus_one: false
+        )
+
+      assert MyGuest.all_rsvp?(id) == false
+
+      MyGuest.get_or_create_rsvp!(g1)
+
+      assert MyGuest.all_rsvp?(id) == false
+
+      MyGuest.get_or_create_rsvp!(g2)
+
+      assert MyGuest.all_rsvp?(id) == true
     end
   end
 end

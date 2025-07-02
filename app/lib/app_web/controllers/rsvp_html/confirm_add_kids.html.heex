@@ -15,6 +15,7 @@
     action={~p"/rsvp/add_guest?#{[redirect: ~p"/rsvp/confirm/add_kids"]}"}
     invitation_id={@invitation.id}
     is_kid={true}
+    inputs={[:first_name, :last_name]}
   >
     <:actions>
       <div class="flex justify-between">
