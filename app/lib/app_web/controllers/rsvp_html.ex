@@ -73,7 +73,7 @@ defmodule AppWeb.RSVPHTML do
 
   def confirmation_step(assigns) do
     ~H"""
-    <div class="rounded-2xl border-zinc-300 border-2 p-4">
+    <div class="rounded-2xl border-zinc-300 border-2 p-4" style="view-transition-name: hero">
       <h2 class="text-lg mt-2 mb-4 font-semibold">{@header}</h2>
       <div>
         {render_slot(@inner_block)}

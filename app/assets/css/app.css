@@ -1,8 +1,24 @@
 @import "tailwindcss/base";
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
+
 body {
   background-color: #f5f4ef
+}
+
+@view-transition {
+  navigation: auto;
+  types: slide, forwards;
+}
+
+/* Old stuff going out */
+::view-transition-old(hero) {
+  animation: slide-out-to-right 0.5s linear forwards;
+}
+
+/* New stuff coming in */
+::view-transition-new(hero) {
+  animation: slide-in-from-left 1.5s linear reverse;
 }
 
 :root {
