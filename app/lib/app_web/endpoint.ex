@@ -22,8 +22,9 @@ defmodule AppWeb.Endpoint do
   plug Plug.Static,
     at: "/",
     from: :app,
-    gzip: false,
-    only: AppWeb.static_paths()
+    gzip: true,
+    only: AppWeb.static_paths(),
+    cache_control_for_vsn_requests: "public, max-age=31536000"
 
   # Code reloading can be explicitly enabled under the
   # :code_reloader configuration of your endpoint.
