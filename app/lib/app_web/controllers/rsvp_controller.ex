@@ -16,9 +16,21 @@ defmodule AppWeb.RSVPController do
         MyGuest.get_guest(guest_id, preload: :rsvp)
     end
     |> case do
-      nil -> render_lookup(conn)
-      %Guest{rsvp: nil} -> redirect(conn, to: ~p"/rsvp/edit")
-      _guest -> redirect(conn, to: ~p"/rsvp/thanks")
+      nil ->
+        render_lookup(conn)
+
+      %Guest{rsvp: nil} ->
+        redirect(conn, to: ~p"/rsvp/edit")
+
+      %Guest{invitation_id: invitation_id} ->
+        if MyGuest.all_rsvp?(invitation_id) do
+          redirect(conn, to: ~p"/rsvp/thanks")
+        else
+          redirect(conn, to: ~p"/rsvp/edit")
+        end
+
+      _ ->
+        render_not_found(conn)
     end
   end
 
@@ -200,11 +212,12 @@ defmodule AppWeb.RSVPController do
   def add_guest(conn, %{"guest" => guest_params, "redirect" => redirect}) do
     guest_id = get_guest_id(conn)
 
-    invitation =
-      MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
+    invitation = MyGuest.get_guest!(guest_id, preload: :invitation) |> then(& &1.invitation)
 
     cond do
-      guest_params["invitation_id"] != invitation.id -> :denied
+      # guest_params invitation_id is  string, casting both values to a string
+      # just protects against unforseen edge cases.
+      to_string(guest_params["invitation_id"]) != to_string(invitation.id) -> :denied
       invitation == nil -> :denied
       invitation.permit_kids and guest_params["is_kid"] == "true" -> :ok
       invitation.additional_guests > 0 -> :ok
@@ -268,7 +281,12 @@ defmodule AppWeb.RSVPController do
   def thanks(conn, _params) do
     %{invitation: invitation} = get_confirm_details(conn)
     guests = invitation.guests |> MyGuest.load(preload: :rsvp)
-    conn |> render(:thanks, invitation: invitation, guests: guests)
+
+    if MyGuest.all_rsvp?(guests) do
+      conn |> render(:thanks, invitation: invitation, guests: guests)
+    else
+      conn |> redirect(to: ~p"/rsvp/edit")
+    end
   end
 
   defp get_confirm_details(conn) do

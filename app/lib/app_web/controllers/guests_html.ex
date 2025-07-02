@@ -35,6 +35,11 @@ defmodule AppWeb.GuestsHTML do
     default: nil,
     doc: "Hidden is kid field value"
 
+  attr :inputs, :list,
+    required: false,
+    default: [:first_name, :last_name, :email, :phone],
+    doc: "Input for what fields should be rendered in the guest form."
+
   attr :changeset, :any, required: true, doc: "Guest changeset"
   slot :actions
 
@@ -53,10 +58,24 @@ defmodule AppWeb.GuestsHTML do
       <input :if={@redirect} type="hidden" name="redirect" value={@redirect} />
       <input :if={@invitation_id} name="guest[invitation_id]" type="hidden" value={@invitation_id} />
       <input :if={@is_kid} name="guest[is_kid]" type="hidden" value="true" />
-      <.input required field={f[:first_name]} type="text" label="First Name" />
-      <.input required field={f[:last_name]} type="text" label="Last Name" />
-      <.input field={f[:email]} type="email" label="Email" inputmode="email" />
-      <.input field={f[:phone]} type="tel" label="Phone" inputmode="tel" />
+      <%= for input <- @inputs do %>
+        <.input
+          :if={input == :first_name}
+          required
+          field={f[:first_name]}
+          type="text"
+          label="First Name"
+        />
+        <.input
+          :if={input == :last_name}
+          required
+          field={f[:last_name]}
+          type="text"
+          label="Last Name"
+        />
+        <.input :if={input == :email} field={f[:email]} type="email" label="Email" inputmode="email" />
+        <.input :if={input == :phone} field={f[:phone]} type="tel" label="Phone" inputmode="tel" />
+      <% end %>
       {render_slot(@actions)}
     </.simple_form>
     """

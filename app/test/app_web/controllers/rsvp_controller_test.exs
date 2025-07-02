@@ -352,7 +352,7 @@ defmodule AppWeb.RSVPControllerTest do
           "email" => "test@test.test",
           "first_name" => "Adam 2",
           "last_name" => "Collins",
-          "invitation_id" => invitation.id
+          "invitation_id" => to_string(invitation.id)
         },
         "redirect" => "/test"
       })

@@ -243,6 +243,20 @@ defmodule App.MyGuest do
     |> Repo.update!()
   end
 
+  def all_rsvp?(nil), do: false
+
+  def all_rsvp?(guests) when is_list(guests) do
+    Enum.all?(guests, &(&1.rsvp != nil))
+  end
+
+  def all_rsvp?(%Invitation{guests: guests}) do
+    all_rsvp?(guests)
+  end
+
+  def all_rsvp?(invitaiton_id) do
+    get_invitation(invitaiton_id, preload: [guests: :rsvp]) |> all_rsvp?()
+  end
+
   defp apply_preloads(element, keywords) do
     keywords
     |> Enum.map(fn keyword ->
