@@ -217,8 +217,8 @@ defmodule AppWeb.RSVPController do
     cond do
       # guest_params invitation_id is  string, casting both values to a string
       # just protects against unforseen edge cases.
-      to_string(guest_params["invitation_id"]) != to_string(invitation.id) -> :denied_1
-      invitation == nil -> :denied_2
+      to_string(guest_params["invitation_id"]) != to_string(invitation.id) -> :denied
+      invitation == nil -> :denied
       invitation.permit_kids and guest_params["is_kid"] == "true" -> :ok
       invitation.additional_guests > 0 -> :ok
       true -> :denied_3
@@ -283,7 +283,6 @@ defmodule AppWeb.RSVPController do
     guests = invitation.guests |> MyGuest.load(preload: :rsvp)
 
     if MyGuest.all_rsvp?(guests) do
-      IO.puts("waht")
       conn |> render(:thanks, invitation: invitation, guests: guests)
     else
       conn |> redirect(to: ~p"/rsvp/edit")
