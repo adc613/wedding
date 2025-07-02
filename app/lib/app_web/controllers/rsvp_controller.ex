@@ -283,7 +283,6 @@ defmodule AppWeb.RSVPController do
     guests = invitation.guests |> MyGuest.load(preload: :rsvp)
 
     if MyGuest.all_rsvp?(guests) do
-      IO.puts("waht")
       conn |> render(:thanks, invitation: invitation, guests: guests)
     else
       conn |> redirect(to: ~p"/rsvp/edit")
