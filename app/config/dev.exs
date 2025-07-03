@@ -19,7 +19,7 @@ config :app, AppWeb.Endpoint,
   http: [ip: {0, 0, 0, 0}, port: 4000],
   check_origin: false,
   code_reloader: true,
-  debug_errors: false,
+  debug_errors: true,
   secret_key_base: "yhMx0Qya25ph3F8q8DNnz3YQJaFpNpw0H9d4hgI/xXllAho0xZ8Fwi7VLX4OHq3n",
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:app, ~w(--sourcemap=inline --watch)]},
