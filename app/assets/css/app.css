@@ -214,3 +214,11 @@ body {
   background-image: url("/images/ferry.jpg");
    animation: 2s infinite alternate beating-heart 
 }
+
+@-moz-document url-prefix() {
+  .heart-clip {
+    animation: none;
+    width: 60%;
+    height: 70%;
+  }
+}
