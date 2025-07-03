@@ -182,3 +182,35 @@ body {
   }
 }
 
+.full-height {
+  height: 100vh
+}
+
+.full-content-height {
+  height: calc(100% - 61px)
+}
+
+.big-text {
+  font-size: 48px
+}
+
+@keyframes beating-heart {
+  from {
+    width: 50%;
+    height: 55%;
+  }
+
+  to {
+    width: 60%;
+    height: 70%;
+  }
+}
+
+.heart-clip {
+  width: 50%;
+  clip-path: shape(from 50% 91%, line to 90% 50%, arc to 50% 9%  of 1%, arc to 10% 50% of 1%, close);
+  background-position: center;
+  background-size: 80vh;
+  background-image: url("/images/ferry.jpg");
+   animation: 2s infinite alternate beating-heart 
+}
