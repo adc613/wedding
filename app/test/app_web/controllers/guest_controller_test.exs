@@ -51,7 +51,7 @@ defmodule AppWeb.GuestControllerTest do
       conn = get(conn, ~p"/guest/42")
       resp = html_response(conn, 404)
 
-      assert resp =~ "Not found"
+      assert resp =~ "Found Love"
     end
 
     test "GET /guest/new", %{conn: conn} do

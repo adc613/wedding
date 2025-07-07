@@ -5,7 +5,7 @@ defmodule AppWeb.ErrorHTMLTest do
   import Phoenix.Template
 
   test "renders 404.html" do
-    assert render_to_string(AppWeb.ErrorHTML, "404", "html", []) =~ "Not found"
+    assert render_to_string(AppWeb.ErrorHTML, "404", "html", []) =~ "Found Love"
   end
 
   test "renders 500.html" do

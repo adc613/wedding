@@ -5,7 +5,6 @@ defmodule AppWeb.ErrorHTML do
   See config/config.exs.
   """
   use AppWeb, :html
-  import AppWeb.Layouts
 
   # If you want to customize your error pages,
   # uncomment the embed_templates/1 call below
