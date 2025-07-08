@@ -5,6 +5,7 @@ defmodule App.Guest.RSVP do
 
   schema "rsvps" do
     field :events, {:array, Ecto.Enum}, values: [:wedding, :brunch, :rehersal], default: []
+    field :dietary_restrictions, :string
 
     field :declined_events, {:array, Ecto.Enum},
       values: [:wedding, :brunch, :rehersal],
@@ -18,7 +19,7 @@ defmodule App.Guest.RSVP do
   @doc false
   def changeset(rsvp, attrs \\ %{}) do
     rsvp
-    |> cast(attrs, [:events, :declined_events, :guest_id])
+    |> cast(attrs, [:events, :declined_events, :guest_id, :dietary_restrictions])
     |> validate_required([:guest_id])
     |> assoc_constraint(:guest)
   end

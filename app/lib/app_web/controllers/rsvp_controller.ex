@@ -188,20 +188,43 @@ defmodule AppWeb.RSVPController do
   def update_rsvp(conn, params) do
     _invitation = MyGuest.get_invitation(params["invitation_id"], preload: :guests)
     form_key = ~r/^(wedding|brunch|rehersal)-(\d+)$/
+    dietary_key = ~r/^dietary_restrictions_(\d+)$/
 
-    params
-    |> Enum.filter(fn {key, _value} -> Regex.match?(form_key, key) end)
-    |> Enum.reduce(
-      %{},
-      fn {key, value}, acc ->
-        {event, answer, guest_id} = parse_key(key, value, form_key)
-        answers = [{event, answer} | Map.get(acc, guest_id, [])]
-        Map.put(acc, guest_id, answers)
-      end
-    )
-    |> Enum.each(fn {guest_id, answers} ->
-      {events, declined_events} = parse_answers(answers)
-      MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events})
+    {event_params, other_params} = 
+      params
+      |> Enum.split_with(fn {key, _value} -> Regex.match?(form_key, key) end)
+
+    dietary_params = 
+      other_params
+      |> Enum.filter(fn {key, _value} -> Regex.match?(dietary_key, key) end)
+
+    rsvp_data = 
+      event_params
+      |> Enum.reduce(
+        %{},
+        fn {key, value}, acc ->
+          {event, answer, guest_id} = parse_key(key, value, form_key)
+          answers = [{event, answer} | Map.get(acc, guest_id, [])]
+          Map.put(acc, guest_id, answers)
+        end
+      )
+
+    dietary_data = 
+      dietary_params
+      |> Enum.reduce(
+        %{},
+        fn {key, value}, acc ->
+          [_, guest_id] = Regex.run(dietary_key, key)
+          Map.put(acc, guest_id, value)
+        end
+      )
+
+    guest_ids = Map.keys(rsvp_data)
+
+    Enum.each(guest_ids, fn guest_id ->
+      {events, declined_events} = parse_answers(Map.get(rsvp_data, guest_id, []))
+      dietary_restrictions = Map.get(dietary_data, guest_id)
+      MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events, "dietary_restrictions" => dietary_restrictions})
     end)
 
     conn

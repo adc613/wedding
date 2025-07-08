@@ -46,6 +46,7 @@ defmodule AppWeb.RSVPHTML do
           end
         }
       />
+      <.input type="textarea" label="Dietary Restrictions" name={"dietary_restrictions_" <> to_string(@guest.id)} value={@guest.rsvp && @guest.rsvp.dietary_restrictions} />
     </div>
     """
   end

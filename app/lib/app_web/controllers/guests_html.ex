@@ -115,7 +115,7 @@ defmodule AppWeb.GuestsHTML do
 
   attr :fields, :list,
     required: false,
-    default: [:guest, :std, :email, :phone, :links],
+    default: [:guest, :std, :email, :phone, :dietary_restrictions, :links],
     doc: "The included column types"
 
   attr :checkbox_click, :fun, default: nil, doc: "The function that's called on checkbox click"
@@ -140,6 +140,7 @@ defmodule AppWeb.GuestsHTML do
           {guest.email}
         <% end %>
         <p :if={field == :phone}>{guest.phone}</p>
+        <p :if={field == :dietary_restrictions}>{guest.rsvp && guest.rsvp.dietary_restrictions}</p>
         <.link
           :if={field == :links}
           class="text-blue-500 hover:underline hover:text-blue-600 text-sm"
@@ -170,6 +171,7 @@ defmodule AppWeb.GuestsHTML do
   defp get_label(:email), do: "Email"
   defp get_label(:std), do: "Sent Save the Date"
   defp get_label(:phone), do: "Phone"
+  defp get_label(:dietary_restrictions), do: "Dietary Restrictions"
   defp get_label(_), do: "Placeholder"
 
   defp get_phones(guests, selected) do

@@ -445,4 +445,21 @@ defmodule App.MyGuestTest do
       assert MyGuest.all_rsvp?(id) == true
     end
   end
+
+  describe "update_rsvp!()" do
+    test "updates rsvp with dietary restrictions" do
+      guest = MyGuest.get_guest!(1)
+
+      MyGuest.update_rsvp!(guest.id, %{
+        "events" => ["wedding"],
+        "declined_events" => [],
+        "dietary_restrictions" => "no peanuts"
+      })
+
+      rsvp = MyGuest.get_guest!(guest.id, preload: :rsvp).rsvp
+      assert rsvp.events == [:wedding]
+      assert rsvp.declined_events == []
+      assert rsvp.dietary_restrictions == "no peanuts"
+    end
+  end
 end
