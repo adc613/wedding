@@ -186,7 +186,7 @@ defmodule AppWeb.RSVPController do
   end
 
   def update_rsvp(conn, params) do
-    _invitation = MyGuest.get_invitation(params["invitation_id"], preload: :guests)
+    invitation = MyGuest.get_invitation(params["invitation_id"], preload: :guests)
     form_key = ~r/^(wedding|brunch|rehersal)-(\d+)$/
 
     params
@@ -203,6 +203,12 @@ defmodule AppWeb.RSVPController do
       {events, declined_events} = parse_answers(answers)
       MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events})
     end)
+
+    case params["dietary_restrictions"] do
+      nil -> {:ok, invitation}
+      "" -> {:ok, invitation}
+      dr -> MyGuest.update(invitation, %{"dietary_restrictions" => dr})
+    end
 
     conn
     |> put_flash(:info, "Updated RSVP")

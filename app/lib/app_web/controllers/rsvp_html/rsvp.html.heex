@@ -5,7 +5,97 @@
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
   <.response :for={event <- @invitation.events} event={event} guests={@invitation.guests} />
-  <.button class="btn-action" type="submit">Submit RSVP</.button>
+
+  <div class="mt-6 p-4 rounded-xl border-2 rounded-2xl">
+    <div class="mb-4">
+      <.radio_group
+        options={[
+          yes:
+            if length(@invitation.guests) > 1 do
+              "Yes, we have dietary restrictions"
+            else
+              "Yes, I have a dietary restriction"
+            end,
+          no:
+            if length(@invitation.guests) > 1 do
+              "No, we eat everything"
+            else
+              "No, I eat everything"
+            end
+        ]}
+        name="has_dietary_restrictions"
+        legend="Do you have dietary restrictions or allergies?"
+        current_value={if @invitation.dietary_restrictions, do: :yes, else: :no}
+      />
+    </div>
+
+    <div
+      id="dietary-restrictions-section"
+      class="hidden transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-h-0 overflow-hidden"
+    >
+      <label for="dietary-restrictions" class="block text-lg font-medium text-gray-700 mb-2">
+        Dietary Restrictions or Allergies
+      </label>
+      <textarea
+        id="dietary-restrictions"
+        name="dietary_restrictions"
+        rows="4"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Please let us know about any dietary restrictions, allergies, or special meal requests for your party"
+      ><%= @invitation.dietary_restrictions %></textarea>
+    </div>
+  </div>
+
+  <.button class="btn-action mt-4" type="submit">Submit RSVP</.button>
 </.form>
+
+<script>
+  function toggleDietaryRestrictions() {
+    const yesRadio = document.getElementById('has_dietary_restrictions-yes');
+    const section = document.getElementById('dietary-restrictions-section');
+    const textarea = document.getElementById('dietary-restrictions');
+    
+    if (yesRadio.checked) {
+      // Show the section with animation
+      section.classList.remove('hidden');
+      // Force a reflow to ensure the hidden class is removed before adding animation classes
+      section.offsetHeight;
+      section.classList.remove('opacity-0', 'scale-95', 'max-h-0');
+      section.classList.add('opacity-100', 'scale-100', 'max-h-96');
+      // Make textarea required when yes is selected
+      textarea.setAttribute('required', 'true');
+    } else {
+      // Hide the section with animation
+      section.classList.remove('opacity-100', 'scale-100', 'max-h-96');
+      section.classList.add('opacity-0', 'scale-95', 'max-h-0');
+      // Remove required attribute when no is selected
+      textarea.removeAttribute('required');
+      // Clear the textarea value when hiding
+      textarea.value = '';
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        section.classList.add('hidden');
+      }, 300);
+    }
+  }
+
+  // Add event listeners when the page loads
+  document.addEventListener('DOMContentLoaded', function() {
+    const yesRadio = document.getElementById('has_dietary_restrictions-yes');
+    const noRadio = document.getElementById('has_dietary_restrictions-no');
+    
+    if (yesRadio) {
+      yesRadio.addEventListener('change', toggleDietaryRestrictions);
+    }
+    if (noRadio) {
+      noRadio.addEventListener('change', toggleDietaryRestrictions);
+    }
+    
+    // Show dietary restrictions section if "yes" is already selected
+    if (yesRadio && yesRadio.checked) {
+      toggleDietaryRestrictions();
+    }
+  });
+</script>
 
 <.footer />

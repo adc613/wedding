@@ -102,6 +102,12 @@ defmodule App.MyGuest do
     |> Repo.update()
   end
 
+  def update_invitation!(id, attrs) when is_binary(id) or is_integer(id) do
+    get_invitation!(id)
+    |> Invitation.changeset(attrs)
+    |> Repo.update!()
+  end
+
   def delete(%Guest{} = guest) do
     Repo.delete(guest)
   end
