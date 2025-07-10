@@ -5,7 +5,86 @@
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
   <input type="hidden" value={@invitation.id} name="invitation_id" />
   <.response :for={event <- @invitation.events} event={event} guests={@invitation.guests} />
-  <.button class="btn-action" type="submit">Submit RSVP</.button>
+
+  <div class="mt-6 p-4 rounded-xl border-2 rounded-2xl">
+    <div class="mb-4">
+      <div class="block text-lg font-medium text-gray-700 mb-3">
+        Do you have dietary restrictions or allergies?
+      </div>
+      <div class="flex items-center space-x-6">
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="has-dietary-restrictions-yes"
+            name="has_dietary_restrictions"
+            value="yes"
+            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+            onchange="toggleDietaryRestrictions()"
+            required
+          />
+          <label for="has-dietary-restrictions-yes" class="ml-2 block text-lg font-medium text-gray-700">
+            Yes
+          </label>
+        </div>
+        <div class="flex items-center">
+          <input
+            type="radio"
+            id="has-dietary-restrictions-no"
+            name="has_dietary_restrictions"
+            value="no"
+            class="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300"
+            onchange="toggleDietaryRestrictions()"
+            required
+          />
+          <label for="has-dietary-restrictions-no" class="ml-2 block text-lg font-medium text-gray-700">
+            No
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div
+      id="dietary-restrictions-section"
+      class="hidden transform transition-all duration-300 ease-in-out opacity-0 scale-95 max-h-0 overflow-hidden"
+    >
+      <label for="dietary-restrictions" class="block text-lg font-medium text-gray-700 mb-2">
+        Dietary Restrictions or Allergies
+      </label>
+      <textarea
+        id="dietary-restrictions"
+        name="dietary_restrictions"
+        rows="4"
+        class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+        placeholder="Please let us know about any dietary restrictions, allergies, or special meal requests for your party..."
+      />
+    </div>
+  </div>
+
+  <.button class="btn-action mt-4" type="submit">Submit RSVP</.button>
 </.form>
+
+<script>
+  function toggleDietaryRestrictions() {
+    const yesRadio = document.getElementById('has-dietary-restrictions-yes');
+    const section = document.getElementById('dietary-restrictions-section');
+    
+    if (yesRadio.checked) {
+      // Show the section with animation
+      section.classList.remove('hidden');
+      // Force a reflow to ensure the hidden class is removed before adding animation classes
+      section.offsetHeight;
+      section.classList.remove('opacity-0', 'scale-95', 'max-h-0');
+      section.classList.add('opacity-100', 'scale-100', 'max-h-96');
+    } else {
+      // Hide the section with animation
+      section.classList.remove('opacity-100', 'scale-100', 'max-h-96');
+      section.classList.add('opacity-0', 'scale-95', 'max-h-0');
+      // Wait for animation to complete before hiding
+      setTimeout(() => {
+        section.classList.add('hidden');
+      }, 300);
+    }
+  }
+</script>
 
 <.footer />
