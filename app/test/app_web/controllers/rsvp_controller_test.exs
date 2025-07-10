@@ -1,4 +1,5 @@
 defmodule AppWeb.RSVPControllerTest do
+  alias App.Guest.Invitation
   alias App.Guest.RSVP
   alias App.MyGuest
   use AppWeb.ConnCase
@@ -194,16 +195,19 @@ defmodule AppWeb.RSVPControllerTest do
         put(conn, ~p"/rsvp/invite", %{
           "invitation_id" => 1,
           "wedding-1" => "yes",
-          "rehersal-1" => "no"
+          "rehersal-1" => "no",
+          "dietary_restrictions" => "No meat"
         })
         |> html_response(302)
 
       assert resp =~ "/rsvp/thanks"
 
       %RSVP{events: events, declined_events: declined_events} = MyGuest.get_or_create_rsvp!(guest)
+      %Invitation{dietary_restrictions: dr} = MyGuest.get_invitation!(1)
 
       assert events == [:wedding]
       assert declined_events == [:rehersal]
+      assert dr == "No meat"
     end
   end
 

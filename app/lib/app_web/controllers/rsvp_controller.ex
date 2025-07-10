@@ -204,15 +204,10 @@ defmodule AppWeb.RSVPController do
       MyGuest.update_rsvp!(guest_id, %{"events" => events, "declined_events" => declined_events})
     end)
 
-    # Handle dietary restrictions
-    if params["dietary_restrictions"] do
-      dietary_restrictions = 
-        case params["has_dietary_restrictions"] do
-          "yes" -> params["dietary_restrictions"]
-          _ -> nil
-        end
-      
-      MyGuest.update_invitation!(invitation.id, %{"dietary_restrictions" => dietary_restrictions})
+    case params["dietary_restrictions"] do
+      nil -> {:ok, invitation}
+      "" -> {:ok, invitation}
+      dr -> MyGuest.update(invitation, %{"dietary_restrictions" => dr})
     end
 
     conn
