@@ -23,7 +23,7 @@ defmodule App.Guest.Invitation do
   end
 
   def num_of_people(%Invitation{} = invitation) do
-    length(invitation.guests)
+    length(invitation.guests) + invitation.additional_guests
   end
 
   def count_invites(%Invitation{events: events} = invitation) do

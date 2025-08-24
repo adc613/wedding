@@ -12,7 +12,7 @@ defmodule AppWeb.DashboardLive do
       <:subtitle>Dashboard</:subtitle>
     </.header>
     <h2 class="text-lg font-semibold">Guests</h2>
-    <.scorecards cards={build_cards(@guests, @invitations)} />
+    <.scorecards cards={build_guest_cards(@guests, @invitations)} />
     <h2 class="text-lg font-semibold mt-4">Invites</h2>
     <.scorecards cards={build_invite_cards(@invitations)} />
     <h2 class="text-lg font-semibold mt-4">RSVPs</h2>
@@ -66,7 +66,7 @@ defmodule AppWeb.DashboardLive do
     }
   end
 
-  defp build_cards(guests, invitations) do
+  defp build_guest_cards(guests, invitations) do
     [
       build_guest_count(guests),
       build_plus_one_count(invitations),
@@ -80,7 +80,7 @@ defmodule AppWeb.DashboardLive do
 
   defp build_guest_count(%AsyncResult{ok?: true, result: guests}) do
     %{
-      title: "Total",
+      title: "Max",
       info: length(guests)
     }
   end
@@ -90,7 +90,7 @@ defmodule AppWeb.DashboardLive do
   defp build_plus_one_count(%AsyncResult{ok?: true, result: invitations}) do
     %{
       title: "Additionals",
-      info: invitations |> Enum.map(& &1.additional_guests) |> Enum.sum()
+      info: count_additionals(invitations)
     }
   end
 
@@ -133,15 +133,15 @@ defmodule AppWeb.DashboardLive do
           info: to_string(counts.outstanding) <> " / " <> to_string(counts.total)
         },
         %{
-          title: "Yes to Wedding",
+          title: "Wedding",
           info: counts.wedding
         },
         %{
-          title: "Yes to Brunch",
+          title: "Brunch",
           info: counts.brunch
         },
         %{
-          title: "Yes to Rehearsal",
+          title: "Rehearsal",
           info: counts.rehersal
         }
       ]
@@ -173,7 +173,7 @@ defmodule AppWeb.DashboardLive do
     |> then(fn counts ->
       [
         %{
-          title: "Guests",
+          title: "Max",
           info: counts.total
         },
         %{
@@ -191,4 +191,7 @@ defmodule AppWeb.DashboardLive do
       ]
     end)
   end
+
+  defp count_additionals(invitations),
+    do: invitations |> Enum.map(& &1.additional_guests) |> Enum.count()
 end
