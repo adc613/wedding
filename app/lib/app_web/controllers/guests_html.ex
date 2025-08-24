@@ -159,8 +159,18 @@ defmodule AppWeb.GuestsHTML do
 
   def sms_std_link(assigns) do
     ~H"""
-    <a href={sms_link(@guests)}>
+    <a href={sms_link(@guests, :std)}>
       <.button>Open text</.button>
+    </a>
+    """
+  end
+
+  attr :guest, :any, required: true, doc: "TODO"
+
+  def sms_rsvp_reminder_link(assigns) do
+    ~H"""
+    <a href={sms_link([@guest], :rsvp)}>
+      <.button>Send reminder text</.button>
     </a>
     """
   end
@@ -190,8 +200,12 @@ defmodule AppWeb.GuestsHTML do
     |> Enum.join(",")
   end
 
-  defp sms_link(guests) do
-    "sms:#{sms_phone(guests)}?body=#{URI.encode(sms_body(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  defp sms_link(guests, :std) do
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(std_text(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  end
+
+  defp sms_link(guests, :rsvp) do
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(rsvp_reminder_text(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
   end
 
   defp sms_phone(guests) do
@@ -201,7 +215,7 @@ defmodule AppWeb.GuestsHTML do
     |> Enum.join(",")
   end
 
-  defp sms_body() do
+  defp std_text() do
     """
     https://wedding.adamcollins.io/std
 
@@ -210,6 +224,19 @@ defmodule AppWeb.GuestsHTML do
     Note: We’ll share more details including any information about hotel blocks when we send out invites in the coming months. 
 
     Can't wait to see you in Chicago,
+    Helen & Adam
+    """
+  end
+
+  defp rsvp_reminder_text() do
+    """
+    Hi,
+
+    We're trying to finalize our guest counts can you respond to your RSVP:
+
+    https://wedding.adamcollins.io/rsvp
+
+    Hope to see you there,
     Helen & Adam
     """
   end

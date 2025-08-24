@@ -11,12 +11,12 @@ defmodule AppWeb.DashboardLive do
       Admin page
       <:subtitle>Dashboard</:subtitle>
     </.header>
-    <h2 class="text-lg font-semibold">Guests</h2>
-    <.scorecards cards={build_guest_cards(@guests, @invitations)} />
-    <h2 class="text-lg font-semibold mt-4">Invites</h2>
-    <.scorecards cards={build_invite_cards(@invitations)} />
     <h2 class="text-lg font-semibold mt-4">RSVPs</h2>
     <.scorecards cards={build_rsvp_cards(@invitations)} />
+    <h2 class="text-lg font-semibold mt-4">Invites</h2>
+    <.scorecards cards={build_invite_cards(@invitations)} />
+    <h2 class="text-lg font-semibold">Database</h2>
+    <.scorecards cards={build_guest_cards(@guests, @invitations)} />
     <%= if @need_std.ok? do %>
       <h2 class="text-lg font-semibold mt-8">STDs</h2>
       <%= if length(@need_std.result) == 0 do %>
@@ -35,6 +35,24 @@ defmodule AppWeb.DashboardLive do
                 Mark Sent
               </.button>
               <.sms_std_link guests={[guest]} />
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
+    <%= if @need_rsvp.ok? do %>
+      <h2 class="text-lg font-semibold mt-8">Pending RSVPs</h2>
+      <%= if length(@need_rsvp.result) == 0 do %>
+        <p>All Sent!</p>
+      <% else %>
+        <div>
+          <div :for={guest <- @need_rsvp.result} class="flex justify-between mb-4">
+            <div>
+              {guest.first_name} {guest.last_name}
+            </div>
+            <div class="flex-grow-0">
+              <.sms_rsvp_reminder_link guest={guest} />
             </div>
           </div>
         </div>
@@ -70,8 +88,8 @@ defmodule AppWeb.DashboardLive do
     [
       build_guest_count(guests),
       build_plus_one_count(invitations),
-      build_kid_invite_count(invitations),
-      build_invite_count(invitations)
+      build_invite_count(invitations),
+      build_kid_invite_count(invitations)
     ]
     |> Enum.filter(&(&1 != nil))
   end
@@ -80,7 +98,7 @@ defmodule AppWeb.DashboardLive do
 
   defp build_guest_count(%AsyncResult{ok?: true, result: guests}) do
     %{
-      title: "Max",
+      title: "Guests",
       info: length(guests)
     }
   end
@@ -89,7 +107,7 @@ defmodule AppWeb.DashboardLive do
 
   defp build_plus_one_count(%AsyncResult{ok?: true, result: invitations}) do
     %{
-      title: "Additionals",
+      title: "Additional guests",
       info: count_additionals(invitations)
     }
   end
@@ -107,7 +125,7 @@ defmodule AppWeb.DashboardLive do
 
   defp build_invite_count(%AsyncResult{ok?: true, result: invitations}) do
     %{
-      title: "Invite count",
+      title: "Invites",
       info: length(invitations)
     }
   end
@@ -150,10 +168,11 @@ defmodule AppWeb.DashboardLive do
 
   defp assign_guests(conn) do
     conn
-    |> assign_async([:guests, :need_std], fn ->
+    |> assign_async([:guests, :need_std, :need_rsvp], fn ->
       guests = MyGuest.list_guests()
       need_std = Enum.filter(guests, &(not &1.sent_std))
-      {:ok, %{guests: guests, need_std: need_std}}
+      need_rsvp = Enum.filter(guests, &(&1.rsvp == nil))
+      {:ok, %{guests: guests, need_std: need_std, need_rsvp: need_rsvp}}
     end)
   end
 
@@ -173,25 +192,21 @@ defmodule AppWeb.DashboardLive do
     |> then(fn counts ->
       [
         %{
-          title: "Max",
-          info: counts.total
-        },
-        %{
           title: "Wedding",
           info: counts.wedding
         },
         %{
-          title: "Brunch",
-          info: counts.brunch
-        },
-        %{
           title: "Rehearsal",
           info: counts.rehersal
+        },
+        %{
+          title: "Brunch",
+          info: counts.brunch
         }
       ]
     end)
   end
 
   defp count_additionals(invitations),
-    do: invitations |> Enum.map(& &1.additional_guests) |> Enum.count()
+    do: invitations |> Enum.map(& &1.additional_guests) |> Enum.sum()
 end
