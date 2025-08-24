@@ -125,6 +125,12 @@ defmodule AppWeb.Router do
     end
   end
 
+  scope "/export", AppWeb do
+    pipe_through [:browser, :require_authenticated_user]
+
+    get "/guest", ExportController, :guest_list
+  end
+
   scope "/", AppWeb do
     pipe_through [:browser, :require_authenticated_user]
 
