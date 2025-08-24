@@ -10,6 +10,7 @@ defmodule AppWeb.ExportController do
         last_name: guest.last_name,
         phone: guest.phone,
         rsvp?: guest.rsvp != nil,
+        additional_guests: additional_guests(guest.invitation),
         invitation?: guest.invitation != nil,
         wedding?: guest.invitation != nil and :wedding in guest.invitation.events,
         brunch?: guest.invitation != nil and :brunch in guest.invitation.events,
@@ -25,6 +26,7 @@ defmodule AppWeb.ExportController do
         phone: "Phone",
         rsvp?: "RSVP'd",
         invitation?: "Has invitation",
+        additional_guests: "Plus One(s)",
         rehersal?: "Invited to Rehaersal",
         brunch?: "Invited to Brunch",
         edit_guest: "Edit Guest",
@@ -42,6 +44,9 @@ defmodule AppWeb.ExportController do
     |> put_root_layout(false)
     |> send_resp(200, data)
   end
+
+  defp additional_guests(nil), do: 0
+  defp additional_guests(invitation), do: invitation.additional_guests
 
   defp invite_link(nil), do: ""
 
