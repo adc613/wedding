@@ -15,6 +15,10 @@ defmodule App.MyGuest do
     Repo.all(Guest) |> Repo.preload(:rsvp) |> Enum.map(&Guest.add_phone(&1))
   end
 
+  def list_guests(:with_invitations) do
+    Repo.all(Guest) |> Repo.preload([:rsvp, :invitation]) |> Enum.map(&Guest.add_phone(&1))
+  end
+
   def get_guest(phone: phone) do
     {country_code, phone_number} = Guest.convert_phone(phone)
 

@@ -3,8 +3,34 @@ defmodule AppWeb.ExportController do
   use AppWeb, :controller
 
   def guest_list(conn, _params) do
-    MyGuest.list_guests()
-    |> CSV.encode(headers: [first_name: "First name", last_name: "Last name", phone: "Phone"])
+    MyGuest.list_guests(:with_invitations)
+    |> Enum.map(fn guest ->
+      %{
+        first_name: guest.first_name,
+        last_name: guest.last_name,
+        phone: guest.phone,
+        rsvp?: guest.rsvp != nil,
+        invitation?: guest.invitation != nil,
+        wedding?: guest.invitation != nil and :wedding in guest.invitation.events,
+        brunch?: guest.invitation != nil and :brunch in guest.invitation.events,
+        rehersal?: guest.invitation != nil and :rehersal in guest.invitation.events,
+        edit_guest: "https://wedding.adamcollins.io" <> ~p"/guest/#{guest}/edit",
+        edit_invite: invite_link(guest.invitation)
+      }
+    end)
+    |> CSV.encode(
+      headers: [
+        first_name: "First name",
+        last_name: "Last name",
+        phone: "Phone",
+        rsvp?: "RSVP'd",
+        invitation?: "Has invitation",
+        rehersal?: "Invited to Rehaersal",
+        brunch?: "Invited to Brunch",
+        edit_guest: "Edit Guest",
+        edit_invite: "Edit Invite"
+      ]
+    )
     |> Enum.join("")
     |> render_file(conn, "guests")
   end
@@ -16,4 +42,9 @@ defmodule AppWeb.ExportController do
     |> put_root_layout(false)
     |> send_resp(200, data)
   end
+
+  defp invite_link(nil), do: ""
+
+  defp invite_link(invitation),
+    do: "https://wedding.adamcollins.io" <> ~p"/invitation/#{invitation}/edit"
 end
