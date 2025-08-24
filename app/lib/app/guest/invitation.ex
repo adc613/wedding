@@ -26,6 +26,38 @@ defmodule App.Guest.Invitation do
     length(invitation.guests)
   end
 
+  def count_invites(%Invitation{events: events} = invitation) do
+    total = num_of_people(invitation)
+
+    wedding =
+      if :wedding in events do
+        1
+      else
+        0
+      end
+
+    brunch =
+      if :brunch in events do
+        1
+      else
+        0
+      end
+
+    rehersal =
+      if :rehersal in events do
+        1
+      else
+        0
+      end
+
+    %{
+      total: total,
+      wedding: total * wedding,
+      brunch: total * brunch,
+      rehersal: total * rehersal
+    }
+  end
+
   def count_rsvps(%Invitation{} = invitation) do
     Enum.reduce(invitation.guests, {0, 0, 0}, fn guest, {wedding, brunch, rehersal} ->
       case guest.rsvp do
