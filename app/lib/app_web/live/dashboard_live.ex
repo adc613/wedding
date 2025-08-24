@@ -11,8 +11,14 @@ defmodule AppWeb.DashboardLive do
       Admin page
       <:subtitle>Dashboard</:subtitle>
     </.header>
+    <h2 class="text-lg font-semibold">Guests</h2>
+    <.scorecards cards={build_cards(@guests, @invitations)} />
+    <h2 class="text-lg font-semibold mt-4">Invites</h2>
+    <.scorecards cards={build_invite_cards(@invitations)} />
+    <h2 class="text-lg font-semibold mt-4">RSVPs</h2>
+    <.scorecards cards={build_rsvp_cards(@invitations)} />
     <%= if @need_std.ok? do %>
-      <h2 class="text-lg font-semibold">STDs</h2>
+      <h2 class="text-lg font-semibold mt-8">STDs</h2>
       <%= if length(@need_std.result) == 0 do %>
         <p>All Sent!</p>
       <% else %>
@@ -34,10 +40,6 @@ defmodule AppWeb.DashboardLive do
         </div>
       <% end %>
     <% end %>
-    <h2 class="text-lg font-semibold">Guest Info</h2>
-    <.scorecards cards={build_cards(@guests, @invitations)} />
-    <h2 class="text-lg font-semibold">RSVPs</h2>
-    <.scorecards cards={build_rsvp_cards(@invitations)} />
     """
   end
 
@@ -65,7 +67,12 @@ defmodule AppWeb.DashboardLive do
   end
 
   defp build_cards(guests, invitations) do
-    [build_guest_count(guests), build_invite_count(invitations)]
+    [
+      build_guest_count(guests),
+      build_plus_one_count(invitations),
+      build_kid_invite_count(invitations),
+      build_invite_count(invitations)
+    ]
     |> Enum.filter(&(&1 != nil))
   end
 
@@ -73,8 +80,26 @@ defmodule AppWeb.DashboardLive do
 
   defp build_guest_count(%AsyncResult{ok?: true, result: guests}) do
     %{
-      title: "Guest count",
+      title: "Total",
       info: length(guests)
+    }
+  end
+
+  defp build_plus_one_count(%AsyncResult{ok?: false}), do: nil
+
+  defp build_plus_one_count(%AsyncResult{ok?: true, result: invitations}) do
+    %{
+      title: "Additionals",
+      info: invitations |> Enum.map(& &1.additional_guests) |> Enum.sum()
+    }
+  end
+
+  defp build_kid_invite_count(%AsyncResult{ok?: false}), do: nil
+
+  defp build_kid_invite_count(%AsyncResult{ok?: true, result: invitations}) do
+    %{
+      title: "Invitations w/ Kids",
+      info: invitations |> Enum.filter(& &1.permit_kids) |> Enum.count()
     }
   end
 
@@ -100,11 +125,12 @@ defmodule AppWeb.DashboardLive do
         rehersal: acc.rehersal + counts.rehersal
       }
     end)
+    |> then(&Map.put(&1, :outstanding, &1.total - &1.wedding))
     |> then(fn counts ->
       [
         %{
-          title: "Total Guest Invite",
-          info: counts.total
+          title: "Responses",
+          info: to_string(counts.outstanding) <> " / " <> to_string(counts.total)
         },
         %{
           title: "Yes to Wedding",
@@ -128,6 +154,41 @@ defmodule AppWeb.DashboardLive do
       guests = MyGuest.list_guests()
       need_std = Enum.filter(guests, &(not &1.sent_std))
       {:ok, %{guests: guests, need_std: need_std}}
+    end)
+  end
+
+  defp build_invite_cards(%AsyncResult{ok?: false}), do: []
+
+  defp build_invite_cards(%AsyncResult{ok?: true, result: invitations}) do
+    MyGuest.load(invitations, preload: [guests: [:rsvp]])
+    |> Enum.map(&Invitation.count_invites(&1))
+    |> Enum.reduce(fn acc, counts ->
+      %{
+        total: acc.total + counts.total,
+        wedding: acc.wedding + counts.wedding,
+        brunch: acc.brunch + counts.brunch,
+        rehersal: acc.rehersal + counts.rehersal
+      }
+    end)
+    |> then(fn counts ->
+      [
+        %{
+          title: "Guests",
+          info: counts.total
+        },
+        %{
+          title: "Wedding",
+          info: counts.wedding
+        },
+        %{
+          title: "Brunch",
+          info: counts.brunch
+        },
+        %{
+          title: "Rehearsal",
+          info: counts.rehersal
+        }
+      ]
     end)
   end
 end
