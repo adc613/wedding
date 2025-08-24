@@ -6,6 +6,7 @@ defmodule App.Guest.InvitationTest do
 
   test "Changeset happy case" do
     invite = %Invitation{
+      additional_guests: 1,
       guests: [
         %Guest{
           rsvp: %RSVP{
@@ -23,6 +24,6 @@ defmodule App.Guest.InvitationTest do
       ]
     }
 
-    assert Invitation.count_rsvps(invite) == %{total: 3, wedding: 2, brunch: 1, rehersal: 0}
+    assert Invitation.count_rsvps(invite) == %{total: 4, wedding: 2, brunch: 1, rehersal: 0}
   end
 end
