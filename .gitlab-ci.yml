@@ -36,7 +36,7 @@ build_image:
   services:
     - docker:dind
   script:
-    - docerk build -t $CONTAINER_IMAGE ./app
+    - docker build -t $CONTAINER_IMAGE ./app
 
 
 push_image:
