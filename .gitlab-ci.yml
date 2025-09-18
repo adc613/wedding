@@ -17,15 +17,34 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 stages:          # List of stages for jobs, and their order of execution
-  - build
   - test
+  - build
+  - push
 
-build-job:       # This job runs in the build stage, which runs first.
-  stage: build
-  script:
-    - docker build -t test-img .
+variables:
+  CONTAINER_IMAGE: $CI_REGISTRY_IMAGE:$CI_COMMIT_SHORT_SHA
 
 unit-test-job:   # This job runs in the test stage.
   stage: test    # It only starts when the job in the build stage completes successfully.
   script:
+    - docker build -t test-img .
     - docker run test-img
+
+build_image:
+  stage: build
+  image: docker:latest
+  services:
+    - docker:dind
+  script:
+    - docerk build -t $CONTAINER_IMAGE ./app
+
+
+push_image:
+  stage: push
+  image: docker:latest
+  servics:
+    - docker:dind
+  before_script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+  script:
+    - docker push $CONTAINER_IMAGE
