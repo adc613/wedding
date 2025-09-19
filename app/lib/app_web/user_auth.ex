@@ -215,6 +215,25 @@ defmodule AppWeb.UserAuth do
   end
 
   @doc """
+  Used for routes that require the user to be authenticated.
+
+  If you want to enforce the user email is confirmed before
+  they use the application at all, here would be a good place.
+  """
+  def require_authenticated_user_or_super_secure_api_key(
+        %Plug.Conn{params: %{"key" => key}} = conn,
+        opts
+      ) do
+    secure_key = System.get_env("SUPER_SECURE_API_KEY", "disable")
+
+    if secure_key != "disable" and key == secure_key do
+      conn
+    else
+      require_authenticated_user(conn, opts)
+    end
+  end
+
+  @doc """
   Used to enforce that user is authentticated or that the guest in their cookie has permission to respond for a given guest
   """
   def maybe_require_authenticated_user(%Plug.Conn{assigns: %{current_user: user}} = conn, opts)
