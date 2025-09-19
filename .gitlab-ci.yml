@@ -33,6 +33,9 @@ unit-test-job:   # This job runs in the test stage.
 build_image:
   stage: build
   image: docker:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "stable" || $CI_COMMIT_BRANCH == "main"'
+      when: on_success
   services:
     - docker:dind
   script:
@@ -42,6 +45,9 @@ build_image:
 push_image:
   stage: push
   image: docker:latest
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
   services:
     - docker:dind
   before_script:
