@@ -1,5 +1,4 @@
 defmodule AppWeb.PageController do
-  alias App.MyGuest
   use AppWeb, :controller
 
   def home(conn, _params) do
