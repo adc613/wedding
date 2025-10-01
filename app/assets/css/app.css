@@ -11,6 +11,8 @@ body {
   --hinge-purple-muted: #ffeae5;
   --hinge-date: #999;
   --hinge-gray-bg: #f5f5f1;
+  --theme-primary: #55aaff;
+
 }
 
 /* This file is for your main application CSS */
@@ -24,7 +26,7 @@ body {
   font-style: normal;
 }
 
-.chat-conversation {
+.chat-conversathome-1.tail0ab14d.ts.netion {
   background-color: var(--hinge-conversation-bg-color);
   padding: 12px;
   font-family: "IBM Plex Sans", sans-serif;
@@ -220,5 +222,98 @@ body {
     animation: none;
     width: 60%;
     height: 70%;
+  }
+}
+
+.timeline {
+  width: 100%;
+  list-style: none;
+
+  .day-break {
+    margin: auto;
+    color: var(--theme-priamry);
+    display: flex;
+    justify-content: center;
+
+    h2 {
+      font-size: 24px;
+      font-weight: 700;
+    }
+  }
+
+  .time {
+    margin: auto;
+    border: 2px solid var(--theme-primary);
+    border-radius: 16px;
+    font-size: 2.0rem;
+    padding: 16px;
+  }
+
+  .day-break::before {
+    tag: "li";
+  }
+
+  h3 {
+    font-size: 24px;
+    color: #55aaff;
+    margin-bottom: 2rem;
+  }
+
+  li {
+    display: flex;
+    width: 100%;
+
+    div {
+      width: 50%;
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      padding: 1rem;
+    }
+
+  }
+
+  li:nth-child(even) {
+    flex-direction: row-reverse;
+
+    div:nth-child(odd) {
+      border-left:2px solid black;
+    }
+
+    div:nth-child(odd)::before {
+      border-radius: 50%;
+      background-color: #55aaff;
+      border: 6px solid black;
+      content: "";
+      position: absolute;
+      left: -8px;
+      top: 50%;
+      z-index:100;
+    }
+
+    div:nth-child(even) {
+      border-right:2px solid black;
+    }
+  }
+
+  li:nth-child(odd) {
+    div:nth-child(odd) {
+      border-right: 2px solid black;
+    }
+
+    div:nth-child(odd)::after {
+      border-radius: 50%;
+      background-color: #55aaff;
+      border: 6px solid black;
+      content: "";
+      position: absolute;
+      right: -8px;
+      top: 50%;
+      z-index:100;
+    }
+
+    div:nth-child(even) {
+      border-left:2px solid black;
+    }
   }
 }

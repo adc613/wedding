@@ -31,6 +31,7 @@ defmodule AppWeb.Router do
     get "/travel", PageController, :travel
     get "/things", PageController, :things_to_do
     get "/registry", PageController, :registry
+    get "/schedule", PageController, :schedule
   end
 
   scope "/rsvp", AppWeb do

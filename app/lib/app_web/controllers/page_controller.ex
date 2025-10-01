@@ -1,4 +1,5 @@
 defmodule AppWeb.PageController do
+  alias App.MyGuest
   use AppWeb, :controller
 
   def home(conn, _params) do
@@ -38,5 +39,9 @@ defmodule AppWeb.PageController do
 
   def things_to_do(conn, _params) do
     render(conn, :things_to_do)
+  end
+
+  def schedule(conn, _params) do
+    render(conn, :schedule)
   end
 end
