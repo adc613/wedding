@@ -781,4 +781,49 @@ defmodule AppWeb.CoreComponents do
     </fieldset>
     """
   end
+
+  attr :href, :string, required: true
+  slot :inner_block, required: true
+
+  def a(assigns) do
+    ~H"""
+    <.link class="text-blue-500 hover:underline hover:text-blue-600" href={@href}>
+      {render_slot(@inner_block)}
+    </.link>
+    """
+  end
+
+  attr :href, :string, default: nil
+  attr :external?, :boolean, default: false
+  attr :primary?, :boolean, default: false
+  slot :inner_block, required: true
+
+  def a_button(assigns) do
+    ~H"""
+    <.link
+      :if={@href != nil}
+      target={
+        if @external? do
+          "_blank"
+        else
+          ""
+        end
+      }
+      href={@href}
+    >
+      <.button class={
+        if @primary? do
+          "btn-primary"
+        else
+          ""
+        end
+      }>
+        {render_slot(@inner_block)}
+      </.button>
+    </.link>
+    <.button :if={@href == nil}>
+      {render_slot(@inner_block)}
+    </.button>
+    """
+  end
 end

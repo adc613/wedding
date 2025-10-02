@@ -28,10 +28,6 @@ defmodule AppWeb.PageController do
     render(conn, :photos)
   end
 
-  def registry(conn, _params) do
-    render(conn, :registry)
-  end
-
   def travel(conn, _params) do
     render(conn, :travel)
   end

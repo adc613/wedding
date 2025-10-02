@@ -14,6 +14,11 @@ body {
 }
 
 /* This file is for your main application CSS */
+p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
 .btn-action {
   @apply bg-blue-500;
 }
@@ -221,4 +226,104 @@ body {
     width: 60%;
     height: 70%;
   }
+}
+
+.comparison-table {
+  width: 100%;
+
+  tr {
+    margin-top: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+
+  th {
+    text-align: left;
+    padding: 0.5rem;
+  }
+
+  td {
+    padding: 0.5rem;
+    margin: auto;
+  }
+}
+
+ul {
+  list-style-type: disc;
+  list-style-position: inside;
+}
+
+ol {
+  list-style-type: decimal;
+  list-style-position: inside;
+}
+
+.list-style-none {
+  /* Not sure if I need both attributes, but it worked. */
+  list-style: none;
+  list-style-type: none;
+}
+
+.text-caption {
+  font-style: italic;
+  margin-top: 0;
+  padding-left: 1rem;
+}
+
+.button-caption {
+  margin-top: -1rem;
+}
+
+#float-menu {
+  position: fixed;
+  top: 100px;
+  left: 0%;
+  margin-left: 100px;
+  width: 200px;
+  @media only screen and (max-width: 1334px) {
+    display: none;
+  }
+
+  li {
+    transition: background-color 500ms ease-in-out; /* Transition over 1 second */
+    padding: 4px;
+    border-radius: 8px;
+  }
+
+  li:hover {
+    background-color: #55aaff35;
+  }
+
+  ul {
+    list-style: none;
+    list-style-type: none;
+    display: flex;
+    gap: 1rem;
+    flex-direction: column;
+
+    li {
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    .submenu {
+      gap: 0.5rem;
+
+      li {
+        font-weight: 400;
+        padding-left: 1rem;
+      }
+    }
+  }
+}
+
+.btn-primary {
+  background-color: #5af;
+}
+
+.btn-primary:hover {
+  background-color: #55aaff75 !important;
+}
+
+#center-div {
+  min-height: calc(100dvh - 320px);
 }
