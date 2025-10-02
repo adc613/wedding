@@ -1,0 +1,27 @@
+<h1 class="text-4xl text-center font-sans mb-4 ">
+  Registry
+</h1>
+
+<.center_div :if={not @show_link}>
+  <p>
+    We want to emphasize, there is no need to get us a gift. Your presence is
+    truly presents enough.
+  </p>
+  <.simple_form :let={f} id="guest-form" for={@changeset} action={~p"/registry"}>
+    <.error :if={not Enum.empty?(@changeset.errors)}>
+      You must acknowledge our Terms of Registry to see the link
+    </.error>
+    <.input
+      field={f[:tor]}
+      type="checkbox"
+      label="I acknowledge that my presence is truly presents enough."
+    />
+    <.button>Show me the registry</.button>
+  </.simple_form>
+</.center_div>
+
+<.center_div :if={@show_link}>
+  <.a_button primary?={true} external?={true} href="https://www.myregistry.com/giftlist/ha">
+    Helen & Adam's Registry
+  </.a_button>
+</.center_div>
