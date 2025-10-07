@@ -308,12 +308,25 @@ defmodule AppWeb.RSVPController do
   end
 
   defp render_lookup(conn, changeset: changeset) do
-    conn |> render(:lookup, changeset: changeset, guests: [])
+    conn
+    |> render(:lookup,
+      changeset: changeset,
+      guests: [],
+      thumbnail_image: ~p"/images/italy_invite.jpg",
+      page_title: "You're invited"
+    )
   end
 
   defp render_lookup(conn) do
     changeset = Guest.lookup_changeset(%Guest{})
-    conn |> render(:lookup, changeset: changeset, guests: [])
+
+    conn
+    |> render(:lookup,
+      changeset: changeset,
+      guests: [],
+      thumbnail_image: ~p"/images/italy_invite.jpg",
+      page_title: "You're invited"
+    )
   end
 
   defp parse_key(key, value, form_key) do

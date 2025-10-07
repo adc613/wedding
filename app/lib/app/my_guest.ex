@@ -255,9 +255,7 @@ defmodule App.MyGuest do
 
   def mark_sent!(%Invitation{} = invite) do
     invite
-    |> IO.inspect()
     |> Invitation.changeset(%{sent: true})
-    |> IO.inspect()
     |> Repo.update!()
   end
 
