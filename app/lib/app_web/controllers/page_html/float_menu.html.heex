@@ -1,0 +1,12 @@
+<div id="float-menu">
+  <ul>
+    <%= for item <- @items do %>
+      <li><a href={"#" <> item.id}>{item.text}</a></li>
+      <ul :if={Map.has_key?(item, :children)} class="submenu">
+        <li :for={child <- item.children}>
+          <a href={"#" <> child.id}>{child.text}</a>
+        </li>
+      </ul>
+    <% end %>
+  </ul>
+</div>

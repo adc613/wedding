@@ -253,6 +253,12 @@ defmodule App.MyGuest do
     |> Repo.update!()
   end
 
+  def mark_sent!(%Invitation{} = invite) do
+    invite
+    |> Invitation.changeset(%{sent: true})
+    |> Repo.update!()
+  end
+
   def all_rsvp?(nil), do: false
 
   def all_rsvp?(guests) when is_list(guests) do

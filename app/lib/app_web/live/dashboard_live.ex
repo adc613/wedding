@@ -4,6 +4,7 @@ defmodule AppWeb.DashboardLive do
   alias App.MyGuest
   use AppWeb, :live_view
   import AppWeb.GuestsHTML
+  import AppWeb.InvitationHTML
 
   def render(assigns) do
     ~H"""
@@ -41,6 +42,32 @@ defmodule AppWeb.DashboardLive do
       <% end %>
     <% end %>
 
+    <%= if @pending_invites.ok? do %>
+      <h2 class="text-lg font-semibold mt-8">Pending Invitaions</h2>
+      <%= if length(@pending_invites.result) == 0 do %>
+        <p>All Sent!</p>
+      <% else %>
+        <div>
+          <div :for={invite <- @pending_invites.result} class="flex justify-between mb-4">
+            <div>
+              <.invitation_display invitation={invite} />
+            </div>
+            <div class="flex-grow-0">
+              <.button
+                class="mr-8 btn-action"
+                phx-click={JS.push("mark_invite_sent", value: %{id: invite.id})}
+              >
+                Mark Sent
+              </.button>
+            </div>
+            <div class="flex-grow-0">
+              <.sms_invite_link :for={guest <- invite.guests} guest={guest} />
+            </div>
+          </div>
+        </div>
+      <% end %>
+    <% end %>
+
     <%= if @need_rsvp.ok? do %>
       <h2 class="text-lg font-semibold mt-8">Pending RSVPs</h2>
       <%= if length(@need_rsvp.result) == 0 do %>
@@ -66,10 +93,7 @@ defmodule AppWeb.DashboardLive do
       :ok,
       socket
       |> assign_guests()
-      |> assign_async([:invitations], fn ->
-        invitations = MyGuest.list_invitations()
-        {:ok, %{invitations: invitations}}
-      end),
+      |> assign_invites(),
       layout: {AppWeb.Layouts, :admin}
     }
   end
@@ -81,6 +105,16 @@ defmodule AppWeb.DashboardLive do
     {
       :noreply,
       socket |> assign_guests()
+    }
+  end
+
+  def handle_event("mark_invite_sent", %{"id" => id}, socket) do
+    invite = Enum.find(socket.assigns.invitations.result, &(&1.id == id))
+    MyGuest.mark_sent!(invite)
+
+    {
+      :noreply,
+      socket |> assign_invites()
     }
   end
 
@@ -173,6 +207,15 @@ defmodule AppWeb.DashboardLive do
       need_std = Enum.filter(guests, &(not &1.sent_std))
       need_rsvp = Enum.filter(guests, &(&1.rsvp == nil))
       {:ok, %{guests: guests, need_std: need_std, need_rsvp: need_rsvp}}
+    end)
+  end
+
+  defp assign_invites(conn) do
+    conn
+    |> assign_async([:invitations, :pending_invites], fn ->
+      invitations = MyGuest.list_invitations(preload: :guests)
+      pending_invites = Enum.filter(invitations, &(not &1.sent))
+      {:ok, %{invitations: invitations, pending_invites: pending_invites}}
     end)
   end
 

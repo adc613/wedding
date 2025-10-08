@@ -1,0 +1,337 @@
+<h1 class="text-4xl text-center font-sans mb-4 ">
+  Welcome to Chicago
+</h1>
+
+<div>
+  <img class="rounded-2xl m-auto" src={~p"/images/kathy_osterman.jpg"} />
+</div>
+
+<p>
+  First off, to everyone who's traveling to celebrate with us:
+</p>
+
+<p class="text-4xl text-center font-seriff mt-4 mb-4">
+  Thank You
+</p>
+
+<p>
+  We are thrilled to gather all of our favorite people in Chicago to celebrate  our love
+</p>
+
+<hr class="mt-4" />
+
+<.float_menu items={[
+  %{
+    text: "Transit",
+    id: "transit",
+    children: [
+      %{text: "CTA Map", id: "cta-map"}
+    ]
+  },
+  %{
+    text: "Hotel",
+    id: "hotel",
+    children: [
+      %{text: "The Hampton Inn", id: "hampton"},
+      %{text: "The Hyatt", id: "hyatt"},
+      %{text: "The Robey", id: "robey"}
+    ]
+  },
+  %{
+    text: "Flying",
+    id: "airports",
+    children: [
+      %{text: "O'Hare (ORD)", id: "ord"},
+      %{text: "Midway (MDW)", id: "mdw"}
+    ]
+  }
+]} />
+
+<p class="mb-1">
+  <b>TL;DR:</b> We have 3 hotel blocks at 3 price points (before taxes):
+</p>
+
+<ul>
+  <li>
+    <.a href="#hampton">The Hampton Inn</.a>
+    (~$150 per night)
+  </li>
+  <li>
+    <.a href="#hyatt">The Hyatt</.a>
+    (~$250 per night)
+  </li>
+  <li>
+    <.a href="#robey">The Robey</.a>
+    (~$350 per night)
+  </li>
+</ul>
+
+<p class="mt-0">
+  For those traveling by air you'll most likely fly into O'Hare (ORD), but you
+  can also fly into Midway (MDW). Chicago has great public transit and abundant
+  Ubers/lyfts/taxis so you do not need to rent a car.
+  <b>All of the hotels on the list are accessible by train directly from O’Hare.</b>
+</p>
+
+<h2 id="transit" class="text-2xl font-sans mt-4 mb-4">
+  Transit
+</h2>
+
+<p class="mt-1">
+  Chicago has excellent and easy to use public transit. The Chicago Transit
+  Authority (CTA) runs of Chicago's public transit. All CTA trains and busses
+  support tap to pay, so <b>you can tap your credit card or phone to pay for train rides.</b>
+  If you like collecting transit cards, or you don't want to fuss with tap to
+  pay, the CTA transit card is
+  <.a href="https://www.ventrachicago.com/">Ventra.</.a>
+</p>
+
+<h3 id="cta-map" class="text-xl font-sans mt-4 mb-4">CTA Map</h3>
+
+<div>
+  <.a href={~p"/images/train.png"}>
+    <img class="rounded-2xl m-auto" src={~p"/images/train.png"} />
+  </.a>
+</div>
+
+<p>
+  Chicago's city planning is optimized around getting people in and out of
+  downtown. As a result all the train lines do a big loop around the downtown
+  area and therefore Chicagoans refer to it as: <i>The Loop</i>. The trainlines
+  that form The Loop are mostly elevated and are therefore are refered to as <i>The L.</i>
+</p>
+
+<p>
+  The Loop is where you'll find the tourist attractions, museums, architecture
+  tours, The Bean, etc. To give you a point of reference. The Robey is right off
+  of the Daemen stop on the Blue Line (the L). The Garfield Park Conservatory
+  (our ceremony venue) is right off of the Green Line's Conservatory - Central
+  Park Drive stop. The Hampton Inn is right off of the Blue Line's Western stop.
+</p>
+
+<p>
+  To give you a point of reference. The Robey is right off of the <i>Daemen</i>
+  stop on the Blue Line. The Garfield Park Conservatory is right off of the
+  Green Line's <i>Conservatory - Central Park Drive stop</i>. The Hamption Inn
+  is right off of the Blue Line's <i>Western</i>
+  stop.
+</p>
+
+<h2 id="hotel" class="text-2xl font-sans mt-4 mb-4">
+  Hotel
+</h2>
+
+<p>
+  <b>If you use the links we provide you'll get a ~20% discount, depending on the hotel.</b>
+</p>
+
+<p>
+  We're providing 3 options for hotel blocks. We tried to cover different price
+  points and requirements, so please coordinate amongst yourselves and choose
+  the one that best fits the Chicago experience you're looking for. All the hotels
+  we've found are on the Blue Line, which should make getting to and from the
+  loop or the Airport simple.
+</p>
+
+<h3 id="hampton" class="text-xl font-sans mt-4 mb-4">Option 1: The Hampton Inn</h3>
+
+<div class="m-auto">
+  <img class="rounded-2xl m-auto w-full" src={~p"/images/hampton_inn_medical_district.jpg"} />
+</div>
+
+<p class="mb-1">
+  At ~$150 a night, we felt this was the best deal we could find that was:
+</p>
+<ul>
+  <li>
+    on the
+    <.a href="#cta">Blue Line</.a>
+    (<i>easy access to ORD</i>)
+  </li>
+  <li>close to the loop, if you want to explore the city</li>
+  <li>close to our wedding Venue</li>
+</ul>
+<p class="mt-0">
+  As an added bonus it is new construction.
+</p>
+
+<p>
+  The downside is that the location is near an interstate and a hospital so the
+  immediate neighborhood doesn't cater as well to tourist traffic.
+</p>
+
+<h4 class="font-bold">Travel times</h4>
+
+<table class="comparison-table">
+  <tr>
+    <th></th>
+    <th>O'Hare</th>
+    <th>Midway</th>
+    <th>Venue</th>
+    <th>The Loop</th>
+  </tr>
+  <tr>
+    <th>Transit</th>
+    <td>~1 hr</td>
+    <td>~50 min (requires transfer)</td>
+    <td>N/A</td>
+    <td>25 min</td>
+  </tr>
+  <tr>
+    <th>Car</th>
+    <td>50 min</td>
+    <td>34 min</td>
+    <td>8 min</td>
+    <td>11 min</td>
+  </tr>
+</table>
+
+<hr class="mt-4 mb-4" />
+
+<p>
+  <b>Per night (Friday & Saturday) cost before tax:</b> ~$150
+</p>
+
+<.booking_link href="https://www.hilton.com/en/book/reservation/deeplink/?ctyhocn=CHIGGHX&tid=31652062&groupCode=CHHCCW&arrivaldate=2026-04-03&departuredate=2026-04-05&cid=OM,WW,HILTONLINK,EN,DirectLink&fromId=HILTONLINKDIRECT" />
+
+<h3 id="hyatt" class="text-xl font-sans mt-4 mb-4">Option 2: The Hyatt Wicker Park</h3>
+
+<div>
+  <img class="rounded-2xl m-auto" src={~p"/images/hyatt_wicker_park.jpg"} />
+</div>
+
+<p>
+  This is our midrange option. It's walking distance to The Robey and so you'll
+  still have easy access to the cute coffee shops, thrifting, and trendy bars
+  in Wicker Park. It's a great option if you want to be a little closer to us,
+  but don't want to pay The Robey prices.
+</p>
+
+<h4 class="font-bold">Travel times</h4>
+
+<table class="comparison-table">
+  <tr>
+    <th></th>
+    <th>O'Hare</th>
+    <th>Midway</th>
+    <th>Venue</th>
+    <th>The Loop</th>
+  </tr>
+  <tr>
+    <th>Transit</th>
+    <td>46 min</td>
+    <td>55 min</td>
+    <td>N/A</td>
+    <td>25 min</td>
+  </tr>
+  <tr>
+    <th>Car</th>
+    <td>48 min</td>
+    <td>40 min</td>
+    <td>11 min</td>
+    <td>17 min</td>
+  </tr>
+</table>
+
+<hr class="mt-4 mb-4" />
+
+<p>
+  <b>Per night (Friday & Saturday) cost before tax:</b> ~$270
+</p>
+
+<.booking_link href="https://www.hyatt.com/shop/rooms/chizk?checkinDate=2026-04-03&checkoutDate=2026-04-05&rooms=1&adults=1&kids=0&corp_id=85917&accessibilityCheck=false" />
+
+<h3 id="robey" class="text-xl font-sans mt-4 mb-4">Option 3: The Robey</h3>
+
+<div>
+  <img class="rounded-2xl m-auto" src={~p"/images/the_robey.jpg"} />
+</div>
+
+<p>
+  We wanted to experience a unique Hotel for our wedding day and we
+  landed on
+  <.a href="https://therobey.com">The Robey.</.a>
+  This is where our wedding parties and immediate family will be staying. For
+  cost reasons, we were conservative with our hotel block, but we're more than
+  happy to negotiate more rooms if there is interest. Just click the link below
+  to fill out the form and we'll get back to you as soon as we can.
+</p>
+
+<h4 class="font-bold">Travel times</h4>
+
+<table class="comparison-table">
+  <tr>
+    <th></th>
+    <th>O'Hare</th>
+    <th>Midway</th>
+    <th>Venue</th>
+    <th>The Loop</th>
+  </tr>
+  <tr>
+    <th>Transit</th>
+    <td>35 min</td>
+    <td>48 min</td>
+    <td>N/A</td>
+    <td>20 min</td>
+  </tr>
+  <tr>
+    <th>Car</th>
+    <td>50 min</td>
+    <td>42 min</td>
+    <td>11 min</td>
+    <td>19 min</td>
+  </tr>
+</table>
+
+<hr class="mt-4 mb-4" />
+
+<p>
+  <b>Per night (Friday & Saturday) cost before tax:</b> ~$350
+</p>
+
+<p>
+  For liability reasons, we have a limited rooms block for The Robey. However, If
+  you are interested in the Robey, we'd love to have you. Please fill out
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSeYc1ODqEYPmisr2LyVepNTlrv6fySSMwOyrGCwuFi98Q640A/viewform?usp=header">
+    this form
+  </a>
+  and we'll do our best to negotiate a discount in our wedding block.
+</p>
+
+<.booking_link href="https://docs.google.com/forms/d/e/1FAIpQLSeYc1ODqEYPmisr2LyVepNTlrv6fySSMwOyrGCwuFi98Q640A/viewform?usp=header" />
+<p class="text-caption button-caption">
+  Links to google form (read paragraph above)
+</p>
+
+<h2 id="airports" class="text-2xl font-sans mt-4 mb-4">
+  Flying
+</h2>
+
+<p>
+  There are 2 options for flying into Chicago.
+</p>
+
+<ol>
+  <li>O'Hare (ORD)</li>
+  <li>Midway (MDW)</li>
+</ol>
+
+<h3 id="ord" class="text-xl font-sans mt-4 mb-4">O'Hare</h3>
+
+<p>
+  O'Hare is a very large airport with large airport problems. If your flight
+  leaves at a busy time there can be long security lines and walking to your
+  terminal can be a workout. However, there are tons of  flights going in and
+  out of O'Hare, which means it’s usually the cheaper option. O'Hare is on the
+  Blue Line will take you almost directly to your hotel, but see more on that
+  in the
+  <.a href="#hotel">Hotel block section.</.a>
+</p>
+
+<h3 id="mdw" class="text-xl font-sans mt-4 mb-4">Midway</h3>
+
+<p>
+  Midway is a much smaller airport than O'Hare, so navigating the Airport is a
+  bit easier. It's not far from the hotels we've chosen, but if you're looking
+  to take public transit, which we recommend, expect to require a transfer.
+</p>
