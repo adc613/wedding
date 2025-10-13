@@ -76,7 +76,7 @@ defmodule AppWeb.InvitationManageLiveTest do
                MyGuest.get_guest!(2)
              ]
 
-      assert MyGuest.get_invitation(1).events == [:wedding, :rehersal]
+      assert MyGuest.get_invitation(1).events == [:rehersal, :wedding]
     end
 
     test "delete invitation", %{conn: conn, user: user} do

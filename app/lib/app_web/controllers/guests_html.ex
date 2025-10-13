@@ -175,6 +175,16 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
+  attr :guest, :any, required: true, doc: "TODO"
+
+  def sms_invite_link(assigns) do
+    ~H"""
+    <a href={sms_link([@guest], :invite)}>
+      <.button>Invite {@guest.first_name} {@guest.last_name}</.button>
+    </a>
+    """
+  end
+
   defp get_label(:guest), do: "Guest"
   defp get_label(:links), do: "Links"
   defp get_label(:email), do: "Email"
@@ -208,6 +218,10 @@ defmodule AppWeb.GuestsHTML do
     "sms:#{sms_phone(guests)}?body=#{URI.encode(rsvp_reminder_text(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
   end
 
+  defp sms_link(guests, :invite) do
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(invite_text(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  end
+
   defp sms_phone(guests) do
     guests
     |> Enum.filter(&(&1.phone != ""))
@@ -233,6 +247,20 @@ defmodule AppWeb.GuestsHTML do
     Hi,
 
     We're trying to finalize our guest counts can you respond to your RSVP:
+
+    https://wedding.adamcollins.io/rsvp
+
+    Hope to see you there,
+    Helen & Adam
+    """
+  end
+
+  defp invite_text() do
+    """
+    Hi,
+
+    You're formally invited to our wedding. Please RSVP at your earliest
+    convience:
 
     https://wedding.adamcollins.io/rsvp
 

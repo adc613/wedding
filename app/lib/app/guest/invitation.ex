@@ -11,6 +11,7 @@ defmodule App.Guest.Invitation do
     field :additional_guests, :integer
     field :permit_kids, :boolean
     field :dietary_restrictions, :string
+    field :sent, :boolean, default: false
 
     timestamps(type: :utc_datetime)
   end
@@ -18,7 +19,7 @@ defmodule App.Guest.Invitation do
   @doc false
   def changeset(invitation, attrs \\ %{}) do
     invitation
-    |> cast(attrs, [:events, :additional_guests, :permit_kids, :dietary_restrictions])
+    |> cast(attrs, [:events, :additional_guests, :permit_kids, :dietary_restrictions, :sent])
     |> validate_required([:events])
   end
 

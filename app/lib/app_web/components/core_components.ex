@@ -783,11 +783,22 @@ defmodule AppWeb.CoreComponents do
   end
 
   attr :href, :string, required: true
+  attr :external?, :boolean, default: false
   slot :inner_block, required: true
 
   def a(assigns) do
     ~H"""
-    <.link class="text-blue-500 hover:underline hover:text-blue-600" href={@href}>
+    <.link
+      class="text-blue-500 hover:underline hover:text-blue-600"
+      href={@href}
+      target={
+        if @external? do
+          "_blank"
+        else
+          ""
+        end
+      }
+    >
       {render_slot(@inner_block)}
     </.link>
     """

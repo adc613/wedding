@@ -1,11 +1,17 @@
 <header class="px-4 sm:px-6 lg:px-8">
-  <div class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
+  <nav class="flex items-center justify-between border-b border-zinc-100 py-3 text-sm">
     <div class="flex items-center gap-4 list-style-none">
       <a href="/">
         <img src={~p"/assets/icons/favicon-32x32.png"} width="36" />
       </a>
     </div>
-    <ul class="relative z-10 flex text-lg items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end list-style-none">
+    <div id="nav-opener">
+      <div class="fa fa-solid fa-bars"></div>
+    </div>
+    <ul
+      id="nav-list"
+      class="relative z-10 flex text-lg items-center gap-4 px-4 sm:px-6 lg:px-8 justify-end list-style-none"
+    >
       <li>
         <a href="/story" class="hover:text-zinc-700">
           Our Story
@@ -26,18 +32,42 @@
           Travel
         </a>
       </li>
+      <li>
+        <a href="/rsvp" class="hover:text-zinc-700">
+          RSVP
+        </a>
+      </li>
       <!--
       <li>
         <a href="/things" class="hover:text-zinc-700">
           Things to Do
         </a>
       </li>
-      <li>
-        <a href="/rsvp" class="hover:text-zinc-700">
-          RSVP
-        </a>
-      </li>
       -->
     </ul>
-  </div>
+  </nav>
 </header>
+<script>
+  const navList = document.getElementById("nav-list");
+  const navOpener = document.getElementById("nav-opener");
+  let isOpen = false;
+
+  navOpener.addEventListener('click', (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if(isOpen) {
+      navList.classList.remove("nav-open");
+      isOpen = false;
+    } else {
+      navList.classList.add("nav-open");
+      isOpen = true;
+    }
+  });
+
+  document.body.addEventListener('click', (e) => {
+    if(isOpen) {
+      navList.classList.remove("nav-open");
+      isOpen = false;
+    }
+  });
+</script>

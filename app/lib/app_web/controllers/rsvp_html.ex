@@ -83,10 +83,7 @@ defmodule AppWeb.RSVPHTML do
       <div>
         {render_slot(@inner_block)}
       </div>
-      <div :if={not @hide_next or @action} class="mt-8 flex justify-between">
-        <div :if={@action}>
-          {render_slot(@action)}
-        </div>
+      <div :if={not @hide_next or @action} class="mt-8 flex justify-between pl-0">
         <div :if={not @hide_next}>
           <.link href={~p"/rsvp/confirm/#{@step_id + 1}"}>
             <.button>
@@ -94,8 +91,29 @@ defmodule AppWeb.RSVPHTML do
             </.button>
           </.link>
         </div>
+        <div :if={@action}>
+          {render_slot(@action)}
+        </div>
       </div>
     </div>
+    <script>
+      const forms = document.getElementsByTagName("form")
+      const primaryForm = forms[forms.length - 1]
+      let isFormDirty = false
+      primaryForm.addEventListener('submit', () => {
+        isFormDirty = false
+      });
+      primaryForm.addEventListener('change', () => {
+        console.log("changes!!!")
+        isFormDirty = true
+      });
+      window.addEventListener('beforeunload', (e) => {
+        if (isFormDirty) {
+            e.preventDefault();
+            e.returnValue =  'You may have unsaved changes. Are you sure you want to leave?' 
+        }
+      });
+    </script>
     """
   end
 end

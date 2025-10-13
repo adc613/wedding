@@ -15,12 +15,12 @@ defmodule AppWeb.PageHTML do
 
   def event_group(%{event: :wedding} = assigns) do
     ~H"""
-    <.event_card group_name="Wedding day" full_width_footer={@full_width_footer}>
+    <.event_card group_name="" full_width_footer={@full_width_footer}>
       <:events>
         <!-- Hide cocktail event for now -->
         <!--<.cocktail_event /> -->
-        <.reception_event />
         <.ceremony_event />
+        <.reception_event />
       </:events>
       <:footer>
         {render_slot(@footer)}
@@ -31,7 +31,7 @@ defmodule AppWeb.PageHTML do
 
   def event_group(%{event: :brunch} = assigns) do
     ~H"""
-    <.event_card group_name="Brunch" full_width_footer={@full_width_footer}>
+    <.event_card group_name="" full_width_footer={@full_width_footer}>
       <:events>
         <.brunch_event />
       </:events>
@@ -44,7 +44,7 @@ defmodule AppWeb.PageHTML do
 
   def event_group(%{event: :rehersal} = assigns) do
     ~H"""
-    <.event_card group_name="Reherseal dinner" full_width_footer={@full_width_footer}>
+    <.event_card group_name="" full_width_footer={@full_width_footer}>
       <:events>
         <.rehersal_event />
       </:events>
@@ -59,11 +59,11 @@ defmodule AppWeb.PageHTML do
     ~H"""
     <.event
       title="Brunch"
-      date="2026.04.04"
-      time="5:00 PM - 7:00 PM"
-      location="Garfield Park Conservatory"
-      attire="Cocktail"
-      location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
+      date="2026.04.03"
+      time="TBD"
+      location="1416 Noyes St. Evanston, IL"
+      attire="Casual"
+      location_link="https://maps.app.goo.gl/mrJHnqL9QVB5nz7s6"
       suffix=""
     />
     """
@@ -74,7 +74,7 @@ defmodule AppWeb.PageHTML do
     <.event
       title="Ceremony"
       date="2026.04.04"
-      time="TBD"
+      time="5:00 PM"
       location="Garfield Park Conservatory"
       attire="Cocktail"
       location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
@@ -88,24 +88,10 @@ defmodule AppWeb.PageHTML do
     <.event
       title="Reception"
       date="2026.04.04"
-      time="TBD"
+      time="7:00 PM"
       location="Ovation"
       attire="Cocktail"
       location_link="https://maps.app.goo.gl/5fnzavcBJPoiYeN96"
-      suffix=""
-    />
-    """
-  end
-
-  def cocktail_event(assigns) do
-    ~H"""
-    <.event
-      title="Cocktail Hour"
-      date="2026.04.04"
-      time="5:00 PM - 7:00 PM"
-      location="Garfield Park Conservatory"
-      attire="Cocktail"
-      location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
       suffix=""
     />
     """
@@ -115,11 +101,11 @@ defmodule AppWeb.PageHTML do
     ~H"""
     <.event
       title="Rehearsal"
-      date="2026.04.04"
-      time="5:00 PM - 7:00 PM"
-      location="Garfield Park Conservatory"
-      attire="Cocktail"
-      location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
+      date="2026.04.03"
+      time="6:00PM - 9:00PM"
+      location="Irazu"
+      attire="Smart Casual"
+      location_link="https://maps.app.goo.gl/GEUBReV9GTSLeii98"
       suffix=""
     />
     """
@@ -169,29 +155,31 @@ defmodule AppWeb.PageHTML do
         </h2>
       </div>
       <div class="mx-auto">
-        <p class="text-xl text-center">
+        <p class="text-xl text-center mt-0 mb-0">
           {@date}
         </p>
       </div>
       <div class="mx-auto">
-        <p class="text-md text-center">
+        <p class="text-md text-center mt-0 mb-0">
           <b>Time: </b>
           {@time}
         </p>
       </div>
       <div class="mx-auto">
-        <p class="text-md text-center">
+        <p class="text-md text-center mt-0 mb-0">
           <b>Location: </b>
-          <a href={@location_link}>{@location} <i class="fa fa-map-marker"></i></a>
+          <.a external?={true} href={@location_link}>
+            {@location} <i class="fa fa-map-marker"></i>
+          </.a>
         </p>
       </div>
       <div class="mx-auto">
-        <p class="text-md text-center">
+        <p class="text-md text-center mt-0 mb-0">
           <b>Attire: </b>{@attire}
         </p>
       </div>
       <div class="mx-auto">
-        <p class="text-md text-center">
+        <p class="text-md text-center mt-0 mb-0">
           {@suffix}
         </p>
       </div>

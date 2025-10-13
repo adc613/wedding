@@ -4,8 +4,8 @@
 
 <.center_div :if={not @show_link}>
   <p>
-    We want to emphasize, there is no need to get us a gift. Your presence is
-    truly presents enough.
+    We want to emphasize there is no need to get us a gift. Your presence is
+    truly present enough.
   </p>
   <.simple_form :let={f} id="guest-form" for={@changeset} action={~p"/registry"}>
     <.error :if={not Enum.empty?(@changeset.errors)}>
@@ -14,7 +14,7 @@
     <.input
       field={f[:tor]}
       type="checkbox"
-      label="I acknowledge that my presence is truly presents enough."
+      label="I acknowledge that my presence is truly present enough."
     />
     <.button>Show me the registry</.button>
   </.simple_form>
