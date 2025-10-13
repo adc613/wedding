@@ -100,7 +100,7 @@ defmodule AppWeb.PageHTML do
   def rehersal_event(assigns) do
     ~H"""
     <.event
-      title="Rehearsal"
+      title="Rehearsal dinner"
       date="2026.04.03"
       time="6:00PM - 9:00PM"
       location="Irazu"
