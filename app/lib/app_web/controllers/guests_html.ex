@@ -259,8 +259,7 @@ defmodule AppWeb.GuestsHTML do
     """
     Hi,
 
-    You're formally invited to our wedding. Please RSVP at your earliest
-    convience:
+    You're formally invited to our wedding. Please RSVP at your earliest convience:
 
     https://wedding.adamcollins.io/rsvp
 
