@@ -282,7 +282,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/1")
         |> html_response(200)
 
-      assert resp =~ "Last confirmation"
+      assert resp =~ "Final confirmation"
 
       refute resp =~ "got a plus one"
 
@@ -294,7 +294,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/1")
         |> html_response(200)
 
-      refute resp =~ "Last confirmation"
+      refute resp =~ "Final confirmation"
       assert resp =~ "got a plus one"
     end
 
@@ -311,7 +311,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/2")
         |> html_response(200)
 
-      assert resp =~ "Last confirmation"
+      assert resp =~ "Final confirmation"
       refute resp =~ "family-friendly"
 
       MyGuest.update(invitation, %{"permit_kids" => "true"})
@@ -322,7 +322,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/2")
         |> html_response(200)
 
-      refute resp =~ "Last confirmation"
+      refute resp =~ "Final confirmation"
       assert resp =~ "family-friendly"
     end
 
@@ -339,7 +339,7 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp/confirm/3")
         |> html_response(200)
 
-      assert resp =~ "Last confirmation"
+      assert resp =~ "Final confirmation"
     end
 
     test "Block users from adding guests when they don't have permission", %{
