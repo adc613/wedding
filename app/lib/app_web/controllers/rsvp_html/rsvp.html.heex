@@ -46,7 +46,9 @@
     </div>
   </div>
 
-  <.button class="btn-action mt-4" type="submit">Submit RSVP</.button>
+  <.button id="submit-btn" class="btn-action mt-4 ml-auto block" type="submit">
+    Submit RSVP
+  </.button>
 </.form>
 
 <script>
@@ -96,6 +98,29 @@
       toggleDietaryRestrictions();
     }
   });
-</script>
+  const forms = document.getElementsByTagName("form")
+  const primaryForm = forms[forms.length - 1]
+  let isFormDirty = false
+  primaryForm.addEventListener('submit', (e) => {
+    isFormDirty = false
+  });
+  primaryForm.addEventListener('change', () => {
+    isFormDirty = true
+  });
+  window.addEventListener('beforeunload', (e) => {
+    if (isFormDirty) {
+        e.preventDefault();
+        e.returnValue =  'You may have unsaved changes. Are you sure you want to leave?' 
+    }
+  });
 
+  submitBtn = document.getElementById('submit-btn');
+  submitBtn.addEventListener('click', (e) => {
+    const newElement = document.createElement('p')
+    newElement.textContent = "Double check that a response was selected for every guest.";
+    newElement.classList.add("text-red-600")
+    submitBtn.after(newElement);
+    submitBtn.removeEventListener('click');
+  });
+</script>
 <.footer />

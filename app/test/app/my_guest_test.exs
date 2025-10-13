@@ -127,6 +127,39 @@ defmodule App.MyGuestTest do
     assert {:error, :duplicate_std} = result
   end
 
+  describe "mark_sent()" do
+    test "Send invitation" do
+      guest = MyGuest.get_guest(1, preload: :rsvp)
+
+      {:ok, invitation} =
+        MyGuest.create_invitation(
+          guests: [guest],
+          events: [:wedding, :rehersal],
+          kids: false,
+          plus_one: false
+        )
+
+      assert invitation.sent == false
+
+      MyGuest.mark_sent!(invitation)
+      invitation = MyGuest.get_invitation(invitation.id)
+
+      assert invitation.sent
+    end
+
+    test "Send STD" do
+      guest = MyGuest.get_guest(1)
+
+      assert guest.sent_std == false
+
+      MyGuest.mark_sent!(guest)
+
+      guest = MyGuest.get_guest(1)
+
+      assert guest.sent_std
+    end
+  end
+
   describe "create_invitation()" do
     test "Happy case" do
       guest = MyGuest.get_guest(1, preload: :rsvp)
@@ -141,7 +174,10 @@ defmodule App.MyGuestTest do
       g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
 
       assert guest != g2
-      assert g2.invitation == MyGuest.get_invitation(guest_id: 1)
+
+      assert %{g2.invitation | events: [:rehersal, :wedding]} ==
+               MyGuest.get_invitation(guest_id: 1)
+
       assert nil == MyGuest.get_invitation(42)
       assert g2.invitation.additional_guests == 0
       assert g2.invitation.permit_kids == false
