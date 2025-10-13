@@ -257,11 +257,10 @@ defmodule AppWeb.GuestsHTML do
 
   defp invite_text() do
     """
+    https://wedding.adamcollins.io/rsvp
     Hi,
 
-    You're formally invited to our wedding. Please RSVP at your earliest convience:
-
-    https://wedding.adamcollins.io/rsvp
+    You're formally invited to our wedding. Please RSVP at your earliest convience.
 
     Hope to see you there,
     Helen & Adam

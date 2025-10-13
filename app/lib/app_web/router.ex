@@ -30,6 +30,7 @@ defmodule AppWeb.Router do
     get "/photos", PageController, :photos
     get "/travel", PageController, :travel
     get "/things", PageController, :things_to_do
+    get "/schedule", PageController, :schedule
     get "/registry", RegistryController, :registry
     post "/registry", RegistryController, :confirm_tor
   end
