@@ -62,24 +62,28 @@ defmodule App.MyGuest do
     |> then(& &1.invitation)
     |> Repo.preload(guests: :rsvp)
     |> load_phone_str()
+    |> sort_events()
   end
 
   def get_invitation(guest_id: id) do
     get_guest!(id, preload: :invitation)
     |> then(& &1.invitation)
     |> load_phone_str()
+    |> sort_events()
   end
 
   def get_invitation(id, keywords \\ []) do
     Repo.get(Invitation, id)
     |> apply_preloads(keywords)
     |> load_phone_str()
+    |> sort_events()
   end
 
   def get_invitation!(id, keywords \\ []) do
     Repo.get!(Invitation, id)
     |> apply_preloads(keywords)
     |> load_phone_str()
+    |> sort_events()
   end
 
   def update!(%Guest{} = guest, attrs) do
@@ -141,7 +145,7 @@ defmodule App.MyGuest do
         |> Repo.update!()
       end
 
-      invitation |> load_phone_str()
+      invitation |> load_phone_str() |> sort_events()
     end)
   end
 
@@ -174,6 +178,7 @@ defmodule App.MyGuest do
     Repo.all(Invitation)
     |> apply_preloads(keywords)
     |> Enum.map(&load_phone_str(&1))
+    |> Enum.map(&sort_events(&1))
   end
 
   def create_guest(attrs, %Invitation{} = invitation) do
@@ -302,4 +307,12 @@ defmodule App.MyGuest do
   end
 
   defp load_phone_str(nil), do: nil
+
+  defp sort_events(%Invitation{} = invitation) do
+    [:brunch, :rehersal, :wedding]
+    |> Enum.filter(&(&1 in invitation.events))
+    |> then(&%{invitation | events: &1})
+  end
+
+  defp sort_events(nil), do: nil
 end

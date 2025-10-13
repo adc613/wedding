@@ -2,7 +2,7 @@
 
 <br />
 
-<.confirmation_step header="Please confirm contact information one last time." step_id={@step_id}>
+<.confirmation_step header="Last confirmation for group contact information." step_id={@step_id}>
   <ul class="list-disc list-inside space-y-2 mb-8">
     <%= for guest <- @invitation.guests do %>
       <li>
@@ -18,7 +18,9 @@
     <% end %>
   </ul>
   <p>
-    Click <i>Next</i> once everything looks good.
+    Click <i>Next</i>
+    once everything looks good. Or click <i>edit information</i>
+    to make adjustments.
   </p>
 </.confirmation_step>
 

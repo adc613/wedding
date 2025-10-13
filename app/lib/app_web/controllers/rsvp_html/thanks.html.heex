@@ -1,8 +1,16 @@
 <h1 class="text-lg text-brand">
   Thanks for RSVP'ing!
 </h1>
+<p>
+  <b>Next steps</b>
+  If you're coming from out of town, please see the
+  <.a href={~p"/travel"}>Travel section</.a>
+  for hotel block details and any general information about traveling to
+  Chicago. For everyone else, we can't wait to see you there.
+</p>
+
 <p class="mb-4">
-  If you see any mistakes or would like to make any changes please <.link
+  If you would like to make any changes please <.link
     class="text-blue-500 hover:underline hover:text-blue-600"
     href={~p"/rsvp/edit"}
   >click the link to update your responses</.link>.
@@ -12,7 +20,7 @@
   <.event_group event={event}>
     <:footer>
       <h2 class="text-lg font-semibold text-center mb-2">Attending</h2>
-      <ul class="text-center mx-auto">
+      <ul class="text-center mx-auto list-style-none">
         <li :for={guest <- @guests}>
           <.check_icon checked={event in guest.rsvp.events} />
           {guest.first_name} {guest.last_name}

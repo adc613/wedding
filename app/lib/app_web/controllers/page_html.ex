@@ -61,9 +61,9 @@ defmodule AppWeb.PageHTML do
       title="Brunch"
       date="2026.04.03"
       time="TBD"
-      location="Garfield Park Conservatory"
-      attire="Cocktail"
-      location_link="https://maps.app.goo.gl/39aRmoqY6hVrzzGE7"
+      location="1416 Noyes St. Evanston, IL"
+      attire="Casual"
+      location_link="https://maps.app.goo.gl/mrJHnqL9QVB5nz7s6"
       suffix=""
     />
     """
@@ -104,7 +104,7 @@ defmodule AppWeb.PageHTML do
       date="2026.04.03"
       time="6:00PM - 9:00PM"
       location="Irazu"
-      attire="Dressy Casual, but really where whatever you want"
+      attire="Smart Casual"
       location_link="https://maps.app.goo.gl/GEUBReV9GTSLeii98"
       suffix=""
     />
@@ -168,7 +168,9 @@ defmodule AppWeb.PageHTML do
       <div class="mx-auto">
         <p class="text-md text-center mt-0 mb-0">
           <b>Location: </b>
-          <a href={@location_link}>{@location} <i class="fa fa-map-marker"></i></a>
+          <.a external?={true} href={@location_link}>
+            {@location} <i class="fa fa-map-marker"></i>
+          </.a>
         </p>
       </div>
       <div class="mx-auto">

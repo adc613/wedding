@@ -174,7 +174,10 @@ defmodule App.MyGuestTest do
       g2 = MyGuest.get_guest!(1, preload: :rsvp, preload: :invitation)
 
       assert guest != g2
-      assert g2.invitation == MyGuest.get_invitation(guest_id: 1)
+
+      assert %{g2.invitation | events: [:rehersal, :wedding]} ==
+               MyGuest.get_invitation(guest_id: 1)
+
       assert nil == MyGuest.get_invitation(42)
       assert g2.invitation.additional_guests == 0
       assert g2.invitation.permit_kids == false
