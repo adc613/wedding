@@ -787,20 +787,17 @@ defmodule AppWeb.CoreComponents do
   slot :inner_block, required: true
 
   def a(assigns) do
+    target =
+      if assigns.external? do
+        "_blank"
+      else
+        ""
+      end
+
+    class = "text-blue-500 hover:underline hover:text-blue-600"
+
     ~H"""
-    <.link
-      class="text-blue-500 hover:underline hover:text-blue-600"
-      href={@href}
-      target={
-        if @external? do
-          "_blank"
-        else
-          ""
-        end
-      }
-    >
-      {render_slot(@inner_block)}
-    </.link>
+    <.link href={@href} class={class} target={target}>{render_slot(@inner_block)}</.link>
     """
   end
 
