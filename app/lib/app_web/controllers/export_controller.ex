@@ -2,6 +2,67 @@ defmodule AppWeb.ExportController do
   alias App.MyGuest
   use AppWeb, :controller
 
+  def invite(conn, _params) do
+    MyGuest.list_invitations()
+    |> Enum.map(fn invite ->
+      %{
+        invitation_id: invite.id,
+        additional_guests: invite.additional_guests,
+        kids?: invite.permit_kids,
+        brunch?: has_event(invite, :brunch),
+        rehersal?: has_event(invite, :rehersal),
+        wedding?: has_event(invite, :wedding),
+        restrictions: invite.dietary_restrictions
+      }
+    end)
+    |> CSV.encode(
+      headers: [
+        invitation_id: "Invitation ID",
+        additional_guests: "Additional guest(s)",
+        kids?: "Permit kids",
+        brunch?: "Yes to Brunch",
+        rehersal?: "Yes to Rehearsal",
+        wedding?: "Yes to Wedding",
+        restrictions: "Dietary Restrictions"
+      ]
+    )
+    |> Enum.join("")
+    |> render_file(conn, "invites")
+  end
+
+  def rsvp(conn, _params) do
+    MyGuest.list_guests(:with_invitations)
+    |> Enum.map(fn guest ->
+      %{
+        first_name: guest.first_name,
+        last_name: guest.last_name,
+        invitation_id:
+          if guest.invitation == nil do
+            0
+          else
+            guest.invitation.id
+          end,
+        answered?: guest.rsvp != nil,
+        brunch?: has_event(guest.rsvp, :brunch),
+        rehersal?: has_event(guest.rsvp, :rehersal),
+        wedding?: has_event(guest.rsvp, :wedding)
+      }
+    end)
+    |> CSV.encode(
+      headers: [
+        first_name: "First name",
+        last_name: "Last name",
+        invitation_id: "Invitation ID",
+        answered?: "RSVP'd",
+        brunch?: "Yes to Brunch",
+        rehersal?: "Yes to Rehearsal",
+        wedding?: "Yes to Wedding"
+      ]
+    )
+    |> Enum.join("")
+    |> render_file(conn, "rsvps")
+  end
+
   def guest_list(conn, _params) do
     MyGuest.list_guests(:with_invitations)
     |> Enum.map(fn guest ->
@@ -52,4 +113,10 @@ defmodule AppWeb.ExportController do
 
   defp invite_link(invitation),
     do: "https://wedding.adamcollins.io" <> ~p"/invitation/#{invitation}/edit"
+
+  defp has_event(nil, _event), do: nil
+
+  defp has_event(thing, event) do
+    event in thing.events
+  end
 end

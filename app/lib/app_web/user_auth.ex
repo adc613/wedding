@@ -233,6 +233,10 @@ defmodule AppWeb.UserAuth do
     end
   end
 
+  def require_authenticated_user_or_super_secure_api_key(conn, opts) do
+    require_authenticated_user(conn, opts)
+  end
+
   @doc """
   Used to enforce that user is authentticated or that the guest in their cookie has permission to respond for a given guest
   """
