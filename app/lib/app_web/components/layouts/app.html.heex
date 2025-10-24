@@ -10,7 +10,23 @@
 <footer>
   <hr />
   <p class="max-w-2xl mx-auto p-2">
-    Any issues with the site? <i>Text or email us.</i>
+    Any issues with the site?
+    (<i :if={Map.has_key?(assigns, :guest_id) and @guest_id != nil}>
+      <.a
+        type={:phone}
+        phone="+18475626149"
+        body="Wow Adam you're so clever for using SMS links. However, I did want to tell your excellence about a small bug I found on the website: "
+      >
+      Text</.a>
+      or
+      <.a
+        type={:email}
+        to="helen.adam.wedding2026@gmail.com"
+        subject="[wedding.adamcolins.io] Bug"
+        body="Yo! Your excellences something is up with the website."
+      >email us.</.a>
+    </i>
+    <i :if={not Map.has_key?(assigns, :guest_id) or @guest_id == nil}>Text or email us.</i>)
     Adam built this website from scratch, so it's bound to have its quirks.
   </p>
 </footer>

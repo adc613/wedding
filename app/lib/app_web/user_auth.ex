@@ -87,6 +87,18 @@ defmodule AppWeb.UserAuth do
     |> redirect(to: ~p"/")
   end
 
+  def insecurely_fetch_guest_id(conn, _opts) do
+    conn
+    |> fetch_cookies(encrypted: ~w(guest-id))
+    |> case do
+      %{cookies: %{"guest-id" => guest_id}} -> guest_id
+      _ -> nil
+    end
+    |> case do
+      id -> conn |> put_guest_id_in_session(id)
+    end
+  end
+
   @doc """
   Authenticates the user by looking into the session
   and remember me token.
@@ -150,6 +162,10 @@ defmodule AppWeb.UserAuth do
     {:cont, mount_current_user(socket, session)}
   end
 
+  def on_mount(:mount_current_guest, _params, session, socket) do
+    {:cont, mount_current_guest(socket, session)}
+  end
+
   def on_mount(:ensure_authenticated, _params, session, socket) do
     socket = mount_current_user(socket, session)
 
@@ -183,6 +199,16 @@ defmodule AppWeb.UserAuth do
     end)
   end
 
+  defp mount_current_guest(socket, session) do
+    Phoenix.Component.assign_new(socket, :insecure_guest_id, fn ->
+      if guest_id = session["insecure_guest_id"] do
+        guest_id
+      else
+        nil
+      end
+    end)
+  end
+
   @doc """
   Used for routes that require the user to not be authenticated.
   """
@@ -194,6 +220,21 @@ defmodule AppWeb.UserAuth do
     else
       conn
     end
+  end
+
+  @doc """
+  Used for routes that require the user to be authenticated.
+
+  If you want to enforce the user email is confirmed before
+  they use the application at all, here would be a good place.
+  """
+  def require_guest_id(conn, _opts) do
+    conn
+    # |> fetch_cookies(encrypted: ~w(guest-id))
+    # |> case do
+    # %{cookies: %{"guest-id" => _guest_id}} -> conn
+    # _ -> conn |> redirect(to: "/todo") |> halt()
+    # end
   end
 
   @doc """
@@ -298,6 +339,11 @@ defmodule AppWeb.UserAuth do
     conn
     |> put_session(:user_token, token)
     |> put_session(:live_socket_id, "users_sessions:#{Base.url_encode64(token)}")
+  end
+
+  defp put_guest_id_in_session(conn, id) do
+    conn
+    |> put_session(:insecure_guest_id, id)
   end
 
   defp maybe_store_return_to(%{method: "GET"} = conn) do
