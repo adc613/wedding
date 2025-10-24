@@ -19,7 +19,6 @@ defmodule AppWeb.RegistryController do
 
   def registry(conn, _params) do
     changeset = RegistryForm.changeset(%RegistryForm{tor: false}, %{"tor" => false})
-    IO.inspect(changeset)
 
     tor =
       conn
@@ -43,8 +42,6 @@ defmodule AppWeb.RegistryController do
 
       _ ->
         changeset = RegistryForm.changeset(%RegistryForm{}, %{"tor" => nil})
-        IO.inspect(changeset)
-        IO.inspect(changeset.action)
         render(conn, :registry, %{changeset: changeset, show_link: false})
     end
   end

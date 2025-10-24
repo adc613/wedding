@@ -782,22 +782,49 @@ defmodule AppWeb.CoreComponents do
     """
   end
 
-  attr :href, :string, required: true
+  attr :type, :atom, default: :href
+  attr :href, :string, required: false, default: ""
+  attr :phone, :string, required: false, default: ""
+  attr :to, :string, required: false, default: ""
+  attr :subject, :string, required: false, default: ""
+  attr :body, :string, required: false, default: ""
   attr :external?, :boolean, default: false
   slot :inner_block, required: true
 
+  def a(%{type: :phone} = assigns) do
+    ~H"""
+    <a
+      href={sms_link(phone: @phone, body: @body)}
+      class="text-blue-500 hover:underline hover:text-blue-600"
+    >
+      {render_slot(@inner_block)}
+    </a>
+    """
+  end
+
+  def a(%{type: :email} = assigns) do
+    ~H"""
+    <a
+      href={mail_link(to: @to, subject: @subject, body: @body)}
+      class="text-blue-500 hover:underline hover:text-blue-600"
+    >
+      {render_slot(@inner_block)}
+    </a>
+    """
+  end
+
   def a(assigns) do
-    target =
+    assigns =
       if assigns.external? do
-        "_blank"
+        assign(assigns, target: "_blank")
       else
-        ""
+        assign(assigns, target: "")
       end
 
-    class = "text-blue-500 hover:underline hover:text-blue-600"
-
     ~H"""
-    <.link href={@href} class={class} target={target}>{render_slot(@inner_block)}</.link>
+    <.link href={@href} target={@target} class="text-blue-500 hover:underline hover:text-blue-600">
+      {render_slot(@inner_block)}
+    </.link>
     """
   end
 
@@ -833,5 +860,17 @@ defmodule AppWeb.CoreComponents do
       {render_slot(@inner_block)}
     </.button>
     """
+  end
+
+  defp sms_link(phone: phone, body: body) do
+    "sms:#{sms_phone(phone)}?body=#{URI.encode(body, &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  end
+
+  defp sms_phone(phone) do
+    phone
+  end
+
+  defp mail_link(to: to, subject: subject, body: body) do
+    "mailto:#{to}?subject=#{URI.encode(subject)}&body=#{body}"
   end
 end

@@ -13,6 +13,10 @@ defmodule AppWeb.Router do
     plug :fetch_current_user
   end
 
+  pipeline :guest_live_view_extras do
+    plug :insecurely_fetch_guest_id
+  end
+
   pipeline :admin_layout do
     plug :put_layout, html: {AppWeb.Layouts, :admin}
   end
@@ -154,6 +158,15 @@ defmodule AppWeb.Router do
       on_mount: [{AppWeb.UserAuth, :mount_current_user}] do
       live "/users/confirm/:token", UserConfirmationLive, :edit
       live "/users/confirm", UserConfirmationInstructionsLive, :new
+    end
+  end
+
+  scope "/faq", AppWeb do
+    pipe_through [:browser, :guest_live_view_extras]
+
+    live_session :require_guest_id,
+      on_mount: [{AppWeb.UserAuth, :mount_current_user}, {AppWeb.UserAuth, :mount_current_guest}] do
+      live "/", FaqLive
     end
   end
 end

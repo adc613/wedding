@@ -466,3 +466,42 @@ ol {
     cursor: pointer;
   }
 }
+
+.question {
+  display: flex;
+  gap: 18px;
+
+  .gutter {
+    min-width: 68px;
+    text-align: center;
+
+    .action {
+      font-size: 30px;
+      color: #55aaff;
+    }
+
+    .action:hover {
+      color: #55aaff35;
+    }
+  }
+
+  .content {
+    width: 100%;
+
+    h2 {
+      margin-top: 0;
+    }
+  }
+}
+
+[data-tooltip]:hover::after {
+  display: inline-block;
+  position: absolute;
+  content: attr(data-tooltip);
+  background: white;
+  color: black;
+  font-size: 16px;
+  padding: 1rem;
+  border: 1px solid grey;
+  border-radius: 0.5rem;
+}

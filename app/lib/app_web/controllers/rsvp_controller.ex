@@ -117,7 +117,7 @@ defmodule AppWeb.RSVPController do
   def reset_guest_id(conn, _params),
     do: conn |> delete_resp_cookie("guest-id") |> redirect(to: ~p"/rsvp")
 
-  def lookup_invite(conn, %{"guest" => %{"phone" => phone}}) do
+  def lookup_invite(conn, %{"guest" => %{"phone" => phone}} = params) do
     MyGuest.get_guest(phone: phone)
     |> case do
       nil -> nil
@@ -126,14 +126,18 @@ defmodule AppWeb.RSVPController do
     end
     |> case do
       %Guest{rsvp: nil} = guest ->
+        redirect_path = Map.get(params, "redirect", ~p"/rsvp/confirm")
+
         conn
         |> put_resp_cookie("guest-id", guest.id, encrypt: true)
-        |> redirect(to: ~p"/rsvp/confirm")
+        |> redirect(to: redirect_path)
 
       %Guest{} = guest ->
+        redirect_path = Map.get(params, "redirect", ~p"/rsvp")
+
         conn
         |> put_resp_cookie("guest-id", guest.id, encrypt: true)
-        |> redirect(to: ~p"/rsvp")
+        |> redirect(to: redirect_path)
 
       :many_matches ->
         conn
