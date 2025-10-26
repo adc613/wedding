@@ -789,7 +789,7 @@ defmodule AppWeb.CoreComponents do
   attr :subject, :string, required: false, default: ""
   attr :body, :string, required: false, default: ""
   attr :external?, :boolean, default: false
-  slot :inner_block, required: true
+  slot :inner_block, required: false
 
   def a(%{type: :phone} = assigns) do
     ~H"""
@@ -798,6 +798,14 @@ defmodule AppWeb.CoreComponents do
       class="text-blue-500 hover:underline hover:text-blue-600"
     >
       {render_slot(@inner_block)}
+    </a>
+    """
+  end
+
+  def a(%{type: :tel} = assigns) do
+    ~H"""
+    <a href={tel_link(@to)} class="text-blue-500 hover:underline hover:text-blue-600 fa fa-tel">
+      {@to}
     </a>
     """
   end
@@ -868,6 +876,10 @@ defmodule AppWeb.CoreComponents do
 
   defp sms_phone(phone) do
     phone
+  end
+
+  defp tel_link(phone) do
+    "tel:#{phone}"
   end
 
   defp mail_link(to: to, subject: subject, body: body) do

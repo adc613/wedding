@@ -36,6 +36,7 @@ defmodule AppWeb.InvitationHTML do
       <.input field={f[:brunch]} id="brunch" type="checkbox" label="Brunch" />
       <.input field={f[:rehersal]} id="rehersal" type="checkbox" label="Rehearsal" />
       <.input field={f[:wedding]} id="rehersal" type="checkbox" label="Wedding" />
+      <.input field={f[:robey]} id="robey" type="checkbox" label="Robey group" />
       {render_slot(@actions)}
     </.simple_form>
     """

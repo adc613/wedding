@@ -1,4 +1,6 @@
 defmodule AppWeb.PageController do
+  alias App.MyGuest
+  alias App.Guest.Guest
   use AppWeb, :controller
 
   def home(conn, _params) do
@@ -20,6 +22,14 @@ defmodule AppWeb.PageController do
     render(conn, :std, %{page_title: "Save the Date"})
   end
 
+  def robey(conn, _params) do
+    can_book_robey(conn)
+    |> case do
+      true -> render(conn, :robey)
+      false -> redirect(conn, to: ~p"/travel")
+    end
+  end
+
   def story(conn, _params) do
     render(conn, :story)
   end
@@ -29,14 +39,26 @@ defmodule AppWeb.PageController do
   end
 
   def travel(conn, _params) do
-    render(conn, :travel)
+    render(conn, :travel, can_book_robey: can_book_robey(conn))
   end
 
   def things_to_do(conn, _params) do
-    render(conn, :things_to_do)
+    render(conn, :things_to_do, can_book_robey: can_book_robey(conn))
   end
 
   def schedule(conn, _params) do
     render(conn, :schedule)
+  end
+
+  defp can_book_robey(conn) do
+    get_guest_id(conn)
+    |> case do
+      nil -> nil
+      id -> MyGuest.get_guest(id, preload: :invitation)
+    end
+    |> case do
+      %Guest{} = guest -> guest.invitation.robey
+      _ -> false
+    end
   end
 end
