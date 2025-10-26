@@ -111,7 +111,7 @@ defmodule AppWeb.GuestsHTML do
     required: false,
     doc: "The function that's called on row click"
 
-  attr :redirect, :string, default: "/guest", doc: "The rediret path for guest links"
+  attr :redirect, :string, default: "/guest", doc: "The redirect path for guest links"
 
   attr :fields, :list,
     required: false,

@@ -26,7 +26,7 @@ defmodule AppWeb.PageController do
     can_book_robey(conn)
     |> case do
       true -> render(conn, :robey)
-      false -> redirect(conn, to: ~p"/travel")
+      false -> redirect(conn, to: ~p"/travel#robey")
     end
   end
 
