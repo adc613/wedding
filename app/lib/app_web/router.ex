@@ -11,6 +11,7 @@ defmodule AppWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :fetch_current_user
+    plug :fetch_current_guest
   end
 
   pipeline :guest_live_view_extras do
@@ -34,10 +35,15 @@ defmodule AppWeb.Router do
     get "/photos", PageController, :photos
     get "/travel", PageController, :travel
     get "/things", PageController, :things_to_do
-    get "/robey", PageController, :robey
     get "/schedule", PageController, :schedule
     get "/registry", RegistryController, :registry
     post "/registry", RegistryController, :confirm_tor
+
+    scope "/robey" do
+      pipe_through :require_guest_id
+
+      get "/", PageController, :robey
+    end
   end
 
   scope "/rsvp", AppWeb do
@@ -165,7 +171,7 @@ defmodule AppWeb.Router do
   scope "/faq", AppWeb do
     pipe_through [:browser, :guest_live_view_extras]
 
-    live_session :require_guest_id,
+    live_session :too_lazy_to_learn_the_right_way_to_use_api,
       on_mount: [{AppWeb.UserAuth, :mount_current_user}, {AppWeb.UserAuth, :mount_current_guest}] do
       live "/", FaqLive
     end

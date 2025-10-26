@@ -109,6 +109,18 @@ defmodule AppWeb.UserAuth do
     assign(conn, :current_user, user)
   end
 
+  def fetch_current_guest(conn, _opts) do
+    guest_id =
+      conn
+      |> fetch_cookies(encrypted: ~w(guest-id))
+      |> case do
+        %{cookies: %{"guest-id" => guest_id}} -> guest_id
+        _ -> nil
+      end
+
+    assign(conn, :guest_id, guest_id)
+  end
+
   defp ensure_user_token(conn) do
     if token = get_session(conn, :user_token) do
       {token, conn}
@@ -222,19 +234,8 @@ defmodule AppWeb.UserAuth do
     end
   end
 
-  @doc """
-  Used for routes that require the user to be authenticated.
-
-  If you want to enforce the user email is confirmed before
-  they use the application at all, here would be a good place.
-  """
-  def require_guest_id(conn, _opts) do
+  def too_lazy_to_learn_the_right_way_to_use_api(conn, _opts) do
     conn
-    # |> fetch_cookies(encrypted: ~w(guest-id))
-    # |> case do
-    # %{cookies: %{"guest-id" => _guest_id}} -> conn
-    # _ -> conn |> redirect(to: "/todo") |> halt()
-    # end
   end
 
   @doc """
@@ -251,6 +252,17 @@ defmodule AppWeb.UserAuth do
       |> put_flash(:error, "You must log in to access this page.")
       |> maybe_store_return_to()
       |> redirect(to: ~p"/users/log_in")
+      |> halt()
+    end
+  end
+
+  def require_guest_id(conn, _opts) do
+    if conn.assigns[:guest_id] do
+      conn
+    else
+      conn
+      |> put_flash(:error, "This page requires an invitaiton.")
+      |> redirect(to: ~p"/rsvp?#")
       |> halt()
     end
   end
