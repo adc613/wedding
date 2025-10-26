@@ -43,6 +43,9 @@ defmodule AppWeb.InvitationManageLive do
       <:col :let={invitation} label="Permit Kids">
         <.check_icon checked={invitation.permit_kids} />
       </:col>
+      <:col :let={invitation} label="Robey">
+        <.check_icon checked={invitation.robey} />
+      </:col>
       <:col :let={invitation} label="Actions">
         <.link href={~p"/invitation/#{invitation}/edit?#{[redirect: ~p"/admin/invitation"]}"}>
           <.button>

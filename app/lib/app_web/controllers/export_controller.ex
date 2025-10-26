@@ -12,7 +12,8 @@ defmodule AppWeb.ExportController do
         brunch?: has_event(invite, :brunch),
         rehersal?: has_event(invite, :rehersal),
         wedding?: has_event(invite, :wedding),
-        restrictions: invite.dietary_restrictions
+        restrictions: invite.dietary_restrictions,
+        robey?: invite.robey
       }
     end)
     |> CSV.encode(
@@ -23,7 +24,8 @@ defmodule AppWeb.ExportController do
         brunch?: "Yes to Brunch",
         rehersal?: "Yes to Rehearsal",
         wedding?: "Yes to Wedding",
-        restrictions: "Dietary Restrictions"
+        restrictions: "Dietary Restrictions",
+        robey?: "Robey"
       ]
     )
     |> Enum.join("")
