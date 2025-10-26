@@ -58,7 +58,7 @@ defmodule AppWeb.PageHTML do
   def brunch_event(assigns) do
     ~H"""
     <.event
-      title="Brunch"
+      title="Family Brunch"
       date="2026.04.03"
       time="TBD"
       location="1416 Noyes St. Evanston, IL"

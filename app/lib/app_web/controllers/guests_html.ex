@@ -176,12 +176,19 @@ defmodule AppWeb.GuestsHTML do
   end
 
   attr :guest, :any, required: true, doc: "TODO"
+  attr :invitation, :any, required: true, doc: "TODO"
 
   def sms_invite_link(assigns) do
     ~H"""
-    <a href={sms_link([@guest], :invite)}>
-      <.button>Invite {@guest.first_name} {@guest.last_name}</.button>
-    </a>
+    <%= if @invitation.robey do %>
+      <a href={sms_link([@guest], :invite_robey)}>
+        <.button>Invite {@guest.first_name} {@guest.last_name}</.button>
+      </a>
+    <% else %>
+      <a href={sms_link([@guest], :invite)}>
+        <.button>Invite {@guest.first_name} {@guest.last_name}</.button>
+      </a>
+    <% end %>
     """
   end
 
@@ -219,7 +226,11 @@ defmodule AppWeb.GuestsHTML do
   end
 
   defp sms_link(guests, :invite) do
-    "sms:#{sms_phone(guests)}?body=#{URI.encode(invite_text(), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(invite_text(:default), &(&1 != ?& and URI.char_unescaped?(&1)))}"
+  end
+
+  defp sms_link(guests, :invite_robey) do
+    "sms:#{sms_phone(guests)}?body=#{URI.encode(invite_text(:robey), &(&1 != ?& and URI.char_unescaped?(&1)))}"
   end
 
   defp sms_phone(guests) do
@@ -255,7 +266,23 @@ defmodule AppWeb.GuestsHTML do
     """
   end
 
-  defp invite_text() do
+  defp invite_text(:robey) do
+    """
+    https://wedding.adamcollins.io/rsvp
+    Hi,
+
+    You're formally invited to our wedding. Please RSVP at your earliest convenience.
+
+    Once you've RSVP'd you should gain access to The Robey booking link in the travel section. 
+
+    We're asking all our VIPs (you included) to stay at The Robey. If this does not work, please let us know; we are on the hook for a minimum number of rooms.
+
+    Looking forward to seeing you there,
+    Helen & Adam
+    """
+  end
+
+  defp invite_text(_default) do
     """
     https://wedding.adamcollins.io/rsvp
     Hi,

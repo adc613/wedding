@@ -61,7 +61,7 @@ defmodule AppWeb.DashboardLive do
               </.button>
             </div>
             <div class="flex-grow-0">
-              <.sms_invite_link :for={guest <- invite.guests} guest={guest} />
+              <.sms_invite_link :for={guest <- invite.guests} guest={guest} invitation={invite} />
             </div>
           </div>
         </div>
