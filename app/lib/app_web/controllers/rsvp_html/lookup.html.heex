@@ -5,7 +5,8 @@
   Please enter your phone number below to see your invitation
 </p>
 
-<.simple_form :let={f} for={@changeset} action="/rsvp/lookup" method="post">
+<.simple_form :let={f} for={@changeset} action={~p"/rsvp/lookup"} method="post">
+  <input name="redirect" type="hidden" value={@redirect} />
   <.input field={f[:phone]} type="tel" inputmode="tel" label="Phone" />
   <:actions>
     <.button class="btn-action">Lookup invitation</.button>

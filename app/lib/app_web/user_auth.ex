@@ -262,7 +262,7 @@ defmodule AppWeb.UserAuth do
     else
       conn
       |> put_flash(:error, "This page requires an invitaiton.")
-      |> redirect(to: ~p"/rsvp?#")
+      |> redirect(to: ~p"/rsvp?#{[redirect: maybe_get_current_path(conn)]}")
       |> halt()
     end
   end
@@ -363,6 +363,12 @@ defmodule AppWeb.UserAuth do
   end
 
   defp maybe_store_return_to(conn), do: conn
+
+  defp maybe_get_current_path(%{method: "GET"} = conn) do
+    current_path(conn)
+  end
+
+  defp maybe_get_current_path(_conn), do: nil
 
   defp signed_in_path(_conn), do: ~p"/"
 end

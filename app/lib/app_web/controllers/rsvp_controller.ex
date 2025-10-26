@@ -5,7 +5,9 @@ defmodule AppWeb.RSVPController do
   alias App.MyGuest
   alias App.Guest.Guest
 
-  def rsvp(conn, _params) do
+  def rsvp(conn, params) do
+    redirect = Map.get(params, "redirect", ~p"/rsvp")
+
     conn
     |> get_guest_id()
     |> case do
@@ -17,7 +19,7 @@ defmodule AppWeb.RSVPController do
     end
     |> case do
       nil ->
-        render_lookup(conn)
+        render_lookup(conn, redirect)
 
       %Guest{rsvp: nil} ->
         redirect(conn, to: ~p"/rsvp/edit")
@@ -151,12 +153,13 @@ defmodule AppWeb.RSVPController do
     end
   end
 
-  def lookup_invite(conn, %{"guest" => %{"email" => email}}) do
+  def lookup_invite(conn, %{"guest" => %{"email" => email}} = params) do
     email = String.trim(email) |> String.downcase()
+    redirect = Map.get(params, "redirect", ~p"/rsvp")
 
     case Guest.apply_lookup(%Guest{}, %{"email" => email}) do
       {:error, changeset} ->
-        conn |> render_lookup(changeset: changeset)
+        conn |> render_lookup(redirect, changeset: changeset)
 
       {:ok, _changeset} ->
         MyGuest.get_guest(email: email)
@@ -311,17 +314,18 @@ defmodule AppWeb.RSVPController do
     %{guest_id: guest_id, invitation: invitation}
   end
 
-  defp render_lookup(conn, changeset: changeset) do
+  defp render_lookup(conn, redirect, changeset: changeset) do
     conn
     |> render(:lookup,
       changeset: changeset,
       guests: [],
       thumbnail_image: ~p"/images/italy_invite.jpg",
-      page_title: "You're invited"
+      page_title: "You're invited",
+      redirect: redirect
     )
   end
 
-  defp render_lookup(conn) do
+  defp render_lookup(conn, redirect) do
     changeset = Guest.lookup_changeset(%Guest{})
 
     conn
@@ -329,7 +333,8 @@ defmodule AppWeb.RSVPController do
       changeset: changeset,
       guests: [],
       thumbnail_image: ~p"/images/italy_invite.jpg",
-      page_title: "You're invited"
+      page_title: "You're invited",
+      redirect: redirect
     )
   end
 
