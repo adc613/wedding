@@ -1,5 +1,18 @@
 <.rsvp_header />
 
+<div
+  :if={@invitation.additional_guests > 0}
+  class="mt-6 p-4 rounded-xl border-2 rounded-2xl  border-zinc-300"
+>
+  <p>
+    It looks like you have not used your plus one. Click the button below if
+    you'd like to bring a guest.
+  </p>
+  <.a_button primary?={false} href={~p"/rsvp/confirm/1"}>
+    Add Plus One
+  </.a_button>
+</div>
+
 <br />
 
 <.form for={%{}} action={~p"/rsvp/invite"} method="put">
