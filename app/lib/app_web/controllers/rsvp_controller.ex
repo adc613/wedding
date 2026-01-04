@@ -6,7 +6,9 @@ defmodule AppWeb.RSVPController do
   alias App.Guest.Guest
 
   def rsvp(conn, params) do
-    redirect = Map.get(params, "redirect", ~p"/rsvp")
+    redirect =
+      Map.get(params, "redirect", ~p"/rsvp/confirm/0")
+      |> IO.inspect()
 
     conn
     |> get_guest_id()
