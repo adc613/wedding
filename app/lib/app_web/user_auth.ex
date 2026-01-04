@@ -330,7 +330,7 @@ defmodule AppWeb.UserAuth do
 
       _ ->
         conn
-        |> redirect(to: ~p"/rsvp")
+        |> redirect(to: ~p"/rsvp?#{[redirect: maybe_get_current_path(conn)]}")
         |> halt()
     end
   end
