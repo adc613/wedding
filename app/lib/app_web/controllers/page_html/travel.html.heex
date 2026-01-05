@@ -169,6 +169,7 @@
     <th>Midway</th>
     <th>Venue</th>
     <th>The Loop</th>
+    <th :if={@rehearsal?}>Rehearsal</th>
   </tr>
   <tr>
     <th>Transit</th>
@@ -176,6 +177,7 @@
     <td>~50 min (requires transfer)</td>
     <td>N/A</td>
     <td>25 min</td>
+    <td :if={@rehearsal?}>31 min (bus)</td>
   </tr>
   <tr>
     <th>Car</th>
@@ -183,6 +185,7 @@
     <td>34 min</td>
     <td>8 min</td>
     <td>11 min</td>
+    <td :if={@rehearsal?}>15 min</td>
   </tr>
 </table>
 
@@ -216,6 +219,7 @@
     <th>Midway</th>
     <th>Venue</th>
     <th>The Loop</th>
+    <th :if={@rehearsal?}>Rehearsal</th>
   </tr>
   <tr>
     <th>Transit</th>
@@ -223,6 +227,7 @@
     <td>55 min</td>
     <td>N/A</td>
     <td>25 min</td>
+    <td :if={@rehearsal?}>25 min (walking)</td>
   </tr>
   <tr>
     <th>Car</th>
@@ -230,6 +235,7 @@
     <td>40 min</td>
     <td>11 min</td>
     <td>17 min</td>
+    <td :if={@rehearsal?}>6 min</td>
   </tr>
 </table>
 
@@ -266,6 +272,7 @@
     <th>Midway</th>
     <th>Venue</th>
     <th>The Loop</th>
+    <th :if={@rehearsal?}>Rehearsal</th>
   </tr>
   <tr>
     <th>Transit</th>
@@ -273,6 +280,7 @@
     <td>48 min</td>
     <td>N/A</td>
     <td>20 min</td>
+    <td :if={@rehearsal?}>11 min (walking)</td>
   </tr>
   <tr>
     <th>Car</th>
@@ -280,6 +288,7 @@
     <td>42 min</td>
     <td>11 min</td>
     <td>19 min</td>
+    <td :if={@rehearsal?}>2 min</td>
   </tr>
 </table>
 
@@ -343,3 +352,15 @@
   bit easier. It's not far from the hotels we've chosen, but if you're looking
   to take public transit, which we recommend, expect to require a transfer.
 </p>
+
+<div
+  :if={not Map.has_key?(assigns, :guest_id) or @guest_id == nil}
+  class="mt-6 p-4 rounded-xl border-2 rounded-2xl  border-zinc-300"
+>
+  <p>
+    Missing event details? Want to see personalized infromation?
+  </p>
+  <.a_button primary?={false} href={~p"/rsvp?#{[redirect: "/travel"]}"}>
+    Lookup your invitation
+  </.a_button>
+</div>

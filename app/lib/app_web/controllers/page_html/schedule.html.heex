@@ -4,21 +4,72 @@
 
 <ul class="timeline">
   <li></li>
-  <li class="day-break">
-    <h2>Friday April 3rd 2026</h2>
-  </li>
-  <li>
-    <div>
-      <h3>Hotel Check-in</h3>
-      <p>
-        Exact check in times may vary.
-      </p>
-    </div>
-    <div>
-      <p class="time">3:00pm</p>
-    </div>
-  </li>
-  <li></li>
+  <%= if @can_book_robey do %>
+    <li class="day-break">
+      <h2>Thrusday April 2nd 2026</h2>
+    </li>
+    <li>
+      <div>
+        <h3>The Robey Check-in</h3>
+        <p>
+          We're planning to check in around this time and we'll be hanging out at
+          the hotel for anyone who wants to join.
+        </p>
+      </div>
+      <div>
+        <p class="time">3:00pm</p>
+      </div>
+    </li>
+  <% end %>
+  <%= if !@can_book_robey or @rehearsal? or @brunch? do %>
+    <li class="day-break">
+      <h2>Friday April 3rd 2026</h2>
+    </li>
+    <li :if={!@can_book_robey}>
+      <div>
+        <h3>Hotel Check-in</h3>
+        <p>
+          Exact check in times may vary.
+        </p>
+      </div>
+      <div>
+        <p class="time">3:00pm</p>
+      </div>
+    </li>
+    <li :if={@brunch?}>
+      <div>
+        <h3>Family Brunch</h3>
+        <p>
+          We're doing a family brunch with just the immediate family at
+          <.a external?={true} href="https://maps.app.goo.gl/mrJHnqL9QVB5nz7s6">
+            Adam's
+            <span class="whitespace-nowrap">Parents' house <i class="fa fa-map-marker"></i></span>
+          </.a>
+          in Evanston.
+        </p>
+      </div>
+      <div>
+        <p class="time">11:00am</p>
+      </div>
+    </li>
+    <li :if={@rehearsal?}>
+      <div>
+        <h3>Rehearsal dinner</h3>
+        <p>
+          The rehearsal dinner will be at
+          <.a external?={true} href="https://maps.app.goo.gl/GEUBReV9GTSLeii98">
+            <span class="whitespace-nowrap">Irazu <i class="fa fa-map-marker"></i></span>
+          </.a>.
+          The dress code is <i>Smart Casual</i>. Irazu is a great restaurant in
+          Wicker Park that's walking distance to both The Robey and The Hampton.
+        </p>
+      </div>
+      <div>
+        <p class="time">6:00pm</p>
+      </div>
+    </li>
+    <li></li>
+  <% end %>
   <li class="day-break">
     <h2>Saturday April 4th 2026</h2>
   </li>
@@ -27,14 +78,14 @@
       <h3>Doors open @ Garfield Park Conservatory</h3>
       <p>
         The conservatory becomes ours at 5:00pm; before 5 it's open to the
-        public. So if you want to get there at little early in order to have more
-        time you are welcome, just be aware that there may be other people
-        there. It's an incredible space and they're even building a
+        public (fee for non-chicago residents). So if you want to get there at
+        little earlier to have more time you are welcome, just be aware that there
+        may be other people around. It's an incredible space and they're even building a
         <.a external?={true} href="https://gpca.givecloud.co/emg">Children's garden,</.a>
         that should be complete in time for the wedding.
       </p>
       <p>
-        Warning for the hangry intolerant among us. <b>We will not be serving food
+        Warning for the hangry intolerant among us: <b>We will not be serving food
           at Garfield Park Conservatory.</b> If you're someone who's prone to bouts
         of hanger, we recommend a snack beforehand.
       </p>
@@ -47,8 +98,8 @@
     <div>
       <h3>Ceremony begins</h3>
       <p>
-        The Ceremony will begin at roughly 6:00pm.  If you want to take picutres at Garfield Park,
-        <b>please take pictures before the ceremony.</b>
+        The Ceremony will begin at roughly 6:00pm.  If you want to take pictures at Garfield Park,
+        <b>please take photos before the ceremony.</b>
       </p>
     </div>
     <div>
@@ -59,12 +110,12 @@
     <div>
       <h3>Bus to Ovation</h3>
       <p>
-        Immediately folowing the ceremony we'll bus everyone to the Ovation for
+        Immediately following the ceremony we'll bus everyone to the Ovation for
         the reception dinner. Ovation is a quick 7 minute drive down the road.
       </p>
     </div>
     <div>
-      <p class="time">7:00pm</p>
+      <p class="time">6:50pm</p>
     </div>
   </li>
   <li>
@@ -82,8 +133,8 @@
     <dIv>
       <h3>Doors Closed</h3>
       <p>
-        The end of a great night. (Warning: <b>We will not be providing transportation home,</b>
-        so please plan accordingly). Ubers/Lyfts are plentiful in Chicago, and
+        The end of a great night. Warning: <b>We will not be providing transportation home,</b>
+        so please plan accordingly. Ubers/Lyfts are plentiful in Chicago, and
         all
         <.a href={~p"/travel#hotel"}>hotel blocks</.a>
         are a &lt;15 minute drive from the Venue.
@@ -99,15 +150,25 @@
   </li>
   <li>
     <dIv>
-      <h3>See you laters</h3>
+      <h3>Hotel check-out</h3>
       <p>
-        Will be eating breakfast somewhere at or near
-        <.a href="https://maps.app.goo.gl/82LVNTz7JmMm7JAB9" external?={true}>The Robey</.a>, check back in closer
-        to the wedding, and we'll share a location so that people can come say their goodbyes.
+        Exact time may vary based on hotel. Check your reservation.
       </p>
     </dIv>
     <div>
-      <p class="time">TBD</p>
+      <p class="time">12:00pm</p>
     </div>
   </li>
 </ul>
+
+<div
+  :if={not Map.has_key?(assigns, :guest_id) or @guest_id == nil}
+  class="mt-6 p-4 rounded-xl border-2 rounded-2xl  border-zinc-300"
+>
+  <p>
+    Missing event details? Want to see personalized infromation?
+  </p>
+  <.a_button primary?={false} href={~p"/rsvp?#{[redirect: "/schedule"]}"}>
+    Lookup your invitation
+  </.a_button>
+</div>

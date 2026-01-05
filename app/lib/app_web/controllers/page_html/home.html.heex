@@ -5,10 +5,11 @@
   <img class="rounded-2xl" src={ "/images/" <> @image } />
 </div>
 
-<.public_events />
+<.public_events>
+  <:friday>
+    <.brunch_event :if={@brunch?} />
+    <.rehersal_event :if={@rehearsal?} />
+  </:friday>
+</.public_events>
 
-<hr class="mt-8 mb-8" />
-
-<p class="text-grey-500">
-  Save the date. More details coming soon...
-</p>
+<hr :if={@brunch? or @rehearsal?} class="mt-8 mb-8" />
