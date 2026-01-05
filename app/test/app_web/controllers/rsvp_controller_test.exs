@@ -1,4 +1,5 @@
 defmodule AppWeb.RSVPControllerTest do
+  alias App.Guest
   alias App.Guest.Invitation
   alias App.Guest.RSVP
   alias App.MyGuest
@@ -454,6 +455,30 @@ defmodule AppWeb.RSVPControllerTest do
 
       assert MyGuest.get_invitation(i2.id, preload: :guests)
              |> then(&length(&1.guests)) == 0
+    end
+  end
+
+  describe "POST /rsvp/decline" do
+    test "Create RSVP", %{conn: conn} do
+      guest = MyGuest.get_guest!(1)
+
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
+        |> put(~p"/rsvp/invite", %{
+          "invitation_id" => 1,
+          "wedding-1" => "yes",
+          "rehersal-1" => "no"
+        })
+        |> post(~p"/rsvp/decline")
+        |> html_response(302)
+
+      assert resp =~ "/rsvp/thanks"
+
+      guest = MyGuest.get_guest(guest.id, preload: :rsvp)
+
+      assert guest.rsvp.events == []
+      assert guest.rsvp.declined_events == [:wedding, :brunch, :rehersal]
     end
   end
 end
