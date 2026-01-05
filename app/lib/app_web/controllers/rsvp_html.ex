@@ -108,9 +108,7 @@ defmodule AppWeb.RSVPHTML do
 
     <script>
       (() => {
-          debugger;
         const forms = document.getElementsByTagName("form")
-        const primaryForm = forms[forms.length - 1]
         for(const form of forms) {
           debugger;
           let isFormDirty = false

@@ -261,7 +261,7 @@ defmodule AppWeb.GuestsHTML do
 
     https://wedding.adamcollins.io/rsvp
 
-    If your looking to book travel arrangements, see:
+    If you're booking travel arrangements, we have a couple optional hotel blocks, see:
 
     https://wedding.adamcollins.io/travel
 
