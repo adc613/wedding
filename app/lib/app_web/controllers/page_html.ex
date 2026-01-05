@@ -60,7 +60,7 @@ defmodule AppWeb.PageHTML do
     <.event
       title="Family Brunch"
       date="2026.04.03"
-      time="TBD"
+      time="11:00 AM"
       location="1416 Noyes St. Evanston, IL"
       attire="Casual"
       location_link="https://maps.app.goo.gl/mrJHnqL9QVB5nz7s6"

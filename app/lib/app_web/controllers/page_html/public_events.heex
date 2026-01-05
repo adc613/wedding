@@ -7,24 +7,12 @@
   </div>
 </div>
 
+<%= if Map.has_key?(assigns, :friday) do %>
+  <br />
+  {render_slot(@friday)}
+<% end %>
+
 <hr class="mt-8 mb-8" />
 
 <.ceremony_event />
 <.reception_event />
-
-<div class="flex">
-  <script src="https://cdn.jsdelivr.net/npm/add-to-calendar-button@2" async defer>
-  </script>
-  <add-to-calendar-button
-    class="mx-auto"
-    name="Helen & Adam's Save the Date"
-    description="For latest wedding details go to: [url]http://wedding.adamcollins.io/|wedding.adamcollins.io[/url]"
-    options="['Apple','Google','iCal','Microsoft365','Outlook.com','Yahoo']"
-    location="Chicago, IL"
-    startDate="2026-04-04"
-    timeZone="America/Chicago"
-    hidebranding=""
-    buttonStyle="round"
-  >
-  </add-to-calendar-button>
-</div>
