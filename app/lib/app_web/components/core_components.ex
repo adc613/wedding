@@ -839,6 +839,7 @@ defmodule AppWeb.CoreComponents do
   attr :href, :string, default: nil
   attr :external?, :boolean, default: false
   attr :primary?, :boolean, default: false
+  attr :amazon, :boolean, default: false
   slot :inner_block, required: true
 
   def a_button(assigns) do
@@ -864,9 +865,29 @@ defmodule AppWeb.CoreComponents do
         {render_slot(@inner_block)}
       </.button>
     </.link>
+
     <.button :if={@href == nil}>
       {render_slot(@inner_block)}
     </.button>
+    """
+  end
+
+  attr :href, :string, required: true
+
+  def amazon_button(assigns) do
+    ~H"""
+    <.simple_form method="POST" for={%{}} action={@href} id="amazon-button">
+      <button class="amazon-button" type="submit">
+        <div class="button-content">
+          <img
+            src="https://img.icons8.com/ios-filled/50/000000/mouse-left-click.png"
+            class="icon"
+            alt="click"
+          />
+          <span>Regretfully decline with 1-Click &trade;</span>
+        </div>
+      </button>
+    </.simple_form>
     """
   end
 

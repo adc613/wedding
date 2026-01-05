@@ -7,8 +7,7 @@ defmodule AppWeb.RSVPController do
 
   def rsvp(conn, params) do
     redirect =
-      Map.get(params, "redirect", ~p"/rsvp/confirm/0")
-      |> IO.inspect()
+      Map.get(params, "redirect", ~p"/rsvp/confirm")
 
     conn
     |> get_guest_id()
@@ -302,6 +301,22 @@ defmodule AppWeb.RSVPController do
     else
       conn |> redirect(to: ~p"/rsvp/edit")
     end
+  end
+
+  def decline(conn, _params) do
+    invitation =
+      get_guest_id(conn)
+      |> then(&MyGuest.get_guest(&1))
+      |> then(&MyGuest.get_invitation(&1.invitation_id, preload: :guests))
+
+    Enum.each(invitation.guests, fn guest ->
+      MyGuest.update_rsvp!(guest.id, %{
+        events: [],
+        declined_events: [:wedding, :brunch, :rehersal]
+      })
+    end)
+
+    conn |> redirect(to: ~p"/rsvp/thanks")
   end
 
   defp get_confirm_details(conn) do

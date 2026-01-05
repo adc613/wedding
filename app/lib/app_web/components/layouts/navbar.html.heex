@@ -43,7 +43,18 @@
         </a>
       </li>
       <li>
-        <a href="/rsvp" class="hover:text-zinc-700">
+        <a
+          :if={not Map.has_key?(assigns, :guest_id) or @guest_id == nil}
+          href="/rsvp"
+          class="hover:text-zinc-700"
+        >
+          RSVP
+        </a>
+        <a
+          :if={Map.has_key?(assigns, :guest_id) and @guest_id != nil}
+          href="/rsvp/edit"
+          class="hover:text-zinc-700"
+        >
           RSVP
         </a>
       </li>

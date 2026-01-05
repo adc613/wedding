@@ -61,6 +61,7 @@ defmodule AppWeb.Router do
 
     get "/edit", RSVPController, :edit
     get "/thanks", RSVPController, :thanks
+    post "/decline", RSVPController, :decline
 
     scope "/confirm" do
       get "/", RSVPController, :confirm

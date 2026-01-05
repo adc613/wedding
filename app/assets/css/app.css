@@ -411,6 +411,53 @@ ol {
   }
 }
 
+.amazon-button {
+  /* Layout */
+  display: inline-block;
+  padding: 8px 20px;
+  cursor: pointer;
+  border-radius: 20px;
+  text-align: center;
+  font-family: "Arial", sans-serif;
+  font-size: 13px;
+  user-select: none;
+  
+  /* The Gradient & Colors */
+  background: linear-gradient(to bottom, #f7dfa5, #f0c14b);
+  border: 1px solid #a88734;
+  border-top-color: #947522;
+  color: #111;
+  
+  /* Depth effect */
+  box-shadow: 0 1px 0 rgba(255,255,255,.4) inset;
+  transition: background 0.1s;
+}
+
+/* Hover state: Slightly darker gradient */
+.amazon-button:hover {
+  background: linear-gradient(to bottom, #f5d78e, #eeb933);
+  border-color: #846a29;
+}
+
+/* Active state: "Pressed" look */
+.amazon-button:active {
+  background: #f0c14b;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15) inset;
+  border-color: #846a29;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
+  opacity: 0.7;
+}
+
 .btn-primary {
   background-color: #5af;
 }

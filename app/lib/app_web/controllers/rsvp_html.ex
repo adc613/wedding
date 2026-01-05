@@ -2,7 +2,6 @@ defmodule AppWeb.RSVPHTML do
   use AppWeb, :html
   import AppWeb.PageHTML
   import AppWeb.GuestsHTML
-
   embed_templates "rsvp_html/*"
 
   attr :rsvp, :any, required: true, doc: "Render RSVP status"
@@ -96,23 +95,39 @@ defmodule AppWeb.RSVPHTML do
         </div>
       </div>
     </div>
+
+    <hr class="mt-8" />
+
+    <br />
+
+    <h2 class="text-lg mt-2 mb-4 font-semibold">
+      Not attending?
+    </h2>
+
+    <.amazon_button href={~p"/rsvp/decline"} />
+
     <script>
-      const forms = document.getElementsByTagName("form")
-      const primaryForm = forms[forms.length - 1]
-      let isFormDirty = false
-      primaryForm.addEventListener('submit', () => {
-        isFormDirty = false
-      });
-      primaryForm.addEventListener('change', () => {
-        console.log("changes!!!")
-        isFormDirty = true
-      });
-      window.addEventListener('beforeunload', (e) => {
-        if (isFormDirty) {
-            e.preventDefault();
-            e.returnValue =  'You may have unsaved changes. Are you sure you want to leave?' 
+      (() => {
+          debugger;
+        const forms = document.getElementsByTagName("form")
+        const primaryForm = forms[forms.length - 1]
+        for(const form of forms) {
+          debugger;
+          let isFormDirty = false
+          form.addEventListener('submit', () => {
+            isFormDirty = false
+          });
+          form.addEventListener('change', () => {
+            isFormDirty = true
+          });
+          window.addEventListener('beforeunload', (e) => {
+            if (isFormDirty) {
+                e.preventDefault();
+                e.returnValue =  'You may have unsaved changes. Are you sure you want to leave?' 
+            }
+          });
         }
-      });
+      })();
     </script>
     """
   end

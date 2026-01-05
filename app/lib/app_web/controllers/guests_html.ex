@@ -257,11 +257,17 @@ defmodule AppWeb.GuestsHTML do
     """
     Hi,
 
-    We're trying to finalize our guest counts can you respond to your RSVP:
+    We're only 3 months out from the big day. Please click this link to RSVP:
 
     https://wedding.adamcollins.io/rsvp
 
-    Hope to see you there,
+    If your looking to book travel arrangements, see:
+
+    https://wedding.adamcollins.io/travel
+
+    Please don't hesitate to text us if you ahve any questions :)
+
+    Can't wait to celebrate with you,
     Helen & Adam
     """
   end
