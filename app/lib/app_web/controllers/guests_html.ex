@@ -257,15 +257,17 @@ defmodule AppWeb.GuestsHTML do
     """
     Hi,
 
-    We're only 3 months out from the big day. Please click this link to RSVP:
+    We're less than 3 months out from the wedding day. This is your reminder to RSVP at:
 
     https://wedding.adamcollins.io/rsvp
 
-    If you're booking travel arrangements, we have a couple optional hotel blocks, see:
+    If you're booking travel arrangements, we have optional hotel blocks here:
 
     https://wedding.adamcollins.io/travel
 
-    Please don't hesitate to text us if you ahve any questions :)
+    We recommend booking your hotel sooner rather than later, as some of the prices have already gone up.
+
+    If you have any questions, please don't hesitate to text us.
 
     Can't wait to celebrate with you,
     Helen & Adam
