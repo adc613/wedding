@@ -1,0 +1,51 @@
+<div class="bus-page">
+  <h1 class="text-4xl text-center font-sans mb-4 ">
+    Bus Schedule - 4.4.2026
+  </h1>
+  <div class="bus-schedule">
+    <h2>The Robey Bus</h2>
+    <ul class="bus-stops list-style-none">
+      <li>
+        <div class="bus-stop">
+          <span class="bus-stop-time">Departure</span>
+          <span class="bus-stop-route">Route</span>
+        </div>
+      </li>
+      <li>
+        <.bus_location time="4:30 pm" pickup={:robey} dropoff={:gpc} />
+      </li>
+      <li>
+        <.bus_location time="6:45 pm" pickup={:gpc} dropoff={:ovation} />
+      </li>
+      <li>
+        <.bus_location time="10:00 pm" pickup={:ovation} dropoff={:robey} />
+      </li>
+      <li>
+        <.bus_location time="11:00 pm" pickup={:ovation} dropoff={:robey} />
+      </li>
+    </ul>
+  </div>
+  <div class="bus-schedule">
+    <h2>Hampton Inn Bus</h2>
+    <ul class="bus-stops list-style-none">
+      <li>
+        <div class="bus-stop">
+          <span class="bus-stop-time">Departure</span>
+          <span class="bus-stop-route">Route</span>
+        </div>
+      </li>
+      <li>
+        <.bus_location time="4:30 pm" pickup={:hampton} dropoff={:gpc} />
+      </li>
+      <li>
+        <.bus_location time="6:45 pm" pickup={:gpc} dropoff={:ovation} />
+      </li>
+      <li>
+        <.bus_location time="10:00 pm" pickup={:ovation} dropoff={:hampton} />
+      </li>
+      <li>
+        <.bus_location time="11:00 pm" pickup={:ovation} dropoff={:hampton} />
+      </li>
+    </ul>
+  </div>
+</div>

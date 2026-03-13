@@ -31,6 +31,7 @@ defmodule AppWeb.Router do
 
     get "/", PageController, :home
     get "/std", PageController, :std
+    get "/bus", PageController, :bus
     get "/story", PageController, :story
     get "/photos", PageController, :photos
     get "/travel", PageController, :travel
