@@ -552,3 +552,69 @@ ol {
   border: 1px solid grey;
   border-radius: 0.5rem;
 }
+
+.bus-page {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.bus-schedule {
+  border: 1px solid #e5e7eb;
+  border-radius: 12px;
+  overflow: hidden;
+
+  h2 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin: 0;
+    padding: 0.6rem 1.25rem;
+    background-color: var(--theme-primary);
+    color: white;
+    letter-spacing: 0.02em;
+  }
+}
+
+.bus-stops {
+  padding: 0.25rem 0;
+}
+
+.bus-stop {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.65rem 1.25rem;
+  border-bottom: 1px solid #f0f0ee;
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.bus-stop-time {
+  font-weight: 700;
+  min-width: 5.5rem;
+  font-size: 0.9rem;
+  white-space: nowrap;
+  color: #444;
+}
+
+.bus-stop-route {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+.bus-stop-arrow {
+  color: var(--theme-primary);
+  font-weight: 700;
+}
+
+.bus-header {
+  display: flex;
+  font-weight: 700;
+  min-width: 5.5rem;
+}

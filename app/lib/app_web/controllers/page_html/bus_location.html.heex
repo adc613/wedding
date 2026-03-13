@@ -1,0 +1,24 @@
+<div class="bus-stop">
+  <span class="bus-stop-time">{@time}</span>
+  <span class="bus-stop-route">
+    <span class="bus-stop-location">
+      {case @pickup do
+        :gpc -> "Garfield Park Conservatory"
+        :ovation -> "Ovation Chicago"
+        :hampton -> "Hampton Inn"
+        :robey -> "The Robey"
+        _ -> ""
+      end}
+    </span>
+    <span class="bus-stop-arrow">→</span>
+    <span class="bus-stop-location">
+      {case @dropoff do
+        :gpc -> "Garfield Park Conservatory"
+        :ovation -> "Ovation Chicago"
+        :hampton -> "Hampton Inn"
+        :robey -> "The Robey"
+        _ -> ""
+      end}
+    </span>
+  </span>
+</div>

@@ -26,6 +26,10 @@ defmodule AppWeb.PageController do
     })
   end
 
+  def bus(conn, _params) do
+    render(conn, :bus, %{page_title: "Bus schedule"})
+  end
+
   def std(conn, _params) do
     render(conn, :std, %{page_title: "Save the Date"})
   end
