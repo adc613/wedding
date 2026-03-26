@@ -15,12 +15,6 @@ body {
 
 }
 
-/* This file is for your main application CSS */
-p {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
-
 .btn-action {
   @apply bg-blue-500;
 }
