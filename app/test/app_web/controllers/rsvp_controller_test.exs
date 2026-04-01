@@ -67,7 +67,22 @@ defmodule AppWeb.RSVPControllerTest do
         |> get(~p"/rsvp")
         |> html_response(302)
 
-      assert resp =~ "/rsvp/thanks"
+      assert resp =~ "/rsvp/confirm"
+    end
+
+    test "Redirect to redirect path when available", %{conn: conn} do
+      resp =
+        conn
+        |> post(~p"/rsvp/lookup", %{"guest" => %{"phone" => "8475551234"}})
+        |> put(~p"/rsvp/invite", %{
+          "invitation_id" => 1,
+          "wedding-1" => "yes",
+          "rehersal-1" => "no"
+        })
+        |> get(~p"/rsvp", %{"redirect" => "/test"})
+        |> html_response(302)
+
+      assert resp =~ "/test"
     end
   end
 
