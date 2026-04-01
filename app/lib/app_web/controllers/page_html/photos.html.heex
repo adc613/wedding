@@ -1,12 +1,34 @@
-<h1 class="text-4xl text-center font-serif mb-8 hinge-header">
-  Wedding Photos
-</h1>
+<div id="center-div" class="flex justify-center flex-col items-center">
+  <div
+    :if={Map.has_key?(assigns, :guest_id) and @guest_id != nil}
+    class="flex gap-8 justify-center flex-col items-center mt-6 p-4"
+  >
+    <h1 class="text-4xl text-center font-serif mb-8 hinge-header">
+      Photos
+    </h1>
+    <p>
+      If you take any good photos over the weekend, <b>please add them to the album</b>.
+      If you have trouble using Google Photos feel free to send the photos over
+      iMessage and we'll add them after the wedding.
+    </p>
 
-<p>
-  After the wedding we'll provide more details for where you can find or share
-  wedding photos.
-</p>
+    <img src={~p"/images/photo_album_qr_code.png"} />
 
-<p>
-  So please check back some time in May 2026.
-</p>
+    <.a_button primary?={true} external?={true} href="https://photos.app.goo.gl/Zcws1SJPovSL4MHt6">
+      Show me the photos
+    </.a_button>
+  </div>
+
+  <div
+    :if={not Map.has_key?(assigns, :guest_id) or @guest_id == nil}
+    class="mt-6 p-4 rounded-xl border-2 rounded-2xl  border-zinc-300"
+    class="flex justify-center flex-col items-center"
+  >
+    <p>
+      To see photo information
+    </p>
+    <.a_button primary?={false} href={~p"/rsvp?#{[redirect: "/photos"]}"}>
+      Lookup your invitation
+    </.a_button>
+  </div>
+</div>

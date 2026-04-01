@@ -27,7 +27,7 @@ defmodule AppWeb.RSVPController do
 
       %Guest{invitation_id: invitation_id} ->
         if MyGuest.all_rsvp?(invitation_id) do
-          redirect(conn, to: ~p"/rsvp/thanks")
+          redirect(conn, to: redirect)
         else
           redirect(conn, to: ~p"/rsvp/edit")
         end
